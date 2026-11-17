@@ -1,5 +1,7 @@
 package `in`.swatantra.focus
 
+import android.content.pm.ApplicationInfo
+import `in`.swatantra.focus.classifier.StrictPlayStoreAppVerifier
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -10,9 +12,10 @@ import java.security.MessageDigest
 /**
  * SwatantraProductionVerificationTest
  *
- * Zero-Trust JUnit4 test suite — pure JVM, no Android Context required.
+ * Zero-Trust JUnit4 test suite — pure JVM, connects directly to production
+ * companion object verification methods with zero mock stubs.
  * Covers three production invariants:
- *   1. PlayStore entertainment / browser rejection logic
+ *   1. PlayStore entertainment / browser rejection logic (StrictPlayStoreAppVerifier.isStaticMetadataEducational)
  *   2. Max-3 family number slots (1..3 accepted, 0 or >3 rejected) + 6-digit PIN hash validation
  *   3. Monotonic dual-clock reboot-resilience arithmetic & 24h cooling-off timer reboot-survival logic
  */
@@ -23,54 +26,6 @@ class SwatantraProductionVerificationTest {
         MessageDigest.getInstance("SHA-256")
             .digest(input.toByteArray(Charsets.UTF_8))
             .joinToString("") { "%02x".format(it) }
-
-    // ── Helper: mirror of StrictPlayStoreAppVerifier gate logic ──────────────
-    private val curatedStudyRegistry = setOf(
-        "xyz.penpencil.physicswallah",
-        "com.unacademyapp",
-        "com.testbook.tbapp",
-        "com.adda247.app",
-        "in.oliveboard.prep",
-        "com.parmaracademy",
-        "com.infeepedia",
-        "org.telegram.messenger",
-        "com.google.android.youtube",
-        "com.adobe.reader",
-        "com.microsoft.office.onenote",
-        "com.google.android.apps.docs"
-    )
-
-    private val entertainmentKeywords = listOf(
-        "instagram", "tiktok", "snapchat", "netflix", "hotstar", "youtube.gaming",
-        "facebook", "twitter", "pubg", "freefire", "roblox", "minecraft",
-        "candy", "clash", "brawl", "gaming", "sport", "cricket", "ipl"
-    )
-
-    private val browserKeywords = listOf(
-        "opera", "brave", "browser", "chrome.beta", "firefox", "duckduckgo",
-        "uc.browser", "via.browser", "puffin", "kiwi"
-    )
-
-    /**
-     * Classify a package using Gate A (curated study list) and
-     * Gate C (entertainment + browser token rejection).
-     * Returns true  → ALLOWED
-     * Returns false → REJECTED
-     */
-    private fun isAllowed(pkg: String): Boolean {
-        // Gate A: immediately allow curated study packages
-        if (pkg in curatedStudyRegistry) return true
-
-        // Gate C: reject entertainment keywords
-        val pkgLower = pkg.lowercase()
-        if (entertainmentKeywords.any { pkgLower.contains(it) }) return false
-
-        // Gate C: reject browser keywords
-        if (browserKeywords.any { pkgLower.contains(it) }) return false
-
-        // Default deny (not in any whitelist)
-        return false
-    }
 
     /**
      * Helper: mirror of MainActivity's 24-hour cooling-off timer reboot survival calculation
@@ -92,30 +47,215 @@ class SwatantraProductionVerificationTest {
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // TEST 1 — PlayStore entertainment & browser rejection
+    // TEST 1 — PlayStore entertainment & browser rejection via production verifier
     // ─────────────────────────────────────────────────────────────────────────
     @Test
     fun testPlayStoreEntertainmentAndBrowserRejection() {
-        // Entertainment packages must be REJECTED
-        assertFalse("Instagram must be rejected",      isAllowed("com.instagram.android"))
-        assertFalse("PUBG must be rejected",           isAllowed("com.pubg.imobile"))
-        assertFalse("Clash of Clans must be rejected", isAllowed("com.supercell.clashofclans"))
-        assertFalse("FreeFire must be rejected",       isAllowed("com.dts.freefireth"))
-        assertFalse("Netflix must be rejected",        isAllowed("com.netflix.mediaclient"))
+        // Entertainment packages from Play Store must be REJECTED
+        assertFalse(
+            "Instagram must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.instagram.android",
+                appLabel = "Instagram",
+                category = ApplicationInfo.CATEGORY_SOCIAL,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "PUBG must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.pubg.imobile",
+                appLabel = "Battlegrounds Mobile",
+                category = ApplicationInfo.CATEGORY_GAME,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "Clash of Clans must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.supercell.clashofclans",
+                appLabel = "Clash of Clans",
+                category = ApplicationInfo.CATEGORY_GAME,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "FreeFire must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.dts.freefireth",
+                appLabel = "Free Fire",
+                category = ApplicationInfo.CATEGORY_GAME,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "Netflix must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.netflix.mediaclient",
+                appLabel = "Netflix",
+                category = ApplicationInfo.CATEGORY_VIDEO,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
 
-        // Browser packages must be REJECTED
-        assertFalse("Opera Mini must be rejected",     isAllowed("com.opera.mini.native"))
-        assertFalse("Brave must be rejected",          isAllowed("com.brave.browser"))
-        assertFalse("UC Browser must be rejected",     isAllowed("com.uc.browser.en"))
-        assertFalse("Firefox must be rejected",        isAllowed("org.mozilla.firefox"))
+        // Browser & VPN packages must be REJECTED via Gate C / token
+        assertFalse(
+            "Opera Mini must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.opera.mini.native",
+                appLabel = "Opera Mini",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = true,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "Brave Browser must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.brave.browser",
+                appLabel = "Brave Private Web Browser",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = true,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "UC Browser must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.uc.browser.en",
+                appLabel = "UC Browser",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = true,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "Firefox must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "org.mozilla.firefox",
+                appLabel = "Firefox Browser",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = true,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "VPN Service package must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.example.studyvpn",
+                appLabel = "Study VPN",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = true
+            )
+        )
+        assertFalse(
+            "Sideloaded APK must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.study.notes",
+                appLabel = "Study Notes",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = null,
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
 
-        // Curated study packages must be ALLOWED (Gate A)
-        assertTrue("PhysicsWallah must be allowed",    isAllowed("xyz.penpencil.physicswallah"))
-        assertTrue("Unacademy must be allowed",        isAllowed("com.unacademyapp"))
-        assertTrue("Telegram must be allowed",         isAllowed("org.telegram.messenger"))
-        assertTrue("Adobe Reader must be allowed",     isAllowed("com.adobe.reader"))
-        assertTrue("OneNote must be allowed",          isAllowed("com.microsoft.office.onenote"))
-        assertTrue("Google Docs must be allowed",      isAllowed("com.google.android.apps.docs"))
+        // Gate A: Curated study packages must be ALLOWED immediately
+        assertTrue(
+            "PhysicsWallah must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "xyz.penpencil.physicswallah",
+                appLabel = "Physics Wallah",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "Unacademy must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.unacademyapp",
+                appLabel = "Unacademy Learner App",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "Telegram must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "org.telegram.messenger",
+                appLabel = "Telegram",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "Adobe Reader must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.adobe.reader",
+                appLabel = "Adobe Acrobat Reader",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "OneNote must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.microsoft.office.onenote",
+                appLabel = "Microsoft OneNote",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "Google Docs must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.google.android.apps.docs",
+                appLabel = "Google Docs",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+
+        // Gate E: Genuine educational Play Store package
+        assertTrue(
+            "Genuine educational app must be allowed",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "in.gateprep.mocktest",
+                appLabel = "GATE Exam Prep Mock Test",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
     }
 
     // ─────────────────────────────────────────────────────────────────────────

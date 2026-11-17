@@ -80,6 +80,7 @@ class FourBucketClassifier(context: Context) {
         dpm.setLockTaskPackages(admin, lockTaskAllowed)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // NEVER include LOCK_TASK_FEATURE_GLOBAL_ACTIONS: physical Power-button menu (Restart/Recovery) is blocked
             val features = DevicePolicyManager.LOCK_TASK_FEATURE_SYSTEM_INFO or
                 DevicePolicyManager.LOCK_TASK_FEATURE_NOTIFICATIONS or
                 DevicePolicyManager.LOCK_TASK_FEATURE_BLOCK_ACTIVITY_START_IN_TASK
@@ -128,8 +129,10 @@ class FourBucketClassifier(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             dpm.setUserControlDisabledPackages(admin, listOf(deContext.packageName))
         }
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_PRINTING)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
+
+        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)

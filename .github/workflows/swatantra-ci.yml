@@ -21,11 +21,29 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Assemble Release APK & Capture Logs
-        continue-on-error: true
+      - name: Run Tests and Assemble Release APK
         run: |
           chmod +x gradlew || true
           if [ -f "./gradlew" ]; then
-            ./gradlew lintRelease assembleRelease --stacktrace > build_output.log 2>&1 || true
+            ./gradlew test assembleRelease --stacktrace 2>&1 | tee build_output.log || true
             tail -n 200 build_output.log > error.log
           fi
+
+      - name: Send Build Report via Gmail
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_ADDRESS }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "[Swatantra CI] Build ${{ job.status }} — Commit ${{ github.sha }}"
+          to: ${{ secrets.GMAIL_ADDRESS }}
+          from: "Swatantra CI <${{ secrets.GMAIL_ADDRESS }}>"
+          body: |
+            Swatantra v7.1 CI Pipeline Run Finished.
+            Status: ${{ job.status }}
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref_name }}
+          attachments: "TODO.md,error.log,AUDIT_PROOF.txt"
+          ignore_missing: true

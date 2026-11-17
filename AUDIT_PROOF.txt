@@ -1,39 +1,48 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+858dff5 chore(audit): update AUDIT_PROOF.txt with latest commit state
 a00e5b0 chore(antigravity): sync Swatantra v7.1 build state and error.log
 fe7ee66 fix(security): block back-button in FamilySetupActivity, enforce in onResume, reboot-surviving cooling-off timer, add tests
-4899256 chore(audit): update AUDIT_PROOF.txt with full forensic audit proof
+ M .github/workflows/swatantra-ci.yml
  M AUDIT_PROOF.txt
+ M TODO.md
+ M app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt
+ M app/src/main/java/in/swatantra/focus/classifier/StrictPlayStoreAppVerifier.kt
+ M app/src/main/java/in/swatantra/focus/dpc/SwatantraAdminReceiver.kt
+ M app/src/main/java/in/swatantra/focus/lecture/UniversalLectureInspector.kt
+ M app/src/main/java/in/swatantra/focus/ui/MainActivity.kt
+ M app/src/test/java/in/swatantra/focus/SwatantraProductionVerificationTest.kt
+?? .agents/
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
 app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 33 | Bytes: 1303 | SHA256: 7F7F082AE96E90FA
 app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 31 | Bytes: 1321 | SHA256: 28A97EDBB30FF80A
-app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 144 | Bytes: 5843 | SHA256: F6194F4680758111
-app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 175 | Bytes: 7000 | SHA256: 1536D76BDFAA2C3D
+app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 147 | Bytes: 5887 | SHA256: 90CC3079FACB5436
+app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 207 | Bytes: 8339 | SHA256: BAB41353F3BB1E23
 app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt | Lines: 101 | Bytes: 4527 | SHA256: 17AF842BC61874C3
-app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 35 | Bytes: 1617 | SHA256: 4F8105888C9AF5AD
-app\src\main\java\in\swatantra\focus\lecture\UniversalLectureInspector.kt | Lines: 100 | Bytes: 4254 | SHA256: DC55EAF9D6B1C67B
+app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 46 | Bytes: 2219 | SHA256: 1060C232B9487DA9
+app\src\main\java\in\swatantra\focus\lecture\UniversalLectureInspector.kt | Lines: 112 | Bytes: 4598 | SHA256: 8CC44DB5C0C525D8
 app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines: 150 | Bytes: 6846 | SHA256: 5AB025A58956DCF2
 app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
 app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
 app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 222 | Bytes: 9594 | SHA256: EDB7D5E3A5C99DAF
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 330 | Bytes: 14220 | SHA256: F36D0E85502F026E
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 339 | Bytes: 14665 | SHA256: 7FE64BD940FA0176
 app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 69 | Bytes: 2722 | SHA256: 59AF5E8D43D0530D
 app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
 app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
 app\src\main\res\xml\device_admin_policies.xml | Lines: 14 | Bytes: 430 | SHA256: 5E61A80C8BE194CC
 app\src\main\res\xml\lecture_inspector_config.xml | Lines: 7 | Bytes: 413 | SHA256: 60F625306042349D
 app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C73DC726
-app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 252 | Bytes: 14213 | SHA256: 1331AA0C61BC8EA0
+app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 392 | Bytes: 19471 | SHA256: EAE075E6FD754331
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 107872 bytes | LastWriteTime: 11/17/2026 15:52:19
+APK Size: 107872 bytes | LastWriteTime: 11/18/2026 00:03:15
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
-META-INF/version-control-info.textproto                      120              118
-classes.dex                                                80712            80712
+META-INF/version-control-info.textproto                      120              117
+classes.dex                                                82464            82464
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -46,9 +55,9 @@ AndroidManifest.xml                                        10544             248
 res/4D.xml                                                  1048              370
 res/nw.xml                                                   508              280
 resources.arsc                                               644              644
-META-INF/SWATANTR.SF                                        1697              897
-META-INF/SWATANTR.RSA                                       1419             1120
-META-INF/MANIFEST.MF                                        1570              810
+META-INF/SWATANTR.SF                                        1697              901
+META-INF/SWATANTR.RSA                                       1419             1121
+META-INF/MANIFEST.MF                                        1570              809
 
 
 
@@ -73,20 +82,20 @@ DEX_SYMBOL [HmacSHA256] Present in classes.dex: True
 
 === 4. JUNIT TEST EXECUTION XML REPORTS ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:21:49.866Z" hostname="DESKTOP-JOU27LS" time="0.086">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T18:32:20.949Z" hostname="DESKTOP-JOU27LS" time="0.08">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.06"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.052"/>
   <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.014"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.019"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:21:52.406Z" hostname="DESKTOP-JOU27LS" time="0.111">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T18:32:23.297Z" hostname="DESKTOP-JOU27LS" time="0.08">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.077"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.059"/>
   <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.014"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.011"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
@@ -250,44 +259,89 @@ class StrictPlayStoreAppVerifier(context: Context) {
     private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
     private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
 
-    private val curatedStudyPackages = setOf(
-        "xyz.penpencil.physicswallah",
-        "com.unacademyapp",
-        "com.testbook.tbapp",
-        "com.adda247.app",
-        "in.oliveboard.prep",
-        "com.parmaracademy",
-        "com.infeepedia",
-        "org.telegram.messenger",
-        "com.google.android.youtube",
-        "com.adobe.reader",
-        "com.microsoft.office.onenote",
-        "com.google.android.apps.docs",
-        "com.google.android.apps.nbu.files",
-        "com.ichi2.anki"
-    )
+    companion object {
+        val curatedStudyPackages = setOf(
+            "xyz.penpencil.physicswallah",
+            "com.unacademyapp",
+            "com.testbook.tbapp",
+            "com.adda247.app",
+            "in.oliveboard.prep",
+            "com.parmaracademy",
+            "com.infeepedia",
+            "org.telegram.messenger",
+            "com.google.android.youtube",
+            "com.adobe.reader",
+            "com.microsoft.office.onenote",
+            "com.google.android.apps.docs",
+            "com.google.android.apps.nbu.files",
+            "com.ichi2.anki"
+        )
 
-    private val blacklistedCategories = setOf(
-        ApplicationInfo.CATEGORY_GAME,
-        ApplicationInfo.CATEGORY_SOCIAL,
-        ApplicationInfo.CATEGORY_VIDEO,
-        ApplicationInfo.CATEGORY_AUDIO,
-        ApplicationInfo.CATEGORY_IMAGE,
-        ApplicationInfo.CATEGORY_NEWS,
-        ApplicationInfo.CATEGORY_MAPS
-    )
+        val blacklistedCategories = setOf(
+            ApplicationInfo.CATEGORY_GAME,
+            ApplicationInfo.CATEGORY_SOCIAL,
+            ApplicationInfo.CATEGORY_VIDEO,
+            ApplicationInfo.CATEGORY_AUDIO,
+            ApplicationInfo.CATEGORY_IMAGE,
+            ApplicationInfo.CATEGORY_NEWS,
+            ApplicationInfo.CATEGORY_MAPS
+        )
 
-    private val entertainmentTokens = listOf(
-        "game", "gaming", "ludo", "bgmi", "pubg", "freefire", "codm", "chess", "rummy", "mpl", "dream11",
-        "instagram", "facebook", "snapchat", "whatsapp", "twitter", "threads", "reddit", "discord", "tinder", "bumble",
-        "netflix", "hotstar", "jiocinema", "primevideo", "sonyliv", "zee5", "mxplayer", "vlc", "spotify", "wynk", "gaana",
-        "josh", "moj", "sharechat", "hipi", "chingari", "tiktok", "truecaller", "browser", "opera", "brave", "ucbrowser", "vpn", "proxy"
-    )
+        val entertainmentTokens = listOf(
+            "game", "gaming", "ludo", "bgmi", "pubg", "freefire", "codm", "chess", "rummy", "mpl", "dream11",
+            "instagram", "facebook", "snapchat", "whatsapp", "twitter", "threads", "reddit", "discord", "tinder", "bumble",
+            "netflix", "hotstar", "jiocinema", "primevideo", "sonyliv", "zee5", "mxplayer", "vlc", "spotify", "wynk", "gaana",
+            "josh", "moj", "sharechat", "hipi", "chingari", "tiktok", "truecaller", "browser", "opera", "brave", "ucbrowser", "vpn", "proxy"
+        )
 
-    private val educationalTokens = listOf(
-        "study", "exam", "gate", "upsc", "bpsc", "ssc", "rrb", "ncert", "test", "mock", "prep",
-        "academy", "classes", "lecture", "notes", "pdf", "dictionary", "flashcard", "anki", "learn", "coding", "python", "c++"
-    )
+        val educationalTokens = listOf(
+            "study", "exam", "gate", "upsc", "bpsc", "ssc", "rrb", "ncert", "test", "mock", "prep",
+            "academy", "classes", "lecture", "notes", "pdf", "dictionary", "flashcard", "anki", "learn", "coding", "python", "c++"
+        )
+
+        /**
+         * Pure static 5-gate anti-cheat educational verification logic.
+         * Evaluates package, label, category, source installer, and browser/VPN intent probe results.
+         */
+        fun isStaticMetadataEducational(
+            pkg: String,
+            appLabel: String,
+            category: Int,
+            installer: String?,
+            hasBrowserActivity: Boolean,
+            hasVpnService: Boolean
+        ): Boolean {
+            // Gate A: Curated Study Registry (immediate allow)
+            if (pkg in curatedStudyPackages) {
+                return true
+            }
+
+            // Gate B: Official Play Store Source Check
+            if (installer != "com.android.vending") {
+                return false
+            }
+
+            // Gate C: Anti-Browser & Anti-VPN Intent Probe
+            if (hasBrowserActivity || hasVpnService) {
+                return false
+            }
+
+            // Gate D: OS Category & Entertainment Keyword Blacklist
+            if (category in blacklistedCategories) {
+                return false
+            }
+
+            val lowerPkg = pkg.lowercase()
+            val lowerLabel = appLabel.lowercase()
+
+            if (entertainmentTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }) {
+                return false
+            }
+
+            // Gate E: Educational Keyword Requirement
+            return educationalTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }
+        }
+    }
 
     fun handlePackageEvent(pkg: String) {
         if (pkg == deContext.packageName || pkg == "com.android.vending") return
@@ -336,12 +390,12 @@ class StrictPlayStoreAppVerifier(context: Context) {
     }
 
     fun evaluateStrictEducationalCriteria(pkg: String): Boolean {
-        // Gate A: Curated Study Registry
+        // Fast path for curated study packages
         if (pkg in curatedStudyPackages) {
             return true
         }
 
-        // Gate B: Official Play Store Source Check
+        // Gate B: Installer verification
         val installer = runCatching {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 pm.getInstallSourceInfo(pkg).installingPackageName
@@ -351,46 +405,33 @@ class StrictPlayStoreAppVerifier(context: Context) {
             }
         }.getOrNull()
 
-        if (installer != "com.android.vending") {
-            return false
-        }
-
-        // Gate C: Anti-Browser & Anti-VPN Intent Probe
+        // Gate C: Anti-Browser & Anti-VPN intent probe
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com")).apply {
             addCategory(Intent.CATEGORY_BROWSABLE)
             `package` = pkg
         }
         val browserActivities = runCatching { pm.queryIntentActivities(browserIntent, 0) }.getOrDefault(emptyList())
-        if (browserActivities.isNotEmpty()) {
-            return false
-        }
+        val hasBrowserActivity = browserActivities.isNotEmpty()
 
         val vpnIntent = Intent("android.net.VpnService").apply {
             `package` = pkg
         }
         val vpnServices = runCatching { pm.queryIntentServices(vpnIntent, 0) }.getOrDefault(emptyList())
-        if (vpnServices.isNotEmpty()) {
-            return false
-        }
+        val hasVpnService = vpnServices.isNotEmpty()
 
-        // Gate D: OS Category & Entertainment Keyword Blacklist
+        // Gate D & E: App Info & Category
         val appInfo = runCatching { pm.getApplicationInfo(pkg, 0) }.getOrNull() ?: return false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (appInfo.category in blacklistedCategories) {
-                return false
-            }
-        }
-
+        val category = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) appInfo.category else ApplicationInfo.CATEGORY_UNDEFINED
         val appLabel = runCatching { pm.getApplicationLabel(appInfo).toString() }.getOrDefault("")
-        val lowerPkg = pkg.lowercase()
-        val lowerLabel = appLabel.lowercase()
 
-        if (entertainmentTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }) {
-            return false
-        }
-
-        // Gate E: Educational Keyword Requirement
-        return educationalTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }
+        return isStaticMetadataEducational(
+            pkg = pkg,
+            appLabel = appLabel,
+            category = category,
+            installer = installer,
+            hasBrowserActivity = hasBrowserActivity,
+            hasVpnService = hasVpnService
+        )
     }
 }
 
@@ -791,7 +832,11 @@ class MainActivity : Activity() {
         val coolingOffComplete = isTimerRunning && elapsedSinceRequestMs >= 86_400_000L
 
         if (coolingOffComplete) {
-            // 24 hours elapsed â€” allow PIN-free deprovisioning
+            // 24 hours elapsed â€” clear WAL timestamps and allow PIN-free deprovisioning
+            walPrefs.edit()
+                .remove("deprovision_requested_elapsed_ms")
+                .remove("deprovision_requested_wall_ms")
+                .commit()
             runCatching { stopLockTask() }
             AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
             return
@@ -930,6 +975,11 @@ class MainActivity : Activity() {
 
             val storedHash = callPrefs.getString("family_pin_sha256", null)
             if (storedHash != null && enteredHash == storedHash) {
+                // Clear WAL timestamps before deprovisioning
+                walPrefs.edit()
+                    .remove("deprovision_requested_elapsed_ms")
+                    .remove("deprovision_requested_wall_ms")
+                    .commit()
                 dialog?.dismiss()
                 runCatching { stopLockTask() }
                 AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
@@ -1219,6 +1269,8 @@ class MonotonicDualClockLedger(context: Context) {
 --- FILE: app/src/test/java/in/swatantra/focus/SwatantraProductionVerificationTest.kt ---
 package `in`.swatantra.focus
 
+import android.content.pm.ApplicationInfo
+import `in`.swatantra.focus.classifier.StrictPlayStoreAppVerifier
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -1229,9 +1281,10 @@ import java.security.MessageDigest
 /**
  * SwatantraProductionVerificationTest
  *
- * Zero-Trust JUnit4 test suite â€” pure JVM, no Android Context required.
+ * Zero-Trust JUnit4 test suite â€” pure JVM, connects directly to production
+ * companion object verification methods with zero mock stubs.
  * Covers three production invariants:
- *   1. PlayStore entertainment / browser rejection logic
+ *   1. PlayStore entertainment / browser rejection logic (StrictPlayStoreAppVerifier.isStaticMetadataEducational)
  *   2. Max-3 family number slots (1..3 accepted, 0 or >3 rejected) + 6-digit PIN hash validation
  *   3. Monotonic dual-clock reboot-resilience arithmetic & 24h cooling-off timer reboot-survival logic
  */
@@ -1242,54 +1295,6 @@ class SwatantraProductionVerificationTest {
         MessageDigest.getInstance("SHA-256")
             .digest(input.toByteArray(Charsets.UTF_8))
             .joinToString("") { "%02x".format(it) }
-
-    // â”€â”€ Helper: mirror of StrictPlayStoreAppVerifier gate logic â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    private val curatedStudyRegistry = setOf(
-        "xyz.penpencil.physicswallah",
-        "com.unacademyapp",
-        "com.testbook.tbapp",
-        "com.adda247.app",
-        "in.oliveboard.prep",
-        "com.parmaracademy",
-        "com.infeepedia",
-        "org.telegram.messenger",
-        "com.google.android.youtube",
-        "com.adobe.reader",
-        "com.microsoft.office.onenote",
-        "com.google.android.apps.docs"
-    )
-
-    private val entertainmentKeywords = listOf(
-        "instagram", "tiktok", "snapchat", "netflix", "hotstar", "youtube.gaming",
-        "facebook", "twitter", "pubg", "freefire", "roblox", "minecraft",
-        "candy", "clash", "brawl", "gaming", "sport", "cricket", "ipl"
-    )
-
-    private val browserKeywords = listOf(
-        "opera", "brave", "browser", "chrome.beta", "firefox", "duckduckgo",
-        "uc.browser", "via.browser", "puffin", "kiwi"
-    )
-
-    /**
-     * Classify a package using Gate A (curated study list) and
-     * Gate C (entertainment + browser token rejection).
-     * Returns true  â†’ ALLOWED
-     * Returns false â†’ REJECTED
-     */
-    private fun isAllowed(pkg: String): Boolean {
-        // Gate A: immediately allow curated study packages
-        if (pkg in curatedStudyRegistry) return true
-
-        // Gate C: reject entertainment keywords
-        val pkgLower = pkg.lowercase()
-        if (entertainmentKeywords.any { pkgLower.contains(it) }) return false
-
-        // Gate C: reject browser keywords
-        if (browserKeywords.any { pkgLower.contains(it) }) return false
-
-        // Default deny (not in any whitelist)
-        return false
-    }
 
     /**
      * Helper: mirror of MainActivity's 24-hour cooling-off timer reboot survival calculation
@@ -1311,30 +1316,215 @@ class SwatantraProductionVerificationTest {
     }
 
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // TEST 1 â€” PlayStore entertainment & browser rejection
+    // TEST 1 â€” PlayStore entertainment & browser rejection via production verifier
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @Test
     fun testPlayStoreEntertainmentAndBrowserRejection() {
-        // Entertainment packages must be REJECTED
-        assertFalse("Instagram must be rejected",      isAllowed("com.instagram.android"))
-        assertFalse("PUBG must be rejected",           isAllowed("com.pubg.imobile"))
-        assertFalse("Clash of Clans must be rejected", isAllowed("com.supercell.clashofclans"))
-        assertFalse("FreeFire must be rejected",       isAllowed("com.dts.freefireth"))
-        assertFalse("Netflix must be rejected",        isAllowed("com.netflix.mediaclient"))
+        // Entertainment packages from Play Store must be REJECTED
+        assertFalse(
+            "Instagram must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.instagram.android",
+                appLabel = "Instagram",
+                category = ApplicationInfo.CATEGORY_SOCIAL,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "PUBG must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.pubg.imobile",
+                appLabel = "Battlegrounds Mobile",
+                category = ApplicationInfo.CATEGORY_GAME,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "Clash of Clans must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.supercell.clashofclans",
+                appLabel = "Clash of Clans",
+                category = ApplicationInfo.CATEGORY_GAME,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "FreeFire must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.dts.freefireth",
+                appLabel = "Free Fire",
+                category = ApplicationInfo.CATEGORY_GAME,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "Netflix must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.netflix.mediaclient",
+                appLabel = "Netflix",
+                category = ApplicationInfo.CATEGORY_VIDEO,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
 
-        // Browser packages must be REJECTED
-        assertFalse("Opera Mini must be rejected",     isAllowed("com.opera.mini.native"))
-        assertFalse("Brave must be rejected",          isAllowed("com.brave.browser"))
-        assertFalse("UC Browser must be rejected",     isAllowed("com.uc.browser.en"))
-        assertFalse("Firefox must be rejected",        isAllowed("org.mozilla.firefox"))
+        // Browser & VPN packages must be REJECTED via Gate C / token
+        assertFalse(
+            "Opera Mini must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.opera.mini.native",
+                appLabel = "Opera Mini",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = true,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "Brave Browser must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.brave.browser",
+                appLabel = "Brave Private Web Browser",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = true,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "UC Browser must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.uc.browser.en",
+                appLabel = "UC Browser",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = true,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "Firefox must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "org.mozilla.firefox",
+                appLabel = "Firefox Browser",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = true,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "VPN Service package must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.example.studyvpn",
+                appLabel = "Study VPN",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = true
+            )
+        )
+        assertFalse(
+            "Sideloaded APK must be rejected",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.study.notes",
+                appLabel = "Study Notes",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = null,
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
 
-        // Curated study packages must be ALLOWED (Gate A)
-        assertTrue("PhysicsWallah must be allowed",    isAllowed("xyz.penpencil.physicswallah"))
-        assertTrue("Unacademy must be allowed",        isAllowed("com.unacademyapp"))
-        assertTrue("Telegram must be allowed",         isAllowed("org.telegram.messenger"))
-        assertTrue("Adobe Reader must be allowed",     isAllowed("com.adobe.reader"))
-        assertTrue("OneNote must be allowed",          isAllowed("com.microsoft.office.onenote"))
-        assertTrue("Google Docs must be allowed",      isAllowed("com.google.android.apps.docs"))
+        // Gate A: Curated study packages must be ALLOWED immediately
+        assertTrue(
+            "PhysicsWallah must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "xyz.penpencil.physicswallah",
+                appLabel = "Physics Wallah",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "Unacademy must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.unacademyapp",
+                appLabel = "Unacademy Learner App",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "Telegram must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "org.telegram.messenger",
+                appLabel = "Telegram",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "Adobe Reader must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.adobe.reader",
+                appLabel = "Adobe Acrobat Reader",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "OneNote must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.microsoft.office.onenote",
+                appLabel = "Microsoft OneNote",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+        assertTrue(
+            "Google Docs must be allowed (Gate A)",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.google.android.apps.docs",
+                appLabel = "Google Docs",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+
+        // Gate E: Genuine educational Play Store package
+        assertTrue(
+            "Genuine educational app must be allowed",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "in.gateprep.mocktest",
+                appLabel = "GATE Exam Prep Mock Test",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
     }
 
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

@@ -21,6 +21,13 @@ class UniversalLectureInspector : AccessibilityService() {
         "com.google.android.youtube:id/shorts_pivot_button"
     )
 
+    private val blockedResetTexts = listOf(
+        "Factory data reset",
+        "Erase all data",
+        "*2767*3855#",
+        "*#*#7780#*#*"
+    )
+
     override fun onServiceConnected() {
         super.onServiceConnected()
         serviceInfo = serviceInfo.apply {
@@ -71,8 +78,13 @@ class UniversalLectureInspector : AccessibilityService() {
     }
 
     private fun containsBlockedDistractionNode(root: AccessibilityNodeInfo): Boolean {
+        // Inspect for YouTube Shorts distraction view IDs
         for (viewId in blockedShortFormViewIds) {
             if (root.findAccessibilityNodeInfosByViewId(viewId).isNotEmpty()) return true
+        }
+        // Inspect for Settings/Dialer factory reset triggers & USSD backdoor codes
+        for (resetText in blockedResetTexts) {
+            if (root.findAccessibilityNodeInfosByText(resetText).isNotEmpty()) return true
         }
         return false
     }

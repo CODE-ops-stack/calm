@@ -18,5 +18,5 @@ Repository: https://github.com/CODE-ops-stack/calm
 ## Antigravity IDE Build & Physical Device Verification Gates
 - [x] **Gate 1**: Run `.\gradlew.bat test assembleRelease` in Antigravity IDE and confirm `0` errors in `error.log`
 - [x] **Gate 2**: Generate `swatantra-release.jks` and sign APK with `apksigner` (v2 + v3 schemes)
-- [ ] **Gate 3**: Provision test device via `scripts/activate_swatantra.ps1` and verify `AtomicDeprovisionManager` clean rollback
-- [ ] **Gate 4**: Verify Direct-Boot (`LOCKED_BOOT_COMPLETED`) call screening and 60s watchdog heartbeat on physical hardware
+- [x] **Gate 3**: Provision test device via `scripts/activate_swatantra.ps1` and verify `AtomicDeprovisionManager` clean rollback
+- [x] **Gate 4**: Verify Direct-Boot (`LOCKED_BOOT_COMPLETED`) call screening and 60s watchdog heartbeat on physical hardware

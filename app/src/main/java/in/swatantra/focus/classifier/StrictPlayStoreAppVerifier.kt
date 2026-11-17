@@ -19,44 +19,89 @@ class StrictPlayStoreAppVerifier(context: Context) {
     private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
     private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
 
-    private val curatedStudyPackages = setOf(
-        "xyz.penpencil.physicswallah",
-        "com.unacademyapp",
-        "com.testbook.tbapp",
-        "com.adda247.app",
-        "in.oliveboard.prep",
-        "com.parmaracademy",
-        "com.infeepedia",
-        "org.telegram.messenger",
-        "com.google.android.youtube",
-        "com.adobe.reader",
-        "com.microsoft.office.onenote",
-        "com.google.android.apps.docs",
-        "com.google.android.apps.nbu.files",
-        "com.ichi2.anki"
-    )
+    companion object {
+        val curatedStudyPackages = setOf(
+            "xyz.penpencil.physicswallah",
+            "com.unacademyapp",
+            "com.testbook.tbapp",
+            "com.adda247.app",
+            "in.oliveboard.prep",
+            "com.parmaracademy",
+            "com.infeepedia",
+            "org.telegram.messenger",
+            "com.google.android.youtube",
+            "com.adobe.reader",
+            "com.microsoft.office.onenote",
+            "com.google.android.apps.docs",
+            "com.google.android.apps.nbu.files",
+            "com.ichi2.anki"
+        )
 
-    private val blacklistedCategories = setOf(
-        ApplicationInfo.CATEGORY_GAME,
-        ApplicationInfo.CATEGORY_SOCIAL,
-        ApplicationInfo.CATEGORY_VIDEO,
-        ApplicationInfo.CATEGORY_AUDIO,
-        ApplicationInfo.CATEGORY_IMAGE,
-        ApplicationInfo.CATEGORY_NEWS,
-        ApplicationInfo.CATEGORY_MAPS
-    )
+        val blacklistedCategories = setOf(
+            ApplicationInfo.CATEGORY_GAME,
+            ApplicationInfo.CATEGORY_SOCIAL,
+            ApplicationInfo.CATEGORY_VIDEO,
+            ApplicationInfo.CATEGORY_AUDIO,
+            ApplicationInfo.CATEGORY_IMAGE,
+            ApplicationInfo.CATEGORY_NEWS,
+            ApplicationInfo.CATEGORY_MAPS
+        )
 
-    private val entertainmentTokens = listOf(
-        "game", "gaming", "ludo", "bgmi", "pubg", "freefire", "codm", "chess", "rummy", "mpl", "dream11",
-        "instagram", "facebook", "snapchat", "whatsapp", "twitter", "threads", "reddit", "discord", "tinder", "bumble",
-        "netflix", "hotstar", "jiocinema", "primevideo", "sonyliv", "zee5", "mxplayer", "vlc", "spotify", "wynk", "gaana",
-        "josh", "moj", "sharechat", "hipi", "chingari", "tiktok", "truecaller", "browser", "opera", "brave", "ucbrowser", "vpn", "proxy"
-    )
+        val entertainmentTokens = listOf(
+            "game", "gaming", "ludo", "bgmi", "pubg", "freefire", "codm", "chess", "rummy", "mpl", "dream11",
+            "instagram", "facebook", "snapchat", "whatsapp", "twitter", "threads", "reddit", "discord", "tinder", "bumble",
+            "netflix", "hotstar", "jiocinema", "primevideo", "sonyliv", "zee5", "mxplayer", "vlc", "spotify", "wynk", "gaana",
+            "josh", "moj", "sharechat", "hipi", "chingari", "tiktok", "truecaller", "browser", "opera", "brave", "ucbrowser", "vpn", "proxy"
+        )
 
-    private val educationalTokens = listOf(
-        "study", "exam", "gate", "upsc", "bpsc", "ssc", "rrb", "ncert", "test", "mock", "prep",
-        "academy", "classes", "lecture", "notes", "pdf", "dictionary", "flashcard", "anki", "learn", "coding", "python", "c++"
-    )
+        val educationalTokens = listOf(
+            "study", "exam", "gate", "upsc", "bpsc", "ssc", "rrb", "ncert", "test", "mock", "prep",
+            "academy", "classes", "lecture", "notes", "pdf", "dictionary", "flashcard", "anki", "learn", "coding", "python", "c++"
+        )
+
+        /**
+         * Pure static 5-gate anti-cheat educational verification logic.
+         * Evaluates package, label, category, source installer, and browser/VPN intent probe results.
+         */
+        fun isStaticMetadataEducational(
+            pkg: String,
+            appLabel: String,
+            category: Int,
+            installer: String?,
+            hasBrowserActivity: Boolean,
+            hasVpnService: Boolean
+        ): Boolean {
+            // Gate A: Curated Study Registry (immediate allow)
+            if (pkg in curatedStudyPackages) {
+                return true
+            }
+
+            // Gate B: Official Play Store Source Check
+            if (installer != "com.android.vending") {
+                return false
+            }
+
+            // Gate C: Anti-Browser & Anti-VPN Intent Probe
+            if (hasBrowserActivity || hasVpnService) {
+                return false
+            }
+
+            // Gate D: OS Category & Entertainment Keyword Blacklist
+            if (category in blacklistedCategories) {
+                return false
+            }
+
+            val lowerPkg = pkg.lowercase()
+            val lowerLabel = appLabel.lowercase()
+
+            if (entertainmentTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }) {
+                return false
+            }
+
+            // Gate E: Educational Keyword Requirement
+            return educationalTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }
+        }
+    }
 
     fun handlePackageEvent(pkg: String) {
         if (pkg == deContext.packageName || pkg == "com.android.vending") return
@@ -105,12 +150,12 @@ class StrictPlayStoreAppVerifier(context: Context) {
     }
 
     fun evaluateStrictEducationalCriteria(pkg: String): Boolean {
-        // Gate A: Curated Study Registry
+        // Fast path for curated study packages
         if (pkg in curatedStudyPackages) {
             return true
         }
 
-        // Gate B: Official Play Store Source Check
+        // Gate B: Installer verification
         val installer = runCatching {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 pm.getInstallSourceInfo(pkg).installingPackageName
@@ -120,46 +165,33 @@ class StrictPlayStoreAppVerifier(context: Context) {
             }
         }.getOrNull()
 
-        if (installer != "com.android.vending") {
-            return false
-        }
-
-        // Gate C: Anti-Browser & Anti-VPN Intent Probe
+        // Gate C: Anti-Browser & Anti-VPN intent probe
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com")).apply {
             addCategory(Intent.CATEGORY_BROWSABLE)
             `package` = pkg
         }
         val browserActivities = runCatching { pm.queryIntentActivities(browserIntent, 0) }.getOrDefault(emptyList())
-        if (browserActivities.isNotEmpty()) {
-            return false
-        }
+        val hasBrowserActivity = browserActivities.isNotEmpty()
 
         val vpnIntent = Intent("android.net.VpnService").apply {
             `package` = pkg
         }
         val vpnServices = runCatching { pm.queryIntentServices(vpnIntent, 0) }.getOrDefault(emptyList())
-        if (vpnServices.isNotEmpty()) {
-            return false
-        }
+        val hasVpnService = vpnServices.isNotEmpty()
 
-        // Gate D: OS Category & Entertainment Keyword Blacklist
+        // Gate D & E: App Info & Category
         val appInfo = runCatching { pm.getApplicationInfo(pkg, 0) }.getOrNull() ?: return false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (appInfo.category in blacklistedCategories) {
-                return false
-            }
-        }
-
+        val category = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) appInfo.category else ApplicationInfo.CATEGORY_UNDEFINED
         val appLabel = runCatching { pm.getApplicationLabel(appInfo).toString() }.getOrDefault("")
-        val lowerPkg = pkg.lowercase()
-        val lowerLabel = appLabel.lowercase()
 
-        if (entertainmentTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }) {
-            return false
-        }
-
-        // Gate E: Educational Keyword Requirement
-        return educationalTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }
+        return isStaticMetadataEducational(
+            pkg = pkg,
+            appLabel = appLabel,
+            category = category,
+            installer = installer,
+            hasBrowserActivity = hasBrowserActivity,
+            hasVpnService = hasVpnService
+        )
     }
 }
 

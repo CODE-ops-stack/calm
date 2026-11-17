@@ -159,7 +159,11 @@ class MainActivity : Activity() {
         val coolingOffComplete = isTimerRunning && elapsedSinceRequestMs >= 86_400_000L
 
         if (coolingOffComplete) {
-            // 24 hours elapsed — allow PIN-free deprovisioning
+            // 24 hours elapsed — clear WAL timestamps and allow PIN-free deprovisioning
+            walPrefs.edit()
+                .remove("deprovision_requested_elapsed_ms")
+                .remove("deprovision_requested_wall_ms")
+                .commit()
             runCatching { stopLockTask() }
             AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
             return
@@ -298,6 +302,11 @@ class MainActivity : Activity() {
 
             val storedHash = callPrefs.getString("family_pin_sha256", null)
             if (storedHash != null && enteredHash == storedHash) {
+                // Clear WAL timestamps before deprovisioning
+                walPrefs.edit()
+                    .remove("deprovision_requested_elapsed_ms")
+                    .remove("deprovision_requested_wall_ms")
+                    .commit()
                 dialog?.dismiss()
                 runCatching { stopLockTask() }
                 AtomicDeprovisionManager(deContext).executeAtomicDeprovision()

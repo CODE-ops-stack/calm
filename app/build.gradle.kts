@@ -41,5 +41,7 @@ android {
 }
 
 dependencies {
-    // Pure Android SDK bootclasspath only — <1.2 MB APK, <15 MB RAM, 0% idle CPU
+    // Pure Android SDK bootclasspath only -- <1.2 MB APK, <15 MB RAM, 0% idle CPU
+    // JUnit4 for local JVM unit tests ONLY -- zero runtime APK dependency added
+    testImplementation("junit:junit:4.13.2")
 }

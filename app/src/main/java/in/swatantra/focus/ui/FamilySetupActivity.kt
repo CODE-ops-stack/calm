@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
+import android.text.InputFilter
 import android.text.InputType
 import android.view.Gravity
 import android.widget.Button
@@ -13,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import java.security.MessageDigest
 
 class FamilySetupActivity : Activity() {
 
@@ -81,6 +83,28 @@ class FamilySetupActivity : Activity() {
         val (label2, slot2) = createSlotInput("Slot 2: Father / Guardian", "Enter 10-digit mobile number (optional)...")
         val (label3, slot3) = createSlotInput("Slot 3: Brother / Family Member", "Enter 10-digit mobile number (optional)...")
 
+        // ── 6-Digit Family Unlock PIN ─────────────────────────────────────────
+        val pinLabel = TextView(this).apply {
+            text = "6-Digit Family Unlock PIN"
+            textSize = 14f
+            setTextColor(Color.parseColor("#1E242B"))
+            setPadding(0, 20, 0, 6)
+        }
+        val pinInput = EditText(this).apply {
+            hint = "Enter 6-digit PIN..."
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+            filters = arrayOf(InputFilter.LengthFilter(6))
+            setTextColor(Color.parseColor("#1E242B"))
+            setBackgroundColor(Color.parseColor("#EAE6DF"))
+            setPadding(32, 24, 32, 24)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 20) }
+            layoutParams = lp
+        }
+        // ─────────────────────────────────────────────────────────────────────
+
         val lockButton = Button(this).apply {
             text = "Verify & Permanently Lock Family Numbers"
             textSize = 15f
@@ -94,6 +118,24 @@ class FamilySetupActivity : Activity() {
             layoutParams = lp
 
             setOnClickListener {
+                // ── Validate PIN ──────────────────────────────────────────────
+                val pin = pinInput.text?.toString()?.trim().orEmpty()
+                if (pin.length != 6 || !pin.all { it.isDigit() }) {
+                    Toast.makeText(
+                        this@FamilySetupActivity,
+                        "Please enter a valid 6-digit numeric PIN.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+
+                // Compute SHA-256 hex of the PIN using Device-Encrypted bootclasspath only
+                val pinBytes = pin.toByteArray(Charsets.UTF_8)
+                val pinSha256 = MessageDigest.getInstance("SHA-256")
+                    .digest(pinBytes)
+                    .joinToString("") { "%02x".format(it) }
+                // ─────────────────────────────────────────────────────────────
+
                 val rawInputs = listOf(
                     slot1.text?.toString()?.trim().orEmpty(),
                     slot2.text?.toString()?.trim().orEmpty(),
@@ -135,9 +177,10 @@ class FamilySetupActivity : Activity() {
                     return@setOnClickListener
                 }
 
-                // Permanently seal the 3 slots in Device-Encrypted storage
+                // Permanently seal the 3 slots + PIN hash in Device-Encrypted storage
                 prefs.edit()
                     .putStringSet("whitelisted_e164", normalizedE164List)
+                    .putString("family_pin_sha256", pinSha256)
                     .putBoolean("family_numbers_locked", true)
                     .commit()
 
@@ -159,6 +202,8 @@ class FamilySetupActivity : Activity() {
         root.addView(slot2)
         root.addView(label3)
         root.addView(slot3)
+        root.addView(pinLabel)
+        root.addView(pinInput)
         root.addView(lockButton)
 
         scrollView.addView(root)

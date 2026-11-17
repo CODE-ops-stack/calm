@@ -1,0 +1,59 @@
+﻿=== SWATANTRA v7.1 ZERO-TRUST FORENSIC AUDIT ===
+Generated: 2026-11-17T11:58:54+05:30
+
+--- BUILD RESULT ---
+BUILD SUCCESSFUL (74 actionable tasks: 23 executed, 51 up-to-date)
+
+--- UNIT TESTS ---
+testReleaseUnitTest: PASSED
+testDebugUnitTest:   PASSED
+test:                PASSED
+
+--- APK METADATA ---
+APK path:    dist\swatantra-v7.1-release.apk
+APK size:    107872 bytes (105.34 KB)
+APK sha256:  55906AD9B1D1E5C1C3CA62B5BA080FDB339586F72A1320EB7A24133CF8EFE2D1
+
+--- APK SIGNING VERIFICATION ---
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): false
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+
+--- SOURCE FILE INVENTORY (PRODUCTION) ---
+4A5EA2830CEBB0DECC23FAA46143095588B82B3C093BA20E3867FFCA2021D8A4  app\src\main\java\in\swatantra\focus\SwatantraApp.kt
+6E8B02AAB3FC4C5D730926CADFEDBFC717A2D4E667DA8C7C7078C97689A800CA  app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt
+7F7F082AE96E90FA4860F5C6A67766BF10D5E6A1333B8DED6BCA1B894736764E  app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt
+28A97EDBB30FF80A96B05937404D6F19BCC10BC73FA516C91A5775145A3AC2B6  app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt
+F6194F4680758111712ED7B956AB23C76F95287068C8CE13D7AF483461372C32  app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt
+1536D76BDFAA2C3D84002A6D7423E69E25CD4450281286CE169CA8D77D2AC43D  app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt
+17AF842BC61874C3CC0E21F9E7EEBFBCE460F0BF1130464D981EC7A326D21ABB  app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt
+4F8105888C9AF5ADBC4167D93765553EE6E39CF46E8DCB5049D9133C4586D63B  app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt
+DC55EAF9D6B1C67B82CB4D293987AF77EBC0D6EA0EFB20C79FEB27DB6B0B436D  app\src\main\java\in\swatantra\focus\lecture\UniversalLectureInspector.kt
+5AB025A58956DCF2E479F3D921E5EFECA84133E9BD4045E6DEAC11520831779A  app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt
+95F5CC39705F8A0BB8F92376BE5EBF262211A05D78480E6EFBC3A408478ADDE8  app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt
+10536A777B5CB85D9785AB82805D60292AE88E7BB4CDCF689A6D5515048A98BF  app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt
+076B6582DC1CEBB5E5C53F551F78F1C607B5E5316EF3157F4AA75C85380D49A6  app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt
+7F6B726993FEA61A5EBA4E5D573C3723F87ACD20C03F8B7F49843980A0A31903  app\src\main\java\in\swatantra\focus\ui\MainActivity.kt
+59AF5E8D43D0530D35C23A7FEB19ADCB4EAD483A6599BDC7483F302C55AFE52B  app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt
+3E0F169BE18B8540342CC413E1BC531A560489125038C956F6FAF53E3B2C647A  app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt
+
+--- TEST FILE INVENTORY ---
+72FA095CA8DB33BAFE28F2ABF94BF9C33F2E03D981B45820B6884170A2B16E0C  app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt
+
+--- MANDATORY INVARIANT CHECK ---
+PASS: All package/import use backtick-escaped 'in'
+PASS: Zero runtime third-party dependencies in app/build.gradle.kts
+PASS: All SharedPreferences access paired with createDeviceProtectedStorageContext()
+PASS: APK size 107872 bytes < 1.5 MB limit
+PASS: proguard-rules.pro has wildcard keep for in.swatantra.focus.**
+
+--- GIT STATUS ---
+c1855be chore(antigravity): sync Swatantra v7.1 build state and error.log
+6538756 chore(antigravity): sync Swatantra v7.1 build state and error.log
+
+=== END AUDIT PROOF ===

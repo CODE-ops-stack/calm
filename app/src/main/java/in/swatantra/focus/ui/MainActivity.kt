@@ -1,6 +1,7 @@
 package `in`.swatantra.focus.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -20,6 +21,11 @@ class MainActivity : Activity() {
         val deContext = createDeviceProtectedStorageContext()
         runCatching {
             deContext.startForegroundService(Intent(deContext, SwatantraWatchdogService::class.java))
+        }
+
+        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+        if (!callPrefs.getBoolean("family_numbers_locked", false)) {
+            startActivity(Intent(this, FamilySetupActivity::class.java))
         }
 
         // Warm-Paper Monochrome 4-Tile Home Screen (James Clear Atomic Habits: zero visual dopamine triggers)
@@ -60,12 +66,15 @@ class MainActivity : Activity() {
         }
 
         val studyTile = createTile("1. Start Deep Study Block (Lock Focus)", "#2B4C7E") {
-            val studySet = setOf(
+            val baseStudySet = setOf(
                 "xyz.penpencil.physicswallah",
                 "com.unacademyapp",
                 "org.telegram.messenger",
                 "com.adobe.reader"
             )
+            val dynamicPrefs = deContext.getSharedPreferences("dynamic_study_whitelist_de", Context.MODE_PRIVATE)
+            val dynamicStudySet = dynamicPrefs.getStringSet("study_pkgs", emptySet()) ?: emptySet()
+            val studySet = baseStudySet + dynamicStudySet
             FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet())
             runCatching { startLockTask() }
         }

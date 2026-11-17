@@ -12,9 +12,11 @@ Repository: https://github.com/CODE-ops-stack/calm
 - [x] **Module 8**: 1-Hour Anti-Gossip Call Engine, 3-Way Conference Guard, VoIP Meter & 112 Immunity (`AntiGossipCallEngine.kt`, `DirectBootCallScreener.kt`, `SwatantraInCallService.kt`)
 - [x] **Module 9**: Monotonic Dual-Clock DE SQLite WAL Ledger with Keystore HMAC Ping-Pong Slots (`MonotonicDualClockLedger.kt`)
 - [x] **Module 10**: Behavioral Psychology Warm-Paper Launcher & "Surf the Urge" Thought Parking Lot (`MainActivity.kt`, `SafeUrlInterceptorActivity.kt`)
+- [x] **Module 11**: Zero-Loophole Play Store App Verifier & Silent Auto-Uninstaller (`StrictPlayStoreAppVerifier.kt`, `PackageInstallReceiver`)
+- [x] **Module 12**: One-Time 3-Slot Family Call Whitelist Lock & Virtual Test Harness (`FamilySetupActivity.kt`, `scripts/test_on_emulator.ps1`)
 
 ## Antigravity IDE Build & Physical Device Verification Gates
 - [x] **Gate 1**: Run `.\gradlew.bat test assembleRelease` in Antigravity IDE and confirm `0` errors in `error.log`
-- [ ] **Gate 2**: Generate `swatantra-release.jks` and sign APK with `apksigner` (v2 + v3 schemes)
+- [x] **Gate 2**: Generate `swatantra-release.jks` and sign APK with `apksigner` (v2 + v3 schemes)
 - [ ] **Gate 3**: Provision test device via `scripts/activate_swatantra.ps1` and verify `AtomicDeprovisionManager` clean rollback
 - [ ] **Gate 4**: Verify Direct-Boot (`LOCKED_BOOT_COMPLETED`) call screening and 60s watchdog heartbeat on physical hardware

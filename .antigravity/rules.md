@@ -15,3 +15,9 @@
 
 4. **GitHub Telemetry Sync (`CODE-ops-stack/calm`)**:
    - After every build or test run, run `powershell -ExecutionPolicy Bypass -File scripts/sync_and_verify.ps1` to log compiler/test output to `error.log`, update `TODO.md`, and push to `https://github.com/CODE-ops-stack/calm.git`.
+
+5. **Play Store App Verifier & Family Slot Invariants (Modules 11 & 12)**:
+   - Always enforce 5-gate anti-cheat educational verification in `StrictPlayStoreAppVerifier.kt` with instant default-deny quarantine (<50ms suspension).
+   - Strictly enforce maximum 3 permanent family slots in `FamilySetupActivity.kt`; once locked (`family_numbers_locked`), slots cannot be edited or expanded.
+   - Use `scripts/test_on_emulator.ps1` for virtual AVD/RTL provisioning tests without requiring a personal device.
+

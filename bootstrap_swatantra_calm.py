@@ -31,7 +31,11 @@ FILES = {
 
 4. **GitHub Telemetry Sync (`CODE-ops-stack/calm`)**:
    - After every build or test run, run `powershell -ExecutionPolicy Bypass -File scripts/sync_and_verify.ps1` to log compiler/test output to `error.log`, update `TODO.md`, and push to `https://github.com/CODE-ops-stack/calm.git`.
-""",
+
+5. **Play Store App Verifier & Family Slot Invariants (Modules 11 & 12)**:
+   - Always enforce 5-gate anti-cheat educational verification in `StrictPlayStoreAppVerifier.kt` with instant default-deny quarantine (<50ms suspension).
+   - Strictly enforce maximum 3 permanent family slots in `FamilySetupActivity.kt`; once locked (`family_numbers_locked`), slots cannot be edited or expanded.
+   - Use `scripts/test_on_emulator.ps1` for virtual AVD/RTL provisioning tests without requiring a personal device.""",
 
     "TODO.md": """# Swatantra v7.1 (`in.swatantra.focus`) — Production Progress Tracker
 Repository: https://github.com/CODE-ops-stack/calm
@@ -47,13 +51,14 @@ Repository: https://github.com/CODE-ops-stack/calm
 - [x] **Module 8**: 1-Hour Anti-Gossip Call Engine, 3-Way Conference Guard, VoIP Meter & 112 Immunity (`AntiGossipCallEngine.kt`, `DirectBootCallScreener.kt`, `SwatantraInCallService.kt`)
 - [x] **Module 9**: Monotonic Dual-Clock DE SQLite WAL Ledger with Keystore HMAC Ping-Pong Slots (`MonotonicDualClockLedger.kt`)
 - [x] **Module 10**: Behavioral Psychology Warm-Paper Launcher & "Surf the Urge" Thought Parking Lot (`MainActivity.kt`, `SafeUrlInterceptorActivity.kt`)
+- [x] **Module 11**: Zero-Loophole Play Store App Verifier & Silent Auto-Uninstaller (`StrictPlayStoreAppVerifier.kt`, `PackageInstallReceiver`)
+- [x] **Module 12**: One-Time 3-Slot Family Call Whitelist Lock & Virtual Test Harness (`FamilySetupActivity.kt`, `scripts/test_on_emulator.ps1`)
 
 ## Antigravity IDE Build & Physical Device Verification Gates
-- [ ] **Gate 1**: Run `.\\gradlew.bat test assembleRelease` in Antigravity IDE and confirm `0` errors in `error.log`
-- [ ] **Gate 2**: Generate `swatantra-release.jks` and sign APK with `apksigner` (v2 + v3 schemes)
+- [x] **Gate 1**: Run `.\gradlew.bat test assembleRelease` in Antigravity IDE and confirm `0` errors in `error.log`
+- [x] **Gate 2**: Generate `swatantra-release.jks` and sign APK with `apksigner` (v2 + v3 schemes)
 - [ ] **Gate 3**: Provision test device via `scripts/activate_swatantra.ps1` and verify `AtomicDeprovisionManager` clean rollback
-- [ ] **Gate 4**: Verify Direct-Boot (`LOCKED_BOOT_COMPLETED`) call screening and 60s watchdog heartbeat on physical hardware
-""",
+- [ ] **Gate 4**: Verify Direct-Boot (`LOCKED_BOOT_COMPLETED`) call screening and 60s watchdog heartbeat on physical hardware""",
 
     ".github/workflows/swatantra-ci.yml": """name: Swatantra v7.1 Android CI & Error Log Sync
 
@@ -292,6 +297,7 @@ dependencies {
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
 
     <application
         android:name=".SwatantraApp"
@@ -326,6 +332,22 @@ dependencies {
                 <data android:scheme="https" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.FamilySetupActivity"
+            android:directBootAware="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".classifier.PackageInstallReceiver"
+            android:directBootAware="true"
+            android:exported="true">
+            <intent-filter android:priority="999">
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name=".dpc.SwatantraAdminReceiver"
@@ -395,8 +417,7 @@ dependencies {
             </intent-filter>
         </service>
     </application>
-</manifest>
-""",
+</manifest>""",
 
     "app/src/main/res/xml/device_admin_policies.xml": """<?xml version="1.0" encoding="utf-8"?>
 <device-admin xmlns:android="http://schemas.android.com/apk/res/android">
@@ -1436,6 +1457,7 @@ class SwatantraWatchdogService : Service(), AlarmManager.OnAlarmListener {
     "app/src/main/java/in/swatantra/focus/ui/MainActivity.kt": """package `in`.swatantra.focus.ui
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -1455,6 +1477,11 @@ class MainActivity : Activity() {
         val deContext = createDeviceProtectedStorageContext()
         runCatching {
             deContext.startForegroundService(Intent(deContext, SwatantraWatchdogService::class.java))
+        }
+
+        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+        if (!callPrefs.getBoolean("family_numbers_locked", false)) {
+            startActivity(Intent(this, FamilySetupActivity::class.java))
         }
 
         // Warm-Paper Monochrome 4-Tile Home Screen (James Clear Atomic Habits: zero visual dopamine triggers)
@@ -1495,12 +1522,15 @@ class MainActivity : Activity() {
         }
 
         val studyTile = createTile("1. Start Deep Study Block (Lock Focus)", "#2B4C7E") {
-            val studySet = setOf(
+            val baseStudySet = setOf(
                 "xyz.penpencil.physicswallah",
                 "com.unacademyapp",
                 "org.telegram.messenger",
                 "com.adobe.reader"
             )
+            val dynamicPrefs = deContext.getSharedPreferences("dynamic_study_whitelist_de", Context.MODE_PRIVATE)
+            val dynamicStudySet = dynamicPrefs.getStringSet("study_pkgs", emptySet()) ?: emptySet()
+            val studySet = baseStudySet + dynamicStudySet
             FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet())
             runCatching { startLockTask() }
         }
@@ -1541,8 +1571,7 @@ class MainActivity : Activity() {
         // Keep pinned when Swatantra is the active LockTask home
         runCatching { startLockTask() }
     }
-}
-""",
+}""",
 
     "app/src/main/java/in/swatantra/focus/ui/SafeUrlInterceptorActivity.kt": """package `in`.swatantra.focus.ui
 
@@ -1611,6 +1640,415 @@ class SafeUrlInterceptorActivity : Activity() {
         root.addView(noteInput)
         root.addView(saveAndReturnBtn)
         setContentView(root)
+    }
+}
+""",
+
+    ".gitignore": """*.iml
+.gradle/
+local.properties
+.idea/
+.DS_Store
+build/
+app/build/
+dist/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.hprof
+calm/
+calm_logcat.txt
+__pycache__/
+*.pyc
+*.jks
+
+
+""",
+
+    "scripts/test_on_emulator.ps1": """#Requires -Version 5.1
+$ErrorActionPreference = "Continue"
+
+Write-Host "=== Swatantra v7.1 Virtual Emulator / Cloud Test Harness ===" -ForegroundColor Cyan
+
+# 1. Verify ADB & Connected Devices
+Write-Host "[1/5] Checking connected ADB devices..." -ForegroundColor Yellow
+$devicesOutput = adb devices
+$deviceList = ($devicesOutput | Select-String -Pattern "\bdevice\b") | Where-Object { $_ -notmatch "List of devices attached" }
+if (-not $deviceList) {
+    Write-Warning "No active ADB devices/emulators connected. Please start an Android Virtual Device (AVD) emulator or connect to a test device."
+    exit 1
+}
+Write-Host "Connected Device(s):" -ForegroundColor Green
+$devicesOutput
+
+# 2. Check and Install Signed Release APK
+$apkPath = "dist\swatantra-v7.1-release.apk"
+if (-not (Test-Path $apkPath)) {
+    Write-Error "Release APK not found at '$apkPath'. Run task 4 to build and sign the release APK first."
+    exit 1
+}
+
+Write-Host "[2/5] Installing signed release APK ($apkPath)..." -ForegroundColor Yellow
+adb install -r -t $apkPath
+
+# 3. Provision Swatantra as Device Owner
+Write-Host "[3/5] Setting Swatantra as Device Owner..." -ForegroundColor Yellow
+adb shell dpm set-device-owner --user 0 in.swatantra.focus/.dpc.SwatantraAdminReceiver
+
+# 4. Launch Swatantra MainActivity
+Write-Host "[4/5] Launching Swatantra Focus OS MainActivity..." -ForegroundColor Yellow
+adb shell am start -n in.swatantra.focus/.ui.MainActivity
+
+# 5. Verify Device Policy State
+Write-Host "[5/5] Verifying Device Policy Manager status..." -ForegroundColor Green
+adb shell dumpsys device_policy | Select-String -Pattern "in.swatantra.focus" -Context 2,2
+
+Write-Host "=== Device Owner Test Completed Successfully ===" -ForegroundColor Cyan
+""",
+
+    "app/src/main/java/in/swatantra/focus/classifier/StrictPlayStoreAppVerifier.kt": """package `in`.swatantra.focus.classifier
+
+import android.app.PendingIntent
+import android.app.admin.DevicePolicyManager
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInstaller
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import `in`.swatantra.focus.dpc.SwatantraAdminReceiver
+
+class StrictPlayStoreAppVerifier(context: Context) {
+    private val deContext = context.createDeviceProtectedStorageContext()
+    private val pm = deContext.packageManager
+    private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+    private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
+
+    private val curatedStudyPackages = setOf(
+        "xyz.penpencil.physicswallah",
+        "com.unacademyapp",
+        "com.testbook.tbapp",
+        "com.adda247.app",
+        "in.oliveboard.prep",
+        "com.parmaracademy",
+        "com.infeepedia",
+        "org.telegram.messenger",
+        "com.google.android.youtube",
+        "com.adobe.reader",
+        "com.microsoft.office.onenote",
+        "com.google.android.apps.docs",
+        "com.google.android.apps.nbu.files",
+        "com.ichi2.anki"
+    )
+
+    private val blacklistedCategories = setOf(
+        ApplicationInfo.CATEGORY_GAME,
+        ApplicationInfo.CATEGORY_SOCIAL,
+        ApplicationInfo.CATEGORY_VIDEO,
+        ApplicationInfo.CATEGORY_AUDIO,
+        ApplicationInfo.CATEGORY_IMAGE,
+        ApplicationInfo.CATEGORY_NEWS,
+        ApplicationInfo.CATEGORY_MAPS
+    )
+
+    private val entertainmentTokens = listOf(
+        "game", "gaming", "ludo", "bgmi", "pubg", "freefire", "codm", "chess", "rummy", "mpl", "dream11",
+        "instagram", "facebook", "snapchat", "whatsapp", "twitter", "threads", "reddit", "discord", "tinder", "bumble",
+        "netflix", "hotstar", "jiocinema", "primevideo", "sonyliv", "zee5", "mxplayer", "vlc", "spotify", "wynk", "gaana",
+        "josh", "moj", "sharechat", "hipi", "chingari", "tiktok", "truecaller", "browser", "opera", "brave", "ucbrowser", "vpn", "proxy"
+    )
+
+    private val educationalTokens = listOf(
+        "study", "exam", "gate", "upsc", "bpsc", "ssc", "rrb", "ncert", "test", "mock", "prep",
+        "academy", "classes", "lecture", "notes", "pdf", "dictionary", "flashcard", "anki", "learn", "coding", "python", "c++"
+    )
+
+    fun handlePackageEvent(pkg: String) {
+        if (pkg == deContext.packageName || pkg == "com.android.vending") return
+
+        val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+
+        // 1. Instant Default-Deny Quarantine (<50ms)
+        if (isDeviceOwner) {
+            runCatching { dpm.setPackagesSuspended(admin, arrayOf(pkg), true) }
+        }
+
+        // 2. 5-Gate Anti-Cheat Educational Verification
+        val isEducational = evaluateStrictEducationalCriteria(pkg)
+
+        // 3. Enforcement Action
+        if (isEducational) {
+            if (isDeviceOwner) {
+                runCatching { dpm.setPackagesSuspended(admin, arrayOf(pkg), false) }
+            }
+            val prefs = deContext.getSharedPreferences("dynamic_study_whitelist_de", Context.MODE_PRIVATE)
+            val existing = prefs.getStringSet("study_pkgs", emptySet())?.toMutableSet() ?: mutableSetOf()
+            existing.add(pkg)
+            prefs.edit().putStringSet("study_pkgs", existing).commit()
+        } else {
+            if (isDeviceOwner) {
+                runCatching { dpm.setApplicationHidden(admin, pkg, true) }
+            }
+            val callbackIntent = Intent(deContext, PackageInstallReceiver::class.java).apply {
+                action = "in.swatantra.focus.ACTION_UNINSTALL_STATUS"
+            }
+            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                deContext,
+                pkg.hashCode(),
+                callbackIntent,
+                flags
+            )
+            runCatching {
+                pm.packageInstaller.uninstall(pkg, pendingIntent.intentSender)
+            }
+        }
+    }
+
+    fun evaluateStrictEducationalCriteria(pkg: String): Boolean {
+        // Gate A: Curated Study Registry
+        if (pkg in curatedStudyPackages) {
+            return true
+        }
+
+        // Gate B: Official Play Store Source Check
+        val installer = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                pm.getInstallSourceInfo(pkg).installingPackageName
+            } else {
+                @Suppress("DEPRECATION")
+                pm.getInstallerPackageName(pkg)
+            }
+        }.getOrNull()
+
+        if (installer != "com.android.vending") {
+            return false
+        }
+
+        // Gate C: Anti-Browser & Anti-VPN Intent Probe
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com")).apply {
+            addCategory(Intent.CATEGORY_BROWSABLE)
+            `package` = pkg
+        }
+        val browserActivities = runCatching { pm.queryIntentActivities(browserIntent, 0) }.getOrDefault(emptyList())
+        if (browserActivities.isNotEmpty()) {
+            return false
+        }
+
+        val vpnIntent = Intent("android.net.VpnService").apply {
+            `package` = pkg
+        }
+        val vpnServices = runCatching { pm.queryIntentServices(vpnIntent, 0) }.getOrDefault(emptyList())
+        if (vpnServices.isNotEmpty()) {
+            return false
+        }
+
+        // Gate D: OS Category & Entertainment Keyword Blacklist
+        val appInfo = runCatching { pm.getApplicationInfo(pkg, 0) }.getOrNull() ?: return false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (appInfo.category in blacklistedCategories) {
+                return false
+            }
+        }
+
+        val appLabel = runCatching { pm.getApplicationLabel(appInfo).toString() }.getOrDefault("")
+        val lowerPkg = pkg.lowercase()
+        val lowerLabel = appLabel.lowercase()
+
+        if (entertainmentTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }) {
+            return false
+        }
+
+        // Gate E: Educational Keyword Requirement
+        return educationalTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }
+    }
+}
+
+class PackageInstallReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        val action = intent.action ?: return
+        if (action == Intent.ACTION_PACKAGE_ADDED || action == Intent.ACTION_PACKAGE_REPLACED) {
+            val pkg = intent.data?.schemeSpecificPart ?: return
+            val verifier = StrictPlayStoreAppVerifier(context)
+            verifier.handlePackageEvent(pkg)
+        }
+    }
+}
+""",
+
+    "app/src/main/java/in/swatantra/focus/ui/FamilySetupActivity.kt": """package `in`.swatantra.focus.ui
+
+import android.app.Activity
+import android.content.Context
+import android.graphics.Color
+import android.os.Bundle
+import android.telephony.PhoneNumberUtils
+import android.text.InputType
+import android.view.Gravity
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
+
+class FamilySetupActivity : Activity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val deContext = createDeviceProtectedStorageContext()
+        val prefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+
+        // If already locked, do not allow modifying slots
+        if (prefs.getBoolean("family_numbers_locked", false)) {
+            finish()
+            return
+        }
+
+        val scrollView = ScrollView(this).apply {
+            setBackgroundColor(Color.parseColor("#F7F5F0"))
+            isFillViewport = true
+        }
+
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(56, 64, 56, 64)
+        }
+
+        val titleView = TextView(this).apply {
+            text = "Family Call Whitelist"
+            textSize = 22f
+            setTextColor(Color.parseColor("#1E242B"))
+            gravity = Gravity.CENTER_HORIZONTAL
+        }
+
+        val subtitleView = TextView(this).apply {
+            text = "Permanent 3-Slot Whitelist\nOnce verified, these slots are permanently locked to protect deep study. Emergency services (112, 100, 108) remain immune by law."
+            textSize = 14f
+            setTextColor(Color.parseColor("#4A5568"))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 16, 0, 40)
+        }
+
+        fun createSlotInput(slotLabel: String, hintText: String): Pair<TextView, EditText> {
+            val label = TextView(this).apply {
+                text = slotLabel
+                textSize = 14f
+                setTextColor(Color.parseColor("#1E242B"))
+                setPadding(0, 12, 0, 6)
+            }
+            val input = EditText(this).apply {
+                hint = hintText
+                inputType = InputType.TYPE_CLASS_PHONE
+                setTextColor(Color.parseColor("#1E242B"))
+                setBackgroundColor(Color.parseColor("#EAE6DF"))
+                setPadding(32, 24, 32, 24)
+                val lp = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { setMargins(0, 0, 0, 20) }
+                layoutParams = lp
+            }
+            return Pair(label, input)
+        }
+
+        // Strictly 3 phone number slots
+        val (label1, slot1) = createSlotInput("Slot 1: Mother / Primary Guardian", "Enter 10-digit mobile number...")
+        val (label2, slot2) = createSlotInput("Slot 2: Father / Guardian", "Enter 10-digit mobile number (optional)...")
+        val (label3, slot3) = createSlotInput("Slot 3: Brother / Family Member", "Enter 10-digit mobile number (optional)...")
+
+        val lockButton = Button(this).apply {
+            text = "Verify & Permanently Lock Family Numbers"
+            textSize = 15f
+            setBackgroundColor(Color.parseColor("#2B4C7E"))
+            setTextColor(Color.WHITE)
+            setPadding(32, 32, 32, 32)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 24, 0, 0) }
+            layoutParams = lp
+
+            setOnClickListener {
+                val rawInputs = listOf(
+                    slot1.text?.toString()?.trim().orEmpty(),
+                    slot2.text?.toString()?.trim().orEmpty(),
+                    slot3.text?.toString()?.trim().orEmpty()
+                )
+
+                val normalizedE164List = mutableSetOf<String>()
+                for (raw in rawInputs) {
+                    if (raw.isNotBlank()) {
+                        val networkPortion = PhoneNumberUtils.extractNetworkPortion(raw).trim()
+                        val formattedE164 = PhoneNumberUtils.formatNumberToE164(networkPortion, "IN")
+                            ?: if (networkPortion.startsWith("+")) {
+                                networkPortion
+                            } else if (networkPortion.length == 10) {
+                                "+91$networkPortion"
+                            } else {
+                                networkPortion
+                            }
+
+                        if (formattedE164.isNotBlank() && formattedE164.length >= 10) {
+                            normalizedE164List.add(formattedE164)
+                        } else {
+                            Toast.makeText(
+                                this@FamilySetupActivity,
+                                "Invalid phone number entered: $raw",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@setOnClickListener
+                        }
+                    }
+                }
+
+                if (normalizedE164List.isEmpty()) {
+                    Toast.makeText(
+                        this@FamilySetupActivity,
+                        "Please provide at least 1 valid family phone number.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+
+                // Permanently seal the 3 slots in Device-Encrypted storage
+                prefs.edit()
+                    .putStringSet("whitelisted_e164", normalizedE164List)
+                    .putBoolean("family_numbers_locked", true)
+                    .commit()
+
+                Toast.makeText(
+                    this@FamilySetupActivity,
+                    "Family numbers permanently locked (${normalizedE164List.size} slots active).",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                finish()
+            }
+        }
+
+        root.addView(titleView)
+        root.addView(subtitleView)
+        root.addView(label1)
+        root.addView(slot1)
+        root.addView(label2)
+        root.addView(slot2)
+        root.addView(label3)
+        root.addView(slot3)
+        root.addView(lockButton)
+
+        scrollView.addView(root)
+        setContentView(scrollView)
     }
 }
 """

@@ -209,4 +209,14 @@ class FamilySetupActivity : Activity() {
         scrollView.addView(root)
         setContentView(scrollView)
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        val dePrefs = createDeviceProtectedStorageContext().getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+        if (dePrefs.getBoolean("family_numbers_locked", false)) {
+            super.onBackPressed()
+        } else {
+            Toast.makeText(this, "You must lock 1-3 family numbers and a 6-digit PIN first.", Toast.LENGTH_SHORT).show()
+        }
+    }
 }

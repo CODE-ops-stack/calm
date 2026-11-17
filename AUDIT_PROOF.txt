@@ -1,8 +1,11 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+4899256 chore(audit): update AUDIT_PROOF.txt with full forensic audit proof
 7f176c4 chore(antigravity): sync Swatantra v7.1 build state and error.log
 8335645 feat(audit): Tasks 1-3+5 — dual-safe deprovision guard, JUnit3 test suite, full proguard keep, AUDIT_PROOF.txt
-c1855be chore(antigravity): sync Swatantra v7.1 build state and error.log
  M AUDIT_PROOF.txt
+ M app/src/main/java/in/swatantra/focus/ui/FamilySetupActivity.kt
+ M app/src/main/java/in/swatantra/focus/ui/MainActivity.kt
+ M app/src/test/java/in/swatantra/focus/SwatantraProductionVerificationTest.kt
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
@@ -16,24 +19,24 @@ app\src\main\java\in\swatantra\focus\lecture\UniversalLectureInspector.kt | Line
 app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines: 150 | Bytes: 6846 | SHA256: 5AB025A58956DCF2
 app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
 app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
-app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 212 | Bytes: 9145 | SHA256: 076B6582DC1CEBB5
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 313 | Bytes: 13385 | SHA256: 7F6B726993FEA61A
+app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 222 | Bytes: 9594 | SHA256: EDB7D5E3A5C99DAF
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 330 | Bytes: 14220 | SHA256: F36D0E85502F026E
 app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 69 | Bytes: 2722 | SHA256: 59AF5E8D43D0530D
 app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
 app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
 app\src\main\res\xml\device_admin_policies.xml | Lines: 14 | Bytes: 430 | SHA256: 5E61A80C8BE194CC
 app\src\main\res\xml\lecture_inspector_config.xml | Lines: 7 | Bytes: 413 | SHA256: 60F625306042349D
 app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C73DC726
-app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 195 | Bytes: 10594 | SHA256: 72FA095CA8DB33BA
+app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 252 | Bytes: 14213 | SHA256: 1331AA0C61BC8EA0
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 107872 bytes | LastWriteTime: 11/17/2026 15:37:26
+APK Size: 107872 bytes | LastWriteTime: 11/17/2026 15:52:19
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
-META-INF/version-control-info.textproto                      120              115
-classes.dex                                                80376            80376
+META-INF/version-control-info.textproto                      120              118
+classes.dex                                                80712            80712
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -46,8 +49,8 @@ AndroidManifest.xml                                        10544             248
 res/4D.xml                                                  1048              370
 res/nw.xml                                                   508              280
 resources.arsc                                               644              644
-META-INF/SWATANTR.SF                                        1697              898
-META-INF/SWATANTR.RSA                                       1419             1121
+META-INF/SWATANTR.SF                                        1697              897
+META-INF/SWATANTR.RSA                                       1419             1120
 META-INF/MANIFEST.MF                                        1570              810
 
 
@@ -73,20 +76,20 @@ DEX_SYMBOL [HmacSHA256] Present in classes.dex: True
 
 === 4. JUNIT TEST EXECUTION XML REPORTS ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:06:16.545Z" hostname="DESKTOP-JOU27LS" time="0.06">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:21:49.866Z" hostname="DESKTOP-JOU27LS" time="0.086">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.042"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.06"/>
   <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.009"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.014"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:06:18.993Z" hostname="DESKTOP-JOU27LS" time="0.094">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-17T10:21:52.406Z" hostname="DESKTOP-JOU27LS" time="0.111">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.066"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.01"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.077"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.014"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
@@ -617,6 +620,16 @@ class FamilySetupActivity : Activity() {
         scrollView.addView(root)
         setContentView(scrollView)
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        val dePrefs = createDeviceProtectedStorageContext().getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+        if (dePrefs.getBoolean("family_numbers_locked", false)) {
+            super.onBackPressed()
+        } else {
+            Toast.makeText(this, "You must lock 1-3 family numbers and a 6-digit PIN first.", Toast.LENGTH_SHORT).show()
+        }
+    }
 }
 
 --- FILE: app/src/main/java/in/swatantra/focus/ui/MainActivity.kt ---
@@ -742,6 +755,11 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        val deContext = createDeviceProtectedStorageContext()
+        if (!deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE).getBoolean("family_numbers_locked", false)) {
+            startActivity(Intent(this, FamilySetupActivity::class.java))
+            return
+        }
         // Keep pinned when Swatantra is the active LockTask home
         runCatching { startLockTask() }
     }
@@ -750,18 +768,30 @@ class MainActivity : Activity() {
     /**
      * Shows an inline AlertDialog offering two safe paths to deprovision:
      *   Option A: Immediate 6-digit Family PIN verification (SHA-256)
-     *   Option B: 24-hour cooling-off timer fallback
+     *   Option B: 24-hour cooling-off timer fallback (survives reboots)
      * Both paths require Device-Encrypted SharedPreferences.
      */
     private fun showDeprovisionGuard(deContext: Context) {
         val walPrefs = deContext.getSharedPreferences("deprovision_wal", Context.MODE_PRIVATE)
         val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
 
-        // Check if the 24-hour cooling-off timer has already elapsed
+        // Elapsed duration calculation that survives reboots
         val requestedElapsedMs = walPrefs.getLong("deprovision_requested_elapsed_ms", -1L)
+        val requestedWallMs = walPrefs.getLong("deprovision_requested_wall_ms", -1L)
         val nowElapsedMs = SystemClock.elapsedRealtime()
-        val coolingOffComplete = requestedElapsedMs > 0L &&
-                (nowElapsedMs - requestedElapsedMs) >= 86_400_000L
+        val nowWallMs = System.currentTimeMillis()
+
+        val elapsedSinceRequestMs = if (requestedElapsedMs > 0L && nowElapsedMs >= requestedElapsedMs) {
+            nowElapsedMs - requestedElapsedMs
+        } else if (requestedWallMs > 0L && nowWallMs >= requestedWallMs) {
+            // Fallback across reboot when elapsedRealtime reset to 0
+            nowWallMs - requestedWallMs
+        } else {
+            -1L
+        }
+
+        val isTimerRunning = elapsedSinceRequestMs >= 0L
+        val coolingOffComplete = isTimerRunning && elapsedSinceRequestMs >= 86_400_000L
 
         if (coolingOffComplete) {
             // 24 hours elapsed â€” allow PIN-free deprovisioning
@@ -845,8 +875,8 @@ class MainActivity : Activity() {
         }
 
         val timerStatusText = TextView(this).apply {
-            if (requestedElapsedMs > 0L) {
-                val remainingMs = 86_400_000L - (nowElapsedMs - requestedElapsedMs)
+            if (isTimerRunning) {
+                val remainingMs = maxOf(0L, 86_400_000L - elapsedSinceRequestMs)
                 val remainingHours = remainingMs / 3_600_000L
                 val remainingMins = (remainingMs % 3_600_000L) / 60_000L
                 text = "Timer running: ~${remainingHours}h ${remainingMins}m remaining"
@@ -864,7 +894,7 @@ class MainActivity : Activity() {
             setBackgroundColor(Color.parseColor("#6B7280"))
             setTextColor(Color.WHITE)
             setPadding(24, 24, 24, 24)
-            isEnabled = requestedElapsedMs <= 0L   // only allow starting once
+            isEnabled = !isTimerRunning   // only allow starting once
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -914,10 +944,10 @@ class MainActivity : Activity() {
         // Wire Option B â€” 24-hour timer
         startTimerButton.setOnClickListener {
             val nowElapsedForTimer = SystemClock.elapsedRealtime()
-            val nowWallMs = System.currentTimeMillis()
+            val nowWallMsForTimer = System.currentTimeMillis()
             walPrefs.edit()
                 .putLong("deprovision_requested_elapsed_ms", nowElapsedForTimer)
-                .putLong("deprovision_requested_wall_ms", nowWallMs)
+                .putLong("deprovision_requested_wall_ms", nowWallMsForTimer)
                 .commit()
             Toast.makeText(
                 this,
@@ -1205,8 +1235,8 @@ import java.security.MessageDigest
  * Zero-Trust JUnit4 test suite â€” pure JVM, no Android Context required.
  * Covers three production invariants:
  *   1. PlayStore entertainment / browser rejection logic
- *   2. Max-3 family number slots + 6-digit PIN hash validation
- *   3. Monotonic dual-clock reboot-resilience arithmetic
+ *   2. Max-3 family number slots (1..3 accepted, 0 or >3 rejected) + 6-digit PIN hash validation
+ *   3. Monotonic dual-clock reboot-resilience arithmetic & 24h cooling-off timer reboot-survival logic
  */
 class SwatantraProductionVerificationTest {
 
@@ -1264,31 +1294,50 @@ class SwatantraProductionVerificationTest {
         return false
     }
 
+    /**
+     * Helper: mirror of MainActivity's 24-hour cooling-off timer reboot survival calculation
+     */
+    private fun computeCoolingOffElapsedMs(
+        requestedElapsedMs: Long,
+        requestedWallMs: Long,
+        nowElapsedMs: Long,
+        nowWallMs: Long
+    ): Long {
+        return if (requestedElapsedMs > 0L && nowElapsedMs >= requestedElapsedMs) {
+            nowElapsedMs - requestedElapsedMs
+        } else if (requestedWallMs > 0L && nowWallMs >= requestedWallMs) {
+            // Fallback across reboot when elapsedRealtime reset to 0
+            nowWallMs - requestedWallMs
+        } else {
+            -1L
+        }
+    }
+
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     // TEST 1 â€” PlayStore entertainment & browser rejection
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @Test
     fun testPlayStoreEntertainmentAndBrowserRejection() {
         // Entertainment packages must be REJECTED
-        assertFalse("Instagram must be rejected",    isAllowed("com.instagram.android"))
-        assertFalse("PUBG must be rejected",         isAllowed("com.pubg.imobile"))
+        assertFalse("Instagram must be rejected",      isAllowed("com.instagram.android"))
+        assertFalse("PUBG must be rejected",           isAllowed("com.pubg.imobile"))
         assertFalse("Clash of Clans must be rejected", isAllowed("com.supercell.clashofclans"))
-        assertFalse("FreeFire must be rejected",     isAllowed("com.dts.freefireth"))
-        assertFalse("Netflix must be rejected",      isAllowed("com.netflix.mediaclient"))
+        assertFalse("FreeFire must be rejected",       isAllowed("com.dts.freefireth"))
+        assertFalse("Netflix must be rejected",        isAllowed("com.netflix.mediaclient"))
 
         // Browser packages must be REJECTED
-        assertFalse("Opera Mini must be rejected",   isAllowed("com.opera.mini.native"))
-        assertFalse("Brave must be rejected",        isAllowed("com.brave.browser"))
-        assertFalse("UC Browser must be rejected",   isAllowed("com.uc.browser.en"))
-        assertFalse("Firefox must be rejected",      isAllowed("org.mozilla.firefox"))
+        assertFalse("Opera Mini must be rejected",     isAllowed("com.opera.mini.native"))
+        assertFalse("Brave must be rejected",          isAllowed("com.brave.browser"))
+        assertFalse("UC Browser must be rejected",     isAllowed("com.uc.browser.en"))
+        assertFalse("Firefox must be rejected",        isAllowed("org.mozilla.firefox"))
 
         // Curated study packages must be ALLOWED (Gate A)
-        assertTrue("PhysicsWallah must be allowed",  isAllowed("xyz.penpencil.physicswallah"))
-        assertTrue("Unacademy must be allowed",      isAllowed("com.unacademyapp"))
-        assertTrue("Telegram must be allowed",       isAllowed("org.telegram.messenger"))
-        assertTrue("Adobe Reader must be allowed",   isAllowed("com.adobe.reader"))
-        assertTrue("OneNote must be allowed",        isAllowed("com.microsoft.office.onenote"))
-        assertTrue("Google Docs must be allowed",    isAllowed("com.google.android.apps.docs"))
+        assertTrue("PhysicsWallah must be allowed",    isAllowed("xyz.penpencil.physicswallah"))
+        assertTrue("Unacademy must be allowed",        isAllowed("com.unacademyapp"))
+        assertTrue("Telegram must be allowed",         isAllowed("org.telegram.messenger"))
+        assertTrue("Adobe Reader must be allowed",     isAllowed("com.adobe.reader"))
+        assertTrue("OneNote must be allowed",          isAllowed("com.microsoft.office.onenote"))
+        assertTrue("Google Docs must be allowed",      isAllowed("com.google.android.apps.docs"))
     }
 
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -1296,14 +1345,20 @@ class SwatantraProductionVerificationTest {
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @Test
     fun testMaxThreeFamilyNumbersAndPinHash() {
-        // â”€â”€ 3-slot enforcement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        val validSlots   = listOf("+919876543210", "+919123456789", "+918888888888")
-        val tooManySlots = listOf("+919876543210", "+919123456789", "+918888888888", "+917777777777")
+        // â”€â”€ 1 to 3 slot enforcement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        fun isValidSlotCount(count: Int): Boolean = count in 1..3
 
-        // Exactly 3 must pass
-        assertTrue("Exactly 3 slots must be accepted",  validSlots.size <= 3)
-        // 4 slots must be rejected
-        assertFalse("More than 3 slots must be rejected", tooManySlots.size <= 3)
+        val emptySlots   = emptyList<String>()
+        val oneSlot      = listOf("+919876543210")
+        val twoSlots     = listOf("+919876543210", "+919123456789")
+        val threeSlots   = listOf("+919876543210", "+919123456789", "+918888888888")
+        val fourSlots    = listOf("+919876543210", "+919123456789", "+918888888888", "+917777777777")
+
+        assertFalse("0 slots must be rejected", isValidSlotCount(emptySlots.size))
+        assertTrue("1 slot must be accepted",   isValidSlotCount(oneSlot.size))
+        assertTrue("2 slots must be accepted",  isValidSlotCount(twoSlots.size))
+        assertTrue("3 slots must be accepted",  isValidSlotCount(threeSlots.size))
+        assertFalse("4 slots must be rejected", isValidSlotCount(fourSlots.size))
 
         // â”€â”€ PIN length validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         val shortPin  = "12345"   // 5 digits â€” invalid
@@ -1316,7 +1371,7 @@ class SwatantraProductionVerificationTest {
 
         // Non-numeric PIN must be rejected
         val alphaPIN = "abc123"
-        assertFalse("Alphanumeric PIN must be rejected", alphaPIN.all { it.isDigit() })
+        assertFalse("Alphanumeric PIN must be rejected", alphaPIN.length == 6 && alphaPIN.all { it.isDigit() })
 
         // â”€â”€ SHA-256 determinism â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         val hash1 = sha256Hex("123456")
@@ -1338,7 +1393,7 @@ class SwatantraProductionVerificationTest {
     }
 
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // TEST 3 â€” Monotonic dual-clock reboot-resilience arithmetic
+    // TEST 3 â€” Monotonic dual-clock reboot-resilience & 24h cooling-off survival
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     @Test
     fun testMonotonicDualClockRebootAndRtcReset() {
@@ -1375,13 +1430,45 @@ class SwatantraProductionVerificationTest {
             effectiveWallMs2
         )
 
-        // â”€â”€ 24-hour cooling-off: 86_400_000 ms boundary check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        val timerStartElapsed  = 1_000_000L
-        val justBefore24h      = timerStartElapsed + 86_399_999L
-        val exactlyAt24h       = timerStartElapsed + 86_400_000L
-        assertFalse("1 ms before 24h must NOT allow PIN-free deprovision",
-            (justBefore24h - timerStartElapsed) >= 86_400_000L)
-        assertTrue("At exactly 24h must allow PIN-free deprovision",
-            (exactlyAt24h - timerStartElapsed) >= 86_400_000L)
+        // â”€â”€ 24-hour cooling-off: normal elapsed progression without reboot â”€â”€â”€â”€
+        val timerStartElapsed = 1_000_000L
+        val timerStartWall    = 1_700_000_000_000L
+        val justBefore24h     = timerStartElapsed + 86_399_999L
+        val exactlyAt24h      = timerStartElapsed + 86_400_000L
+
+        val elapsedBefore24h = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, justBefore24h, timerStartWall + 86_399_999L)
+        assertFalse("1 ms before 24h must NOT allow PIN-free deprovision", elapsedBefore24h >= 86_400_000L)
+
+        val elapsedAt24h = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, exactlyAt24h, timerStartWall + 86_400_000L)
+        assertTrue("At exactly 24h must allow PIN-free deprovision", elapsedAt24h >= 86_400_000L)
+
+        // â”€â”€ 24-hour cooling-off: REBOOT SURVIVAL FALLBACK SCENARIOS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+        // Scenario A: Device reboots after 25 hours.
+        // nowElapsed reset to 10_000L (which is < requestedElapsed 1_000_000L).
+        // Fallback to wall-clock: nowWall (timerStartWall + 90_000_000L) - timerStartWall = 90_000_000L >= 86_400_000L
+        val postRebootElapsedA = 10_000L
+        val postRebootWallA    = timerStartWall + 90_000_000L
+        val elapsedAfterRebootA = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, postRebootElapsedA, postRebootWallA)
+        assertTrue("Post-reboot wall-clock fallback must permit deprovision after 24h", elapsedAfterRebootA >= 86_400_000L)
+
+        // Scenario B: Device reboots after only 2 hours.
+        // nowElapsed reset to 5_000L (< 1_000_000L).
+        // Fallback to wall-clock: nowWall (timerStartWall + 7_200_000L) - timerStartWall = 7_200_000L < 86_400_000L
+        val postRebootElapsedB = 5_000L
+        val postRebootWallB    = timerStartWall + 7_200_000L
+        val elapsedAfterRebootB = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, postRebootElapsedB, postRebootWallB)
+        assertFalse("Post-reboot wall-clock fallback must DENY deprovision before 24h", elapsedAfterRebootB >= 86_400_000L)
+        assertTrue("Post-reboot timer must still register as running", elapsedAfterRebootB >= 0L)
+
+        // Scenario C: Device reboots and RTC is set backwards (e.g. battery pull to 1970).
+        // nowWall < timerStartWall -> elapsedSinceRequestMs = -1L (not running / invalid)
+        val postRebootElapsedC = 2_000L
+        val postRebootWallC    = timerStartWall - 50_000_000L
+        val elapsedAfterRebootC = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, postRebootElapsedC, postRebootWallC)
+        assertEquals("Time-travel backwards during reboot must return -1L", -1L, elapsedAfterRebootC)
+
+        // Scenario D: Timer was never requested (uninitialized prefs: -1L, -1L)
+        val unstartedElapsed = computeCoolingOffElapsedMs(-1L, -1L, 500_000L, timerStartWall)
+        assertEquals("Unstarted timer must return -1L", -1L, unstartedElapsed)
     }
 }

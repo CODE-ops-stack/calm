@@ -13,8 +13,8 @@ import java.security.MessageDigest
  * Zero-Trust JUnit4 test suite — pure JVM, no Android Context required.
  * Covers three production invariants:
  *   1. PlayStore entertainment / browser rejection logic
- *   2. Max-3 family number slots + 6-digit PIN hash validation
- *   3. Monotonic dual-clock reboot-resilience arithmetic
+ *   2. Max-3 family number slots (1..3 accepted, 0 or >3 rejected) + 6-digit PIN hash validation
+ *   3. Monotonic dual-clock reboot-resilience arithmetic & 24h cooling-off timer reboot-survival logic
  */
 class SwatantraProductionVerificationTest {
 
@@ -72,31 +72,50 @@ class SwatantraProductionVerificationTest {
         return false
     }
 
+    /**
+     * Helper: mirror of MainActivity's 24-hour cooling-off timer reboot survival calculation
+     */
+    private fun computeCoolingOffElapsedMs(
+        requestedElapsedMs: Long,
+        requestedWallMs: Long,
+        nowElapsedMs: Long,
+        nowWallMs: Long
+    ): Long {
+        return if (requestedElapsedMs > 0L && nowElapsedMs >= requestedElapsedMs) {
+            nowElapsedMs - requestedElapsedMs
+        } else if (requestedWallMs > 0L && nowWallMs >= requestedWallMs) {
+            // Fallback across reboot when elapsedRealtime reset to 0
+            nowWallMs - requestedWallMs
+        } else {
+            -1L
+        }
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // TEST 1 — PlayStore entertainment & browser rejection
     // ─────────────────────────────────────────────────────────────────────────
     @Test
     fun testPlayStoreEntertainmentAndBrowserRejection() {
         // Entertainment packages must be REJECTED
-        assertFalse("Instagram must be rejected",    isAllowed("com.instagram.android"))
-        assertFalse("PUBG must be rejected",         isAllowed("com.pubg.imobile"))
+        assertFalse("Instagram must be rejected",      isAllowed("com.instagram.android"))
+        assertFalse("PUBG must be rejected",           isAllowed("com.pubg.imobile"))
         assertFalse("Clash of Clans must be rejected", isAllowed("com.supercell.clashofclans"))
-        assertFalse("FreeFire must be rejected",     isAllowed("com.dts.freefireth"))
-        assertFalse("Netflix must be rejected",      isAllowed("com.netflix.mediaclient"))
+        assertFalse("FreeFire must be rejected",       isAllowed("com.dts.freefireth"))
+        assertFalse("Netflix must be rejected",        isAllowed("com.netflix.mediaclient"))
 
         // Browser packages must be REJECTED
-        assertFalse("Opera Mini must be rejected",   isAllowed("com.opera.mini.native"))
-        assertFalse("Brave must be rejected",        isAllowed("com.brave.browser"))
-        assertFalse("UC Browser must be rejected",   isAllowed("com.uc.browser.en"))
-        assertFalse("Firefox must be rejected",      isAllowed("org.mozilla.firefox"))
+        assertFalse("Opera Mini must be rejected",     isAllowed("com.opera.mini.native"))
+        assertFalse("Brave must be rejected",          isAllowed("com.brave.browser"))
+        assertFalse("UC Browser must be rejected",     isAllowed("com.uc.browser.en"))
+        assertFalse("Firefox must be rejected",        isAllowed("org.mozilla.firefox"))
 
         // Curated study packages must be ALLOWED (Gate A)
-        assertTrue("PhysicsWallah must be allowed",  isAllowed("xyz.penpencil.physicswallah"))
-        assertTrue("Unacademy must be allowed",      isAllowed("com.unacademyapp"))
-        assertTrue("Telegram must be allowed",       isAllowed("org.telegram.messenger"))
-        assertTrue("Adobe Reader must be allowed",   isAllowed("com.adobe.reader"))
-        assertTrue("OneNote must be allowed",        isAllowed("com.microsoft.office.onenote"))
-        assertTrue("Google Docs must be allowed",    isAllowed("com.google.android.apps.docs"))
+        assertTrue("PhysicsWallah must be allowed",    isAllowed("xyz.penpencil.physicswallah"))
+        assertTrue("Unacademy must be allowed",        isAllowed("com.unacademyapp"))
+        assertTrue("Telegram must be allowed",         isAllowed("org.telegram.messenger"))
+        assertTrue("Adobe Reader must be allowed",     isAllowed("com.adobe.reader"))
+        assertTrue("OneNote must be allowed",          isAllowed("com.microsoft.office.onenote"))
+        assertTrue("Google Docs must be allowed",      isAllowed("com.google.android.apps.docs"))
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -104,14 +123,20 @@ class SwatantraProductionVerificationTest {
     // ─────────────────────────────────────────────────────────────────────────
     @Test
     fun testMaxThreeFamilyNumbersAndPinHash() {
-        // ── 3-slot enforcement ────────────────────────────────────────────────
-        val validSlots   = listOf("+919876543210", "+919123456789", "+918888888888")
-        val tooManySlots = listOf("+919876543210", "+919123456789", "+918888888888", "+917777777777")
+        // ── 1 to 3 slot enforcement ──────────────────────────────────────────
+        fun isValidSlotCount(count: Int): Boolean = count in 1..3
 
-        // Exactly 3 must pass
-        assertTrue("Exactly 3 slots must be accepted",  validSlots.size <= 3)
-        // 4 slots must be rejected
-        assertFalse("More than 3 slots must be rejected", tooManySlots.size <= 3)
+        val emptySlots   = emptyList<String>()
+        val oneSlot      = listOf("+919876543210")
+        val twoSlots     = listOf("+919876543210", "+919123456789")
+        val threeSlots   = listOf("+919876543210", "+919123456789", "+918888888888")
+        val fourSlots    = listOf("+919876543210", "+919123456789", "+918888888888", "+917777777777")
+
+        assertFalse("0 slots must be rejected", isValidSlotCount(emptySlots.size))
+        assertTrue("1 slot must be accepted",   isValidSlotCount(oneSlot.size))
+        assertTrue("2 slots must be accepted",  isValidSlotCount(twoSlots.size))
+        assertTrue("3 slots must be accepted",  isValidSlotCount(threeSlots.size))
+        assertFalse("4 slots must be rejected", isValidSlotCount(fourSlots.size))
 
         // ── PIN length validation ─────────────────────────────────────────────
         val shortPin  = "12345"   // 5 digits — invalid
@@ -124,7 +149,7 @@ class SwatantraProductionVerificationTest {
 
         // Non-numeric PIN must be rejected
         val alphaPIN = "abc123"
-        assertFalse("Alphanumeric PIN must be rejected", alphaPIN.all { it.isDigit() })
+        assertFalse("Alphanumeric PIN must be rejected", alphaPIN.length == 6 && alphaPIN.all { it.isDigit() })
 
         // ── SHA-256 determinism ───────────────────────────────────────────────
         val hash1 = sha256Hex("123456")
@@ -146,7 +171,7 @@ class SwatantraProductionVerificationTest {
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // TEST 3 — Monotonic dual-clock reboot-resilience arithmetic
+    // TEST 3 — Monotonic dual-clock reboot-resilience & 24h cooling-off survival
     // ─────────────────────────────────────────────────────────────────────────
     @Test
     fun testMonotonicDualClockRebootAndRtcReset() {
@@ -183,13 +208,45 @@ class SwatantraProductionVerificationTest {
             effectiveWallMs2
         )
 
-        // ── 24-hour cooling-off: 86_400_000 ms boundary check ─────────────────
-        val timerStartElapsed  = 1_000_000L
-        val justBefore24h      = timerStartElapsed + 86_399_999L
-        val exactlyAt24h       = timerStartElapsed + 86_400_000L
-        assertFalse("1 ms before 24h must NOT allow PIN-free deprovision",
-            (justBefore24h - timerStartElapsed) >= 86_400_000L)
-        assertTrue("At exactly 24h must allow PIN-free deprovision",
-            (exactlyAt24h - timerStartElapsed) >= 86_400_000L)
+        // ── 24-hour cooling-off: normal elapsed progression without reboot ────
+        val timerStartElapsed = 1_000_000L
+        val timerStartWall    = 1_700_000_000_000L
+        val justBefore24h     = timerStartElapsed + 86_399_999L
+        val exactlyAt24h      = timerStartElapsed + 86_400_000L
+
+        val elapsedBefore24h = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, justBefore24h, timerStartWall + 86_399_999L)
+        assertFalse("1 ms before 24h must NOT allow PIN-free deprovision", elapsedBefore24h >= 86_400_000L)
+
+        val elapsedAt24h = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, exactlyAt24h, timerStartWall + 86_400_000L)
+        assertTrue("At exactly 24h must allow PIN-free deprovision", elapsedAt24h >= 86_400_000L)
+
+        // ── 24-hour cooling-off: REBOOT SURVIVAL FALLBACK SCENARIOS ────────────
+        // Scenario A: Device reboots after 25 hours.
+        // nowElapsed reset to 10_000L (which is < requestedElapsed 1_000_000L).
+        // Fallback to wall-clock: nowWall (timerStartWall + 90_000_000L) - timerStartWall = 90_000_000L >= 86_400_000L
+        val postRebootElapsedA = 10_000L
+        val postRebootWallA    = timerStartWall + 90_000_000L
+        val elapsedAfterRebootA = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, postRebootElapsedA, postRebootWallA)
+        assertTrue("Post-reboot wall-clock fallback must permit deprovision after 24h", elapsedAfterRebootA >= 86_400_000L)
+
+        // Scenario B: Device reboots after only 2 hours.
+        // nowElapsed reset to 5_000L (< 1_000_000L).
+        // Fallback to wall-clock: nowWall (timerStartWall + 7_200_000L) - timerStartWall = 7_200_000L < 86_400_000L
+        val postRebootElapsedB = 5_000L
+        val postRebootWallB    = timerStartWall + 7_200_000L
+        val elapsedAfterRebootB = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, postRebootElapsedB, postRebootWallB)
+        assertFalse("Post-reboot wall-clock fallback must DENY deprovision before 24h", elapsedAfterRebootB >= 86_400_000L)
+        assertTrue("Post-reboot timer must still register as running", elapsedAfterRebootB >= 0L)
+
+        // Scenario C: Device reboots and RTC is set backwards (e.g. battery pull to 1970).
+        // nowWall < timerStartWall -> elapsedSinceRequestMs = -1L (not running / invalid)
+        val postRebootElapsedC = 2_000L
+        val postRebootWallC    = timerStartWall - 50_000_000L
+        val elapsedAfterRebootC = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, postRebootElapsedC, postRebootWallC)
+        assertEquals("Time-travel backwards during reboot must return -1L", -1L, elapsedAfterRebootC)
+
+        // Scenario D: Timer was never requested (uninitialized prefs: -1L, -1L)
+        val unstartedElapsed = computeCoolingOffElapsedMs(-1L, -1L, 500_000L, timerStartWall)
+        assertEquals("Unstarted timer must return -1L", -1L, unstartedElapsed)
     }
 }

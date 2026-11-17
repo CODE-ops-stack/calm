@@ -120,6 +120,11 @@ class MainActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
+        val deContext = createDeviceProtectedStorageContext()
+        if (!deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE).getBoolean("family_numbers_locked", false)) {
+            startActivity(Intent(this, FamilySetupActivity::class.java))
+            return
+        }
         // Keep pinned when Swatantra is the active LockTask home
         runCatching { startLockTask() }
     }
@@ -128,18 +133,30 @@ class MainActivity : Activity() {
     /**
      * Shows an inline AlertDialog offering two safe paths to deprovision:
      *   Option A: Immediate 6-digit Family PIN verification (SHA-256)
-     *   Option B: 24-hour cooling-off timer fallback
+     *   Option B: 24-hour cooling-off timer fallback (survives reboots)
      * Both paths require Device-Encrypted SharedPreferences.
      */
     private fun showDeprovisionGuard(deContext: Context) {
         val walPrefs = deContext.getSharedPreferences("deprovision_wal", Context.MODE_PRIVATE)
         val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
 
-        // Check if the 24-hour cooling-off timer has already elapsed
+        // Elapsed duration calculation that survives reboots
         val requestedElapsedMs = walPrefs.getLong("deprovision_requested_elapsed_ms", -1L)
+        val requestedWallMs = walPrefs.getLong("deprovision_requested_wall_ms", -1L)
         val nowElapsedMs = SystemClock.elapsedRealtime()
-        val coolingOffComplete = requestedElapsedMs > 0L &&
-                (nowElapsedMs - requestedElapsedMs) >= 86_400_000L
+        val nowWallMs = System.currentTimeMillis()
+
+        val elapsedSinceRequestMs = if (requestedElapsedMs > 0L && nowElapsedMs >= requestedElapsedMs) {
+            nowElapsedMs - requestedElapsedMs
+        } else if (requestedWallMs > 0L && nowWallMs >= requestedWallMs) {
+            // Fallback across reboot when elapsedRealtime reset to 0
+            nowWallMs - requestedWallMs
+        } else {
+            -1L
+        }
+
+        val isTimerRunning = elapsedSinceRequestMs >= 0L
+        val coolingOffComplete = isTimerRunning && elapsedSinceRequestMs >= 86_400_000L
 
         if (coolingOffComplete) {
             // 24 hours elapsed — allow PIN-free deprovisioning
@@ -223,8 +240,8 @@ class MainActivity : Activity() {
         }
 
         val timerStatusText = TextView(this).apply {
-            if (requestedElapsedMs > 0L) {
-                val remainingMs = 86_400_000L - (nowElapsedMs - requestedElapsedMs)
+            if (isTimerRunning) {
+                val remainingMs = maxOf(0L, 86_400_000L - elapsedSinceRequestMs)
                 val remainingHours = remainingMs / 3_600_000L
                 val remainingMins = (remainingMs % 3_600_000L) / 60_000L
                 text = "Timer running: ~${remainingHours}h ${remainingMins}m remaining"
@@ -242,7 +259,7 @@ class MainActivity : Activity() {
             setBackgroundColor(Color.parseColor("#6B7280"))
             setTextColor(Color.WHITE)
             setPadding(24, 24, 24, 24)
-            isEnabled = requestedElapsedMs <= 0L   // only allow starting once
+            isEnabled = !isTimerRunning   // only allow starting once
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -292,10 +309,10 @@ class MainActivity : Activity() {
         // Wire Option B — 24-hour timer
         startTimerButton.setOnClickListener {
             val nowElapsedForTimer = SystemClock.elapsedRealtime()
-            val nowWallMs = System.currentTimeMillis()
+            val nowWallMsForTimer = System.currentTimeMillis()
             walPrefs.edit()
                 .putLong("deprovision_requested_elapsed_ms", nowElapsedForTimer)
-                .putLong("deprovision_requested_wall_ms", nowWallMs)
+                .putLong("deprovision_requested_wall_ms", nowWallMsForTimer)
                 .commit()
             Toast.makeText(
                 this,

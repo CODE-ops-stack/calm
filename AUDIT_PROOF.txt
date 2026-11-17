@@ -1,11 +1,8 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+a00e5b0 chore(antigravity): sync Swatantra v7.1 build state and error.log
+fe7ee66 fix(security): block back-button in FamilySetupActivity, enforce in onResume, reboot-surviving cooling-off timer, add tests
 4899256 chore(audit): update AUDIT_PROOF.txt with full forensic audit proof
-7f176c4 chore(antigravity): sync Swatantra v7.1 build state and error.log
-8335645 feat(audit): Tasks 1-3+5 — dual-safe deprovision guard, JUnit3 test suite, full proguard keep, AUDIT_PROOF.txt
  M AUDIT_PROOF.txt
- M app/src/main/java/in/swatantra/focus/ui/FamilySetupActivity.kt
- M app/src/main/java/in/swatantra/focus/ui/MainActivity.kt
- M app/src/test/java/in/swatantra/focus/SwatantraProductionVerificationTest.kt
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D

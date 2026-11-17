@@ -1,0 +1,31 @@
+name: Swatantra v7.1 Android CI & Error Log Sync
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Assemble Release APK & Capture Logs
+        continue-on-error: true
+        run: |
+          chmod +x gradlew || true
+          if [ -f "./gradlew" ]; then
+            ./gradlew lintRelease assembleRelease --stacktrace > build_output.log 2>&1 || true
+            tail -n 200 build_output.log > error.log
+          fi

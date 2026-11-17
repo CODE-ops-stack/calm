@@ -1,0 +1,9 @@
+-keep class in.swatantra.focus.SwatantraApp { *; }
+-keep class in.swatantra.focus.dpc.SwatantraAdminReceiver { *; }
+-keep class in.swatantra.focus.lecture.UniversalLectureInspector { *; }
+-keep class in.swatantra.focus.calls.DirectBootCallScreener { *; }
+-keep class in.swatantra.focus.calls.SwatantraInCallService { *; }
+-keep class in.swatantra.focus.watchdog.SwatantraWatchdogService { *; }
+-keep class in.swatantra.focus.network.SafeStudyDnsVpnService { *; }
+-keep class in.swatantra.focus.ui.** { *; }
+-optimizations !code/allocation/variable

@@ -21,29 +21,35 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Run Tests and Assemble Release APK
+      - name: Run Unit Tests & Release Build
         run: |
           chmod +x gradlew || true
-          if [ -f "./gradlew" ]; then
-            ./gradlew test assembleRelease --stacktrace 2>&1 | tee build_output.log || true
-            tail -n 200 build_output.log > error.log
-          fi
+          ./gradlew test assembleRelease --stacktrace > build_output.log 2>&1 || true
+          tail -n 150 build_output.log > error.log
 
-      - name: Send Build Report via Gmail
+      - name: Prepare Email Summary Body
+        run: |
+          echo "=== SWATANTRA v7.1 CI TELEMETRY ===" > ci_email_body.txt
+          echo "Commit: ${{ github.sha }}" >> ci_email_body.txt
+          echo "" >> ci_email_body.txt
+          echo "=== TODO.md PROGRESS ===" >> ci_email_body.txt
+          cat TODO.md >> ci_email_body.txt || true
+          echo "" >> ci_email_body.txt
+          echo "=== BUILD & TEST LOG (error.log) ===" >> ci_email_body.txt
+          cat error.log >> ci_email_body.txt || true
+
+      - name: Send Build Telemetry Email to Gmail
         if: always()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
+          secure: true
           username: ${{ secrets.GMAIL_ADDRESS }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
           subject: "[Swatantra CI] Build ${{ job.status }} — Commit ${{ github.sha }}"
           to: ${{ secrets.GMAIL_ADDRESS }}
-          from: "Swatantra CI <${{ secrets.GMAIL_ADDRESS }}>"
-          body: |
-            Swatantra v7.1 CI Pipeline Run Finished.
-            Status: ${{ job.status }}
-            Commit: ${{ github.sha }}
-            Branch: ${{ github.ref_name }}
-          attachments: "TODO.md,error.log,AUDIT_PROOF.txt"
+          from: "Swatantra GitHub CI <${{ secrets.GMAIL_ADDRESS }}>"
+          body: file://ci_email_body.txt
+          attachments: TODO.md,error.log,AUDIT_PROOF.txt
           ignore_missing: true

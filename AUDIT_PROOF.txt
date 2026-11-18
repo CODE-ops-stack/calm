@@ -1,16 +1,16 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+67a46dc feat(security): ensure AtomicDeprovisionManager clears DISALLOW_NETWORK_RESET, update dpc-implementer subagent
 aaf0409 chore(antigravity): sync Swatantra v7.1 build state and error.log
 b28b1e7 feat: complete Tasks 1-4 — subagents, 4-layer anti-reset shield, real verifier companion test, Gmail CI, 100% gates
-858dff5 chore(audit): update AUDIT_PROOF.txt with latest commit state
- M .agents/agents/dpc-implementer/agent.md
+ M .github/workflows/swatantra-ci.yml
  M AUDIT_PROOF.txt
- M app/src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt
+ M app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
 app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 33 | Bytes: 1303 | SHA256: 7F7F082AE96E90FA
 app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 31 | Bytes: 1321 | SHA256: 28A97EDBB30FF80A
-app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 147 | Bytes: 5887 | SHA256: 90CC3079FACB5436
+app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 149 | Bytes: 6063 | SHA256: 74B36931C61EAC6F
 app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 207 | Bytes: 8339 | SHA256: BAB41353F3BB1E23
 app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt | Lines: 103 | Bytes: 4592 | SHA256: D62560672D483625
 app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 46 | Bytes: 2219 | SHA256: 1060C232B9487DA9
@@ -29,13 +29,13 @@ app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C7
 app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 392 | Bytes: 19471 | SHA256: EAE075E6FD754331
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 107872 bytes | LastWriteTime: 11/18/2026 11:04:41
+APK Size: 107872 bytes | LastWriteTime: 11/18/2026 11:09:19
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
-META-INF/version-control-info.textproto                      120              116
-classes.dex                                                82468            82468
+META-INF/version-control-info.textproto                      120              117
+classes.dex                                                82504            82504
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -48,9 +48,9 @@ AndroidManifest.xml                                        10544             248
 res/4D.xml                                                  1048              370
 res/nw.xml                                                   508              280
 resources.arsc                                               644              644
-META-INF/SWATANTR.SF                                        1697              899
-META-INF/SWATANTR.RSA                                       1419             1122
-META-INF/MANIFEST.MF                                        1570              811
+META-INF/SWATANTR.SF                                        1697              896
+META-INF/SWATANTR.RSA                                       1419             1120
+META-INF/MANIFEST.MF                                        1570              810
 
 
 
@@ -75,20 +75,20 @@ DEX_SYMBOL [HmacSHA256] Present in classes.dex: True
 
 === 4. JUNIT TEST EXECUTION XML REPORTS ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-18T05:32:52.496Z" hostname="DESKTOP-JOU27LS" time="0.072">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-18T05:38:54.735Z" hostname="DESKTOP-JOU27LS" time="0.063">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.054"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.009"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.047"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.007"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-18T05:32:54.713Z" hostname="DESKTOP-JOU27LS" time="0.05">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-18T05:38:52.930Z" hostname="DESKTOP-JOU27LS" time="0.084">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.036"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.007"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.054"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.01"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

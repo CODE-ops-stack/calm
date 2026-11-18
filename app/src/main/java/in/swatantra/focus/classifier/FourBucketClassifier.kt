@@ -130,12 +130,14 @@ class FourBucketClassifier(context: Context) {
             dpm.setUserControlDisabledPackages(admin, listOf(deContext.packageName))
         }
 
-        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus
+        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus: enforce all 7 restrictions
         dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_PRINTING)
     }
 
     private fun isEssentialSystemPackage(pkg: String): Boolean {

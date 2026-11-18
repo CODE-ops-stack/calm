@@ -31,7 +31,7 @@ class FamilySetupActivity : Activity() {
         }
 
         val scrollView = ScrollView(this).apply {
-            setBackgroundColor(Color.parseColor("#F7F5F0"))
+            setBackgroundColor(Color.parseColor("#0B0F17"))
             isFillViewport = true
         }
 
@@ -39,19 +39,20 @@ class FamilySetupActivity : Activity() {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER_HORIZONTAL
             setPadding(56, 64, 56, 64)
+            setBackgroundColor(Color.parseColor("#0B0F17"))
         }
 
         val titleView = TextView(this).apply {
             text = "Family Call Whitelist"
             textSize = 22f
-            setTextColor(Color.parseColor("#1E242B"))
+            setTextColor(Color.parseColor("#10B981"))
             gravity = Gravity.CENTER_HORIZONTAL
         }
 
         val subtitleView = TextView(this).apply {
             text = "Permanent 3-Slot Whitelist\nOnce verified, these slots are permanently locked to protect deep study. Emergency services (112, 100, 108) remain immune by law."
             textSize = 14f
-            setTextColor(Color.parseColor("#4A5568"))
+            setTextColor(Color.parseColor("#94A3B8"))
             gravity = Gravity.CENTER_HORIZONTAL
             setPadding(0, 16, 0, 40)
         }
@@ -60,14 +61,15 @@ class FamilySetupActivity : Activity() {
             val label = TextView(this).apply {
                 text = slotLabel
                 textSize = 14f
-                setTextColor(Color.parseColor("#1E242B"))
+                setTextColor(Color.parseColor("#E2E8F0"))
                 setPadding(0, 12, 0, 6)
             }
             val input = EditText(this).apply {
                 hint = hintText
+                setHintTextColor(Color.parseColor("#64748B"))
                 inputType = InputType.TYPE_CLASS_PHONE
-                setTextColor(Color.parseColor("#1E242B"))
-                setBackgroundColor(Color.parseColor("#EAE6DF"))
+                setTextColor(Color.parseColor("#E2E8F0"))
+                setBackgroundColor(Color.parseColor("#161F30"))
                 setPadding(32, 24, 32, 24)
                 val lp = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -87,15 +89,16 @@ class FamilySetupActivity : Activity() {
         val pinLabel = TextView(this).apply {
             text = "6-Digit Family Unlock PIN"
             textSize = 14f
-            setTextColor(Color.parseColor("#1E242B"))
+            setTextColor(Color.parseColor("#E2E8F0"))
             setPadding(0, 20, 0, 6)
         }
         val pinInput = EditText(this).apply {
             hint = "Enter 6-digit PIN..."
+            setHintTextColor(Color.parseColor("#64748B"))
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
             filters = arrayOf(InputFilter.LengthFilter(6))
-            setTextColor(Color.parseColor("#1E242B"))
-            setBackgroundColor(Color.parseColor("#EAE6DF"))
+            setTextColor(Color.parseColor("#E2E8F0"))
+            setBackgroundColor(Color.parseColor("#161F30"))
             setPadding(32, 24, 32, 24)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -108,7 +111,7 @@ class FamilySetupActivity : Activity() {
         val lockButton = Button(this).apply {
             text = "Verify & Permanently Lock Family Numbers"
             textSize = 15f
-            setBackgroundColor(Color.parseColor("#2B4C7E"))
+            setBackgroundColor(Color.parseColor("#059669"))
             setTextColor(Color.WHITE)
             setPadding(32, 32, 32, 32)
             val lp = LinearLayout.LayoutParams(

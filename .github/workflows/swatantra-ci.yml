@@ -18,24 +18,19 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Accept Licenses & Run Release Build
+      - name: Run Unit Tests & Release Build Using Pre-Installed Android SDK
         run: |
           {
-            set +e
-            yes | sdkmanager --licenses >/dev/null 2>&1
+            echo "ANDROID_HOME=$ANDROID_HOME"
+            yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null 2>&1 || true
             chmod +x ./gradlew
-            ./gradlew test assembleRelease --stacktrace
-            EXIT_CODE=$?
-            exit $EXIT_CODE
+            ./gradlew test assembleRelease --no-daemon --stacktrace
           } > ci_build.log 2>&1
 
       - name: Prepare Email Summary Body
         if: always()
         run: |
-          echo "=== SWATANTRA v7.1 CI TELEMETRY ===" > ci_email_body.txt
+          echo "=== SWATANTRA v7.1 MISSION CONTROL CI TELEMETRY ===" > ci_email_body.txt
           echo "Commit: ${{ github.sha }}" >> ci_email_body.txt
           echo "" >> ci_email_body.txt
           echo "=== TODO.md PROGRESS ===" >> ci_email_body.txt

@@ -9,6 +9,15 @@ if (Test-Path ".\gradlew.bat") {
     Write-Host "[BUILD] Running .\gradlew.bat assembleRelease..."
     .\gradlew.bat assembleRelease --stacktrace *>&1 | Tee-Object -Variable buildOut
     $buildOut | Out-File -FilePath "error.log" -Encoding utf8
+
+    $unsignedApk = "app\build\outputs\apk\release\app-release-unsigned.apk"
+    if (Test-Path $unsignedApk) {
+        $zipalign = "C:\Users\harsh\AppData\Local\Android\Sdk\build-tools\35.0.0\zipalign.exe"
+        $apksigner = "C:\Users\harsh\AppData\Local\Android\Sdk\build-tools\35.0.0\apksigner.bat"
+        if (-not (Test-Path "dist")) { New-Item -ItemType Directory -Path "dist" -Force }
+        & $zipalign -v -p -f 4 $unsignedApk "dist\swatantra-v7.1-release.apk"
+        & $apksigner sign --ks "swatantra-release.jks" --ks-pass pass:Swatantra@710 --ks-key-alias "swatantra_key" --key-pass pass:Swatantra@710 --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true "dist\swatantra-v7.1-release.apk"
+    }
 } else {
     "Gradle wrapper not initialized yet. Run 'gradle wrapper' in Antigravity terminal." | Out-File -FilePath "error.log" -Encoding utf8
 }

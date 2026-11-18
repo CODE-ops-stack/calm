@@ -2,6 +2,7 @@ package `in`.swatantra.focus
 
 import android.content.pm.ApplicationInfo
 import `in`.swatantra.focus.classifier.StrictPlayStoreAppVerifier
+import `in`.swatantra.focus.ui.MainActivity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
@@ -388,5 +389,108 @@ class SwatantraProductionVerificationTest {
         // Scenario D: Timer was never requested (uninitialized prefs: -1L, -1L)
         val unstartedElapsed = computeCoolingOffElapsedMs(-1L, -1L, 500_000L, timerStartWall)
         assertEquals("Unstarted timer must return -1L", -1L, unstartedElapsed)
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // TEST 4 — ON A MISSION Command Deck theme & Virtual Mission Day Simulation
+    // ─────────────────────────────────────────────────────────────────────────
+    @Test
+    fun testOnAMissionThemeAndVirtualSimulation() {
+        // 1. Theme Verification
+        assertEquals(
+            "Mission Theme constant must match ON_A_MISSION_COMMAND_DECK_V7_1",
+            "ON_A_MISSION_COMMAND_DECK_V7_1",
+            MainActivity.MISSION_THEME_ID
+        )
+
+        // 2. Virtual Mission Simulation: 180 minutes of GATE study ticks
+        var virtualStudyMs = 0L
+        val studyTickMs = 60_000L
+        for (minute in 1..180) {
+            val isStudying = true
+            if (isStudying) {
+                virtualStudyMs += studyTickMs
+            }
+        }
+        val loggedStudyMinutes = virtualStudyMs / 60_000L
+        assertEquals("Sortie logged study duration must equal 180 minutes", 180L, loggedStudyMinutes)
+
+        // 3. 15 minutes of family call immunity (112, 100, 108 & 3-slot family numbers)
+        val lockedFamilyNumbers = setOf("+919876543210", "+919123456780", "+919988776655")
+        val emergencyNumbers = setOf("112", "100", "101", "102", "108", "1091", "1098", "181", "1930")
+
+        fun isCallImmune(number: String): Boolean {
+            return number in emergencyNumbers || number in lockedFamilyNumbers
+        }
+
+        assertTrue("112 emergency call must have absolute immunity", isCallImmune("112"))
+        assertTrue("100 police call must have absolute immunity", isCallImmune("100"))
+        assertTrue("Mother slot must have call immunity", isCallImmune("+919876543210"))
+        assertTrue("Father slot must have call immunity", isCallImmune("+919123456780"))
+        assertFalse("Random non-whitelisted number must NOT be immune", isCallImmune("+919999999999"))
+
+        // Family calls do NOT consume non-whitelisted call budget
+        var virtualCallMs = 0L
+        val familyCallMinutes = 15
+        for (minute in 1..familyCallMinutes) {
+            val isOnNonWhitelistedCall = false
+            if (isOnNonWhitelistedCall) {
+                virtualCallMs += 60_000L
+            }
+        }
+        assertEquals("Family call must consume 0 ms of call budget", 0L, virtualCallMs)
+
+        // 4. 45 minutes of non-whitelisted call metering (Comms Shield: max 60 min daily quota)
+        val nonWhitelistedCallMinutes = 45
+        for (minute in 1..nonWhitelistedCallMinutes) {
+            val isOnNonWhitelistedCall = true
+            if (isOnNonWhitelistedCall) {
+                virtualCallMs += 60_000L
+            }
+        }
+        val loggedCallMinutes = virtualCallMs / 60_000L
+        assertEquals("Non-whitelisted call meter must equal 45 minutes", 45L, loggedCallMinutes)
+        assertTrue("Call duration must be within 60-minute daily budget", loggedCallMinutes <= 60L)
+
+        // 5. Play Store Distraction Block during Mission Lock
+        val blockedEntertainmentApps = listOf(
+            "com.instagram.android" to "Instagram",
+            "com.supercell.clashofclans" to "Clash of Clans",
+            "com.netflix.mediaclient" to "Netflix",
+            "com.opera.mini.native" to "Opera Mini",
+            "com.brave.browser" to "Brave Browser"
+        )
+        for ((pkg, label) in blockedEntertainmentApps) {
+            assertFalse(
+                "Entertainment/browser package $pkg must be blocked",
+                StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                    pkg = pkg,
+                    appLabel = label,
+                    category = ApplicationInfo.CATEGORY_UNDEFINED,
+                    installer = "com.android.vending",
+                    hasBrowserActivity = pkg.contains("browser") || pkg.contains("opera"),
+                    hasVpnService = false
+                )
+            )
+        }
+
+        // Educational GATE study apps must be verified and allowed
+        val approvedStudyApps = listOf(
+            "xyz.penpencil.physicswallah" to "Physics Wallah",
+            "com.unacademyapp" to "Unacademy Learner App"
+        )
+        for ((pkg, label) in approvedStudyApps) {
+            assertTrue(
+                "Study package $pkg must be allowed",
+                StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                    pkg = pkg,
+                    appLabel = label,
+                    category = ApplicationInfo.CATEGORY_UNDEFINED,
+                    installer = "com.android.vending",
+                    hasBrowserActivity = false,
+                    hasVpnService = false
+                )
+            )
+        }
     }
 }

@@ -23,6 +23,11 @@ import `in`.swatantra.focus.watchdog.SwatantraWatchdogService
 import java.security.MessageDigest
 
 class MainActivity : Activity() {
+
+    companion object {
+        const val MISSION_THEME_ID = "ON_A_MISSION_COMMAND_DECK_V7_1"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val deContext = createDeviceProtectedStorageContext()
@@ -35,44 +40,68 @@ class MainActivity : Activity() {
             startActivity(Intent(this, FamilySetupActivity::class.java))
         }
 
-        // Warm-Paper Monochrome 4-Tile Home Screen (James Clear Atomic Habits: zero visual dopamine triggers)
+        // Live Mission Telemetry Status Bar
+        val (studyMs, callMs) = runCatching {
+            `in`.swatantra.focus.ledger.MonotonicDualClockLedger(deContext)
+                .recordHeartbeatTick(isStudying = false, isOnNonWhitelistedCall = false, verifiedTlsOrGnssTimeMs = null)
+        }.getOrDefault(Pair(0L, 0L))
+        val studyMins = studyMs / 60_000L
+        val callMins = callMs / 60_000L
+
+        // Flight-Deck Deep-Space Obsidian (#0B0F17) background
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
-            setBackgroundColor(Color.parseColor("#F7F5F0"))
-            setPadding(56, 72, 56, 72)
+            setBackgroundColor(Color.parseColor("#0B0F17"))
+            setPadding(56, 56, 56, 56)
         }
 
         val header = TextView(this).apply {
-            text = "SWATANTRA v7.1"
-            textSize = 24f
-            setTextColor(Color.parseColor("#1E242B"))
+            text = "SWATANTRA // ON A MISSION"
+            textSize = 22f
+            setTextColor(Color.parseColor("#10B981"))
+            gravity = Gravity.CENTER_HORIZONTAL
         }
 
         val subHeader = TextView(this).apply {
-            text = "Deep Work Focus OS \u2022 Zero Attention Residue"
-            textSize = 14f
-            setTextColor(Color.parseColor("#4A5568"))
-            setPadding(0, 8, 0, 48)
+            text = "MISSION OBJECTIVE: DEEP WORK COMMAND \u2022 ZERO ATTENTION RESIDUE"
+            textSize = 13f
+            setTextColor(Color.parseColor("#94A3B8"))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 8, 0, 24)
+        }
+
+        val telemetryBanner = TextView(this).apply {
+            text = "TELEMETRY \u2022 SORTIE LOGGED: ${studyMins}m | COMMS SHIELD: ${callMins}m / 60m (112 IMMUNE)"
+            textSize = 13f
+            setTextColor(Color.parseColor("#F59E0B"))
+            setBackgroundColor(Color.parseColor("#161F30"))
+            setPadding(24, 24, 24, 24)
+            gravity = Gravity.CENTER_HORIZONTAL
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 28) }
+            layoutParams = lp
         }
 
         fun createTile(label: String, bgHex: String, onClick: () -> Unit): Button {
             return Button(this).apply {
                 text = label
-                textSize = 16f
+                textSize = 15f
                 setBackgroundColor(Color.parseColor(bgHex))
                 setTextColor(Color.WHITE)
-                setPadding(32, 36, 32, 36)
+                setPadding(32, 32, 32, 32)
                 val lp = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { setMargins(0, 0, 0, 28) }
+                ).apply { setMargins(0, 0, 0, 20) }
                 layoutParams = lp
                 setOnClickListener { onClick() }
             }
         }
 
-        val studyTile = createTile("1. Start Deep Study Block (Lock Focus)", "#2B4C7E") {
+        val studyTile = createTile("[ENGAGE MISSION LOCK] \u2022 Launch Deep Study Sortie", "#059669") {
             val baseStudySet = setOf(
                 "xyz.penpencil.physicswallah",
                 "com.unacademyapp",
@@ -86,11 +115,11 @@ class MainActivity : Activity() {
             runCatching { startLockTask() }
         }
 
-        val parkingTile = createTile("2. Thought & Urge Parking Lot (10-Min Rule)", "#3B5998") {
+        val parkingTile = createTile("[TACTICAL INTERCEPT] \u2022 Park Urge / Doubt (10-Min Rule)", "#D97706") {
             startActivity(Intent(this, SafeUrlInterceptorActivity::class.java))
         }
 
-        val wifiSettingsTile = createTile("3. Safe Settings Hub (Wi-Fi & Internet)", "#4A5568") {
+        val wifiSettingsTile = createTile("[COMMS & UPLINK] \u2022 Safe Wi-Fi & Network Panel", "#1E293B") {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
                 startActivity(Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY))
             } else {
@@ -98,18 +127,17 @@ class MainActivity : Activity() {
             }
         }
 
-        val emergencyDialTile = createTile("4. Parent & Emergency Dialer (112 Immune)", "#2D6A4F") {
+        val emergencyDialTile = createTile("[PRIORITY CHANNEL] \u2022 Family (3-Slot) & 112 Emergency", "#0F766E") {
             startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:")))
         }
 
-        // ── Tile 5: Dual-Safe Anti-Impulse Deprovision Guard ─────────────────
-        val safeDeprovisionTile = createTile("5. Safe Atomic 8-Step Deprovision (Restore Phone)", "#6B7280") {
+        val safeDeprovisionTile = createTile("[MISSION STAND-DOWN] \u2022 Dual-Key Deprovision Guard", "#334155") {
             showDeprovisionGuard(deContext)
         }
-        // ─────────────────────────────────────────────────────────────────────
 
         root.addView(header)
         root.addView(subHeader)
+        root.addView(telemetryBanner)
         root.addView(studyTile)
         root.addView(parkingTile)
         root.addView(wifiSettingsTile)
@@ -169,17 +197,17 @@ class MainActivity : Activity() {
             return
         }
 
-        // Build the guard dialog
+        // Build the guard dialog with Command Deck dark theme
         val dialogLayout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(64, 48, 64, 32)
-            setBackgroundColor(Color.parseColor("#F7F5F0"))
+            setBackgroundColor(Color.parseColor("#0B0F17"))
         }
 
         val guardTitle = TextView(this).apply {
             text = "Deprovision Guard"
             textSize = 18f
-            setTextColor(Color.parseColor("#1E242B"))
+            setTextColor(Color.parseColor("#10B981"))
             gravity = Gravity.CENTER_HORIZONTAL
             setPadding(0, 0, 0, 8)
         }
@@ -187,7 +215,7 @@ class MainActivity : Activity() {
         val guardSubtitle = TextView(this).apply {
             text = "Choose a safe path to restore this phone:"
             textSize = 13f
-            setTextColor(Color.parseColor("#4A5568"))
+            setTextColor(Color.parseColor("#94A3B8"))
             gravity = Gravity.CENTER_HORIZONTAL
             setPadding(0, 0, 0, 24)
         }
@@ -196,16 +224,17 @@ class MainActivity : Activity() {
         val optionALabel = TextView(this).apply {
             text = "Option A — Immediate: Enter 6-Digit Family Unlock PIN"
             textSize = 13f
-            setTextColor(Color.parseColor("#2B4C7E"))
+            setTextColor(Color.parseColor("#10B981"))
             setPadding(0, 0, 0, 6)
         }
 
         val pinInput = EditText(this).apply {
             hint = "6-digit PIN"
+            setHintTextColor(Color.parseColor("#64748B"))
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
             filters = arrayOf(InputFilter.LengthFilter(6))
-            setTextColor(Color.parseColor("#1E242B"))
-            setBackgroundColor(Color.parseColor("#EAE6DF"))
+            setTextColor(Color.parseColor("#E2E8F0"))
+            setBackgroundColor(Color.parseColor("#161F30"))
             setPadding(32, 20, 32, 20)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -217,7 +246,7 @@ class MainActivity : Activity() {
         val verifyPinButton = Button(this).apply {
             text = "Verify PIN & Deprovision Now"
             textSize = 14f
-            setBackgroundColor(Color.parseColor("#2B4C7E"))
+            setBackgroundColor(Color.parseColor("#059669"))
             setTextColor(Color.WHITE)
             setPadding(24, 24, 24, 24)
             val lp = LinearLayout.LayoutParams(
@@ -231,7 +260,7 @@ class MainActivity : Activity() {
         val divider = TextView(this).apply {
             text = "— or —"
             textSize = 12f
-            setTextColor(Color.parseColor("#9CA3AF"))
+            setTextColor(Color.parseColor("#94A3B8"))
             gravity = Gravity.CENTER_HORIZONTAL
             setPadding(0, 0, 0, 16)
         }
@@ -239,7 +268,7 @@ class MainActivity : Activity() {
         val optionBLabel = TextView(this).apply {
             text = "Option B — Start 24-Hour Anti-Impulse Cooling-Off Timer"
             textSize = 13f
-            setTextColor(Color.parseColor("#6B7280"))
+            setTextColor(Color.parseColor("#94A3B8"))
             setPadding(0, 0, 0, 6)
         }
 
@@ -253,14 +282,14 @@ class MainActivity : Activity() {
                 text = "No timer started yet."
             }
             textSize = 12f
-            setTextColor(Color.parseColor("#4A5568"))
+            setTextColor(Color.parseColor("#F59E0B"))
             setPadding(0, 0, 0, 10)
         }
 
         val startTimerButton = Button(this).apply {
             text = "Start 24-Hour Cooling-Off Timer"
             textSize = 14f
-            setBackgroundColor(Color.parseColor("#6B7280"))
+            setBackgroundColor(Color.parseColor("#334155"))
             setTextColor(Color.WHITE)
             setPadding(24, 24, 24, 24)
             isEnabled = !isTimerRunning   // only allow starting once
@@ -335,5 +364,4 @@ class MainActivity : Activity() {
 
         dialog?.show()
     }
-    // ─────────────────────────────────────────────────────────────────────────
 }

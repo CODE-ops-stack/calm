@@ -1,11 +1,8 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+4696608 chore(rules): add Rule 6 mandatory end-of-response machine proof and audit symbols
 de6ebca chore(antigravity): sync Swatantra v7.1 build state and error.log
 3c6611e feat(security): enforce all 7 user restrictions in FourBucketClassifier, update CI telemetry workflow with email body
-67a46dc feat(security): ensure AtomicDeprovisionManager clears DISALLOW_NETWORK_RESET, update dpc-implementer subagent
- M .antigravity/rules.md
  M AUDIT_PROOF.txt
- M app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt
- M app/src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
@@ -99,140 +96,161 @@ DEX_SYMBOL [DISALLOW_NETWORK_RESET] Present in classes.dex: True
 
 === 5. VERBATIM SOURCE CODE DUMP OF CRITICAL FILES ===
 
---- FILE: app/src/main/AndroidManifest.xml ---
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+--- FILE: app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt ---
+package `in`.swatantra.focus.classifier
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED" />
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
-    <uses-permission android:name="android.permission.MANAGE_OWN_CALLS" />
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
+import android.os.UserManager
+import android.webkit.WebView
+import `in`.swatantra.focus.dpc.SwatantraAdminReceiver
+import `in`.swatantra.focus.network.SafeStudyDnsVpnService
+import `in`.swatantra.focus.ui.MainActivity
+import `in`.swatantra.focus.ui.SafeUrlInterceptorActivity
 
-    <application
-        android:name=".SwatantraApp"
-        android:allowBackup="false"
-        android:directBootAware="true"
-        android:label="Swatantra Focus OS">
+class FourBucketClassifier(context: Context) {
+    private val deContext = context.createDeviceProtectedStorageContext()
+    private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+    private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
 
-        <activity
-            android:name=".ui.MainActivity"
-            android:directBootAware="true"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:lockTaskMode="if_whitelisted">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+    companion object {
+        const val AUDIT_ENFORCED_FACTORY_RESET = "DISALLOW_FACTORY_RESET"
+        const val AUDIT_ENFORCED_NETWORK_RESET = "DISALLOW_NETWORK_RESET"
+    }
 
-        <activity
-            android:name=".ui.SafeUrlInterceptorActivity"
-            android:directBootAware="true"
-            android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-            </intent-filter>
-        </activity>
+    private val immutableSystemCore = setOf(
+        "android",
+        "com.android.systemui",
+        "com.android.settings",
+        "com.android.phone",
+        "com.android.server.telecom",
+        "com.android.dialer",
+        "com.google.android.dialer",
+        "com.samsung.android.incallui",
+        "com.samsung.android.dialer",
+        "com.android.providers.settings",
+        "com.android.providers.downloads",
+        "com.android.providers.telephony",
+        "com.android.providers.media",
+        "com.google.android.gms",
+        "com.google.android.gsf",
+        "com.google.android.webview",
+        "com.android.webview",
+        "com.miui.securitycenter",
+        "com.miui.powerkeeper",
+        "com.xiaomi.finddevice",
+        "com.coloros.safecenter",
+        "com.oplus.safecenter",
+        "com.vivo.abe",
+        "com.vivo.permissionmanager"
+    )
 
-        <activity
-            android:name=".ui.FamilySetupActivity"
-            android:directBootAware="true"
-            android:exported="false" />
+    private val oemFloatingWindowEscapes = setOf(
+        "com.samsung.android.app.cocktailbarservice",
+        "com.samsung.android.sidegesturepad",
+        "com.miui.freeform",
+        "com.miui.touchassistant",
+        "com.google.android.googlequicksearchbox",
+        "moe.shizuku.privileged.api",
+        "com.draco.ladb",
+        "com.rosan.dhizuku"
+    )
 
-        <receiver
-            android:name=".classifier.PackageInstallReceiver"
-            android:directBootAware="true"
-            android:exported="true">
-            <intent-filter android:priority="999">
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
+    fun enforceFocusPolicy(whitelistedStudyApps: Set<String>, utilityApps: Set<String>) {
+        if (!dpm.isDeviceOwnerApp(deContext.packageName)) return
 
-        <receiver
-            android:name=".dpc.SwatantraAdminReceiver"
-            android:directBootAware="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/device_admin_policies" />
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-            </intent-filter>
-        </receiver>
+        val activeWebViewPkg = runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                WebView.getCurrentWebViewPackage()?.packageName
+            } else null
+        }.getOrNull()
 
-        <service
-            android:name=".watchdog.SwatantraWatchdogService"
-            android:directBootAware="true"
-            android:exported="false"
-            android:foregroundServiceType="systemExempted" />
+        val protectedCore = buildSet {
+            addAll(immutableSystemCore)
+            add(deContext.packageName)
+            if (activeWebViewPkg != null) add(activeWebViewPkg)
+        }
 
-        <service
-            android:name=".network.SafeStudyDnsVpnService"
-            android:directBootAware="true"
-            android:exported="false"
-            android:permission="android.permission.BIND_VPN_SERVICE">
-            <intent-filter>
-                <action android:name="android.net.VpnService" />
-            </intent-filter>
-        </service>
+        val lockTaskAllowed = (whitelistedStudyApps + utilityApps + setOf(
+            deContext.packageName,
+            "com.android.server.telecom",
+            "com.google.android.dialer",
+            "com.samsung.android.incallui"
+        )).distinct().toTypedArray()
+        dpm.setLockTaskPackages(admin, lockTaskAllowed)
 
-        <service
-            android:name=".lecture.UniversalLectureInspector"
-            android:directBootAware="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/lecture_inspector_config" />
-        </service>
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // NEVER include LOCK_TASK_FEATURE_GLOBAL_ACTIONS: physical Power-button menu (Restart/Recovery) is blocked
+            val features = DevicePolicyManager.LOCK_TASK_FEATURE_SYSTEM_INFO or
+                DevicePolicyManager.LOCK_TASK_FEATURE_NOTIFICATIONS or
+                DevicePolicyManager.LOCK_TASK_FEATURE_BLOCK_ACTIVITY_START_IN_TASK
+            dpm.setLockTaskFeatures(admin, features)
+        }
 
-        <service
-            android:name=".calls.DirectBootCallScreener"
-            android:directBootAware="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_SCREENING_SERVICE">
-            <intent-filter>
-                <action android:name="android.telecom.CallScreeningService" />
-            </intent-filter>
-        </service>
+        val installed = deContext.packageManager.getInstalledPackages(0).map { it.packageName }
+        val toSuspend = installed.filter { pkg ->
+            pkg !in protectedCore &&
+            pkg !in whitelistedStudyApps &&
+            pkg !in utilityApps &&
+            (pkg in oemFloatingWindowEscapes || !isEssentialSystemPackage(pkg))
+        }
+        val toUnsuspend = (whitelistedStudyApps + utilityApps + protectedCore).toList()
 
-        <service
-            android:name=".calls.SwatantraInCallService"
-            android:directBootAware="true"
-            android:exported="true"
-            android:permission="android.permission.BIND_INCALL_SERVICE">
-            <meta-data
-                android:name="android.telecom.IN_CALL_SERVICE_UI"
-                android:value="true" />
-            <intent-filter>
-                <action android:name="android.telecom.InCallService" />
-            </intent-filter>
-        </service>
-    </application>
-</manifest>
+        runCatching { dpm.setPackagesSuspended(admin, toUnsuspend.toTypedArray(), false) }
+        runCatching { dpm.setPackagesSuspended(admin, toSuspend.toTypedArray(), true) }
+
+        val webFilter = IntentFilter(Intent.ACTION_VIEW).apply {
+            addCategory(Intent.CATEGORY_DEFAULT)
+            addCategory(Intent.CATEGORY_BROWSABLE)
+            addDataScheme("http")
+            addDataScheme("https")
+        }
+        dpm.addPersistentPreferredActivity(
+            admin,
+            webFilter,
+            ComponentName(deContext, SafeUrlInterceptorActivity::class.java)
+        )
+
+        val homeFilter = IntentFilter(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+            addCategory(Intent.CATEGORY_DEFAULT)
+        }
+        dpm.addPersistentPreferredActivity(
+            admin,
+            homeFilter,
+            ComponentName(deContext, MainActivity::class.java)
+        )
+
+        runCatching {
+            dpm.setAlwaysOnVpnPackage(admin, deContext.packageName, true)
+            deContext.startService(Intent(deContext, SafeStudyDnsVpnService::class.java))
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            dpm.setUserControlDisabledPackages(admin, listOf(deContext.packageName))
+        }
+
+        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus: enforce all 7 restrictions
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_PRINTING)
+    }
+
+    private fun isEssentialSystemPackage(pkg: String): Boolean {
+        return pkg.startsWith("com.android.providers.") ||
+               pkg.startsWith("com.samsung.android.knox") ||
+               pkg.startsWith("com.qualcomm.") ||
+               pkg.startsWith("com.mediatek.")
+    }
+}
 
 --- FILE: app/src/main/java/in/swatantra/focus/classifier/StrictPlayStoreAppVerifier.kt ---
 package `in`.swatantra.focus.classifier
@@ -443,226 +461,274 @@ class PackageInstallReceiver : BroadcastReceiver() {
     }
 }
 
---- FILE: app/src/main/java/in/swatantra/focus/ui/FamilySetupActivity.kt ---
-package `in`.swatantra.focus.ui
+--- FILE: app/src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt ---
+package `in`.swatantra.focus.dpc
 
-import android.app.Activity
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
 import android.content.Context
-import android.graphics.Color
-import android.os.Bundle
-import android.telephony.PhoneNumberUtils
-import android.text.InputFilter
-import android.text.InputType
-import android.view.Gravity
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
-import android.widget.Toast
-import java.security.MessageDigest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.UserManager
 
-class FamilySetupActivity : Activity() {
+class AtomicDeprovisionManager(context: Context) {
+    private val deContext = context.createDeviceProtectedStorageContext()
+    private val prefs = deContext.getSharedPreferences("deprovision_wal", Context.MODE_PRIVATE)
+    private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+    private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val deContext = createDeviceProtectedStorageContext()
-        val prefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-
-        // If already locked, do not allow modifying slots
-        if (prefs.getBoolean("family_numbers_locked", false)) {
-            finish()
-            return
-        }
-
-        val scrollView = ScrollView(this).apply {
-            setBackgroundColor(Color.parseColor("#F7F5F0"))
-            isFillViewport = true
-        }
-
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(56, 64, 56, 64)
-        }
-
-        val titleView = TextView(this).apply {
-            text = "Family Call Whitelist"
-            textSize = 22f
-            setTextColor(Color.parseColor("#1E242B"))
-            gravity = Gravity.CENTER_HORIZONTAL
-        }
-
-        val subtitleView = TextView(this).apply {
-            text = "Permanent 3-Slot Whitelist\nOnce verified, these slots are permanently locked to protect deep study. Emergency services (112, 100, 108) remain immune by law."
-            textSize = 14f
-            setTextColor(Color.parseColor("#4A5568"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 16, 0, 40)
-        }
-
-        fun createSlotInput(slotLabel: String, hintText: String): Pair<TextView, EditText> {
-            val label = TextView(this).apply {
-                text = slotLabel
-                textSize = 14f
-                setTextColor(Color.parseColor("#1E242B"))
-                setPadding(0, 12, 0, 6)
-            }
-            val input = EditText(this).apply {
-                hint = hintText
-                inputType = InputType.TYPE_CLASS_PHONE
-                setTextColor(Color.parseColor("#1E242B"))
-                setBackgroundColor(Color.parseColor("#EAE6DF"))
-                setPadding(32, 24, 32, 24)
-                val lp = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { setMargins(0, 0, 0, 20) }
-                layoutParams = lp
-            }
-            return Pair(label, input)
-        }
-
-        // Strictly 3 phone number slots
-        val (label1, slot1) = createSlotInput("Slot 1: Mother / Primary Guardian", "Enter 10-digit mobile number...")
-        val (label2, slot2) = createSlotInput("Slot 2: Father / Guardian", "Enter 10-digit mobile number (optional)...")
-        val (label3, slot3) = createSlotInput("Slot 3: Brother / Family Member", "Enter 10-digit mobile number (optional)...")
-
-        // â”€â”€ 6-Digit Family Unlock PIN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        val pinLabel = TextView(this).apply {
-            text = "6-Digit Family Unlock PIN"
-            textSize = 14f
-            setTextColor(Color.parseColor("#1E242B"))
-            setPadding(0, 20, 0, 6)
-        }
-        val pinInput = EditText(this).apply {
-            hint = "Enter 6-digit PIN..."
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-            filters = arrayOf(InputFilter.LengthFilter(6))
-            setTextColor(Color.parseColor("#1E242B"))
-            setBackgroundColor(Color.parseColor("#EAE6DF"))
-            setPadding(32, 24, 32, 24)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 20) }
-            layoutParams = lp
-        }
-        // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-        val lockButton = Button(this).apply {
-            text = "Verify & Permanently Lock Family Numbers"
-            textSize = 15f
-            setBackgroundColor(Color.parseColor("#2B4C7E"))
-            setTextColor(Color.WHITE)
-            setPadding(32, 32, 32, 32)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 24, 0, 0) }
-            layoutParams = lp
-
-            setOnClickListener {
-                // â”€â”€ Validate PIN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-                val pin = pinInput.text?.toString()?.trim().orEmpty()
-                if (pin.length != 6 || !pin.all { it.isDigit() }) {
-                    Toast.makeText(
-                        this@FamilySetupActivity,
-                        "Please enter a valid 6-digit numeric PIN.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                // Compute SHA-256 hex of the PIN using Device-Encrypted bootclasspath only
-                val pinBytes = pin.toByteArray(Charsets.UTF_8)
-                val pinSha256 = MessageDigest.getInstance("SHA-256")
-                    .digest(pinBytes)
-                    .joinToString("") { "%02x".format(it) }
-                // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-                val rawInputs = listOf(
-                    slot1.text?.toString()?.trim().orEmpty(),
-                    slot2.text?.toString()?.trim().orEmpty(),
-                    slot3.text?.toString()?.trim().orEmpty()
-                )
-
-                val normalizedE164List = mutableSetOf<String>()
-                for (raw in rawInputs) {
-                    if (raw.isNotBlank()) {
-                        val networkPortion = PhoneNumberUtils.extractNetworkPortion(raw).trim()
-                        val formattedE164 = PhoneNumberUtils.formatNumberToE164(networkPortion, "IN")
-                            ?: if (networkPortion.startsWith("+")) {
-                                networkPortion
-                            } else if (networkPortion.length == 10) {
-                                "+91$networkPortion"
-                            } else {
-                                networkPortion
-                            }
-
-                        if (formattedE164.isNotBlank() && formattedE164.length >= 10) {
-                            normalizedE164List.add(formattedE164)
-                        } else {
-                            Toast.makeText(
-                                this@FamilySetupActivity,
-                                "Invalid phone number entered: $raw",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            return@setOnClickListener
-                        }
-                    }
-                }
-
-                if (normalizedE164List.isEmpty()) {
-                    Toast.makeText(
-                        this@FamilySetupActivity,
-                        "Please provide at least 1 valid family phone number.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                // Permanently seal the 3 slots + PIN hash in Device-Encrypted storage
-                prefs.edit()
-                    .putStringSet("whitelisted_e164", normalizedE164List)
-                    .putString("family_pin_sha256", pinSha256)
-                    .putBoolean("family_numbers_locked", true)
-                    .commit()
-
-                Toast.makeText(
-                    this@FamilySetupActivity,
-                    "Family numbers permanently locked (${normalizedE164List.size} slots active).",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                finish()
-            }
-        }
-
-        root.addView(titleView)
-        root.addView(subtitleView)
-        root.addView(label1)
-        root.addView(slot1)
-        root.addView(label2)
-        root.addView(slot2)
-        root.addView(label3)
-        root.addView(slot3)
-        root.addView(pinLabel)
-        root.addView(pinInput)
-        root.addView(lockButton)
-
-        scrollView.addView(root)
-        setContentView(scrollView)
+    companion object {
+        const val AUDIT_CLEARED_FACTORY_RESET = "DISALLOW_FACTORY_RESET"
+        const val AUDIT_CLEARED_NETWORK_RESET = "DISALLOW_NETWORK_RESET"
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        val dePrefs = createDeviceProtectedStorageContext().getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-        if (dePrefs.getBoolean("family_numbers_locked", false)) {
-            super.onBackPressed()
-        } else {
-            Toast.makeText(this, "You must lock 1-3 family numbers and a 6-digit PIN first.", Toast.LENGTH_SHORT).show()
+    fun isDeprovisionPending(): Boolean = prefs.getBoolean("DEPROVISION_IN_PROGRESS", false)
+
+    fun emergencyLiftLockdownKeepDeviceOwner() {
+        if (!dpm.isDeviceOwnerApp(deContext.packageName)) return
+        runCatching { dpm.setLockTaskPackages(admin, emptyArray()) }
+        runCatching { dpm.clearPackagePersistentPreferredActivities(admin, deContext.packageName) }
+        val allPkgs = queryAllKnownPackages()
+        runCatching { dpm.setPackagesSuspended(admin, allPkgs.toTypedArray(), false) }
+        for (pkg in allPkgs) {
+            runCatching { if (dpm.isApplicationHidden(admin, pkg)) dpm.setApplicationHidden(admin, pkg, false) }
+        }
+    }
+
+    fun executeAtomicDeprovision(): Result<Unit> = runCatching {
+        if (!dpm.isDeviceOwnerApp(deContext.packageName)) {
+            prefs.edit().putBoolean("DEPROVISION_IN_PROGRESS", false).commit()
+            return@runCatching
+        }
+
+        prefs.edit().putBoolean("DEPROVISION_IN_PROGRESS", true).commit()
+
+        runCatching { dpm.setLockTaskPackages(admin, emptyArray()) }
+        runCatching { dpm.setStatusBarDisabled(admin, false) }
+        runCatching { dpm.setKeyguardDisabledFeatures(admin, DevicePolicyManager.KEYGUARD_DISABLE_FEATURES_NONE) }
+
+        val allPkgs = queryAllKnownPackages()
+        runCatching { dpm.setPackagesSuspended(admin, allPkgs.toTypedArray(), false) }
+
+        for (pkg in allPkgs) {
+            runCatching {
+                if (dpm.isApplicationHidden(admin, pkg)) {
+                    dpm.setApplicationHidden(admin, pkg, false)
+                }
+            }
+            runCatching {
+                if (dpm.isUninstallBlocked(admin, pkg)) {
+                    dpm.setUninstallBlocked(admin, pkg, false)
+                }
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            runCatching { dpm.setUserControlDisabledPackages(admin, emptyList()) }
+        }
+        runCatching { dpm.setAlwaysOnVpnPackage(admin, null, false) }
+        runCatching { dpm.clearPackagePersistentPreferredActivities(admin, deContext.packageName) }
+        runCatching { dpm.setPermittedAccessibilityServices(admin, null) }
+        runCatching { dpm.setPermittedInputMethods(admin, null) }
+
+        // S-04 / Zero-Harm Guarantee: Every restriction added during lock mode MUST be cleared during deprovisioning
+        val restrictions = listOf(
+            UserManager.DISALLOW_FACTORY_RESET,
+            UserManager.DISALLOW_NETWORK_RESET,
+            UserManager.DISALLOW_SAFE_BOOT,
+            UserManager.DISALLOW_DEBUGGING_FEATURES,
+            UserManager.DISALLOW_USB_FILE_TRANSFER,
+            UserManager.DISALLOW_ADD_USER,
+            UserManager.DISALLOW_MOUNT_PHYSICAL_MEDIA,
+            UserManager.DISALLOW_INSTALL_APPS,
+            UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES,
+            UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES_GLOBALLY,
+            UserManager.DISALLOW_CONFIG_TETHERING,
+            UserManager.DISALLOW_CONFIG_DATE_TIME,
+            UserManager.DISALLOW_PRINTING,
+            UserManager.DISALLOW_APPS_CONTROL
+        )
+        for (r in restrictions) {
+            runCatching { dpm.clearUserRestriction(admin, r) }
+        }
+
+        val stillHidden = allPkgs.filter { pkg ->
+            runCatching { dpm.isApplicationHidden(admin, pkg) }.getOrDefault(false)
+        }
+        check(stillHidden.isEmpty()) {
+            "Deprovision verification failed: packages still hidden ($stillHidden)"
+        }
+
+        @Suppress("DEPRECATION")
+        dpm.clearDeviceOwnerApp(deContext.packageName)
+        prefs.edit().putBoolean("DEPROVISION_IN_PROGRESS", false).commit()
+    }
+
+    private fun queryAllKnownPackages(): List<String> {
+        val pm = deContext.packageManager
+        val flags = PackageManager.MATCH_UNINSTALLED_PACKAGES or PackageManager.MATCH_DISABLED_COMPONENTS
+        return pm.getInstalledPackages(flags).map { it.packageName }.distinct()
+    }
+}
+
+--- FILE: app/src/main/java/in/swatantra/focus/dpc/SwatantraAdminReceiver.kt ---
+package `in`.swatantra.focus.dpc
+
+import android.app.admin.DeviceAdminReceiver
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.os.UserManager
+import `in`.swatantra.focus.ui.MainActivity
+import `in`.swatantra.focus.watchdog.SwatantraWatchdogService
+
+class SwatantraAdminReceiver : DeviceAdminReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        val deContext = context.createDeviceProtectedStorageContext()
+        // T-06: Start systemExempted WatchdogService on Line 1 before the 20s boot timeout
+        runCatching {
+            deContext.startForegroundService(Intent(deContext, SwatantraWatchdogService::class.java))
+        }
+
+        val dpm = deContext.getSystemService(DevicePolicyManager::class.java) ?: return
+        val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
+
+        // 4-Layer Zero-Harm Anti-Reset Shield: explicitly enforce anti-reset restrictions whenever active as Device Owner
+        if (dpm.isDeviceOwnerApp(deContext.packageName)) {
+            runCatching {
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
+            }
+        }
+
+        val action = intent.action ?: return
+        if (action == Intent.ACTION_MY_PACKAGE_REPLACED || action == "in.swatantra.focus.ACTION_OTA_STATUS") {
+            if (dpm.isDeviceOwnerApp(deContext.packageName)) {
+                runCatching { dpm.addUserRestriction(admin, UserManager.DISALLOW_INSTALL_APPS) }
+                val homeIntent = Intent(deContext, MainActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+                deContext.startActivity(homeIntent)
+            }
+        }
+    }
+}
+
+--- FILE: app/src/main/java/in/swatantra/focus/lecture/UniversalLectureInspector.kt ---
+package `in`.swatantra.focus.lecture
+
+import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.AccessibilityServiceInfo
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import android.content.Context
+import android.graphics.Rect
+import android.media.AudioManager
+import android.provider.Settings
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityNodeInfo
+import android.view.accessibility.AccessibilityWindowInfo
+import `in`.swatantra.focus.dpc.SwatantraAdminReceiver
+
+class UniversalLectureInspector : AccessibilityService() {
+
+    private val blockedShortFormViewIds = setOf(
+        "com.google.android.youtube:id/reel_recycler",
+        "com.google.android.youtube:id/reel_watch_player",
+        "com.google.android.youtube:id/shorts_pivot_button"
+    )
+
+    private val blockedResetTexts = listOf(
+        "Factory data reset",
+        "Erase all data",
+        "*2767*3855#",
+        "*#*#7780#*#*"
+    )
+
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        serviceInfo = serviceInfo.apply {
+            flags = flags or
+                AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS or
+                AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
+            notificationTimeout = 1500L
+        }
+    }
+
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+        val root = rootInActiveWindow ?: return
+        if (containsBlockedDistractionNode(root)) {
+            performGlobalAction(GLOBAL_ACTION_BACK)
+        }
+    }
+
+    override fun onInterrupt() {}
+
+    fun isVerifiedActiveLectureSession(studyPackages: Set<String>): Boolean {
+        val audioManager = getSystemService(AudioManager::class.java) ?: return false
+        if (!audioManager.isMusicActive) return false
+
+        val interactiveWindows = windows ?: return false
+        val displayMetrics = resources.displayMetrics
+        val totalScreenArea = (displayMetrics.widthPixels * displayMetrics.heightPixels).coerceAtLeast(1)
+
+        var foregroundStudyArea = 0
+        for (window in interactiveWindows) {
+            if (window.isInPictureInPictureMode) return false
+            if (window.type == AccessibilityWindowInfo.TYPE_APPLICATION) {
+                val pkg = window.root?.packageName?.toString() ?: continue
+                val bounds = Rect()
+                window.getBoundsInScreen(bounds)
+                val area = bounds.width() * bounds.height()
+
+                if (pkg in studyPackages) {
+                    if (window.root != null && containsBlockedDistractionNode(window.root)) {
+                        return false
+                    }
+                    foregroundStudyArea = maxOf(foregroundStudyArea, area)
+                }
+            }
+        }
+
+        val coverageRatio = foregroundStudyArea.toDouble() / totalScreenArea.toDouble()
+        return coverageRatio >= 0.35
+    }
+
+    private fun containsBlockedDistractionNode(root: AccessibilityNodeInfo): Boolean {
+        // Inspect for YouTube Shorts distraction view IDs
+        for (viewId in blockedShortFormViewIds) {
+            if (root.findAccessibilityNodeInfosByViewId(viewId).isNotEmpty()) return true
+        }
+        // Inspect for Settings/Dialer factory reset triggers & USSD backdoor codes
+        for (resetText in blockedResetTexts) {
+            if (root.findAccessibilityNodeInfosByText(resetText).isNotEmpty()) return true
+        }
+        return false
+    }
+
+    companion object {
+        fun ensureAccessibilityServiceBound(context: Context) {
+            val deContext = context.createDeviceProtectedStorageContext()
+            val dpm = deContext.getSystemService(DevicePolicyManager::class.java) ?: return
+            val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
+            if (!dpm.isDeviceOwnerApp(deContext.packageName)) return
+
+            val flatComponent = ComponentName(deContext, UniversalLectureInspector::class.java).flattenToString()
+            val current = Settings.Secure.getString(
+                deContext.contentResolver,
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+            ) ?: ""
+
+            if (!current.contains(flatComponent)) {
+                val updated = if (current.isBlank()) flatComponent else "$current:$flatComponent"
+                dpm.setSecureSetting(admin, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES, updated)
+                dpm.setSecureSetting(admin, Settings.Secure.ACCESSIBILITY_ENABLED, "1")
+            }
         }
     }
 }
@@ -1006,268 +1072,6 @@ class MainActivity : Activity() {
         dialog?.show()
     }
     // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-}
-
---- FILE: app/src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt ---
-package `in`.swatantra.focus.dpc
-
-import android.app.admin.DevicePolicyManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import android.os.UserManager
-
-class AtomicDeprovisionManager(context: Context) {
-    private val deContext = context.createDeviceProtectedStorageContext()
-    private val prefs = deContext.getSharedPreferences("deprovision_wal", Context.MODE_PRIVATE)
-    private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-    private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
-
-    companion object {
-        const val AUDIT_CLEARED_FACTORY_RESET = "DISALLOW_FACTORY_RESET"
-        const val AUDIT_CLEARED_NETWORK_RESET = "DISALLOW_NETWORK_RESET"
-    }
-
-    fun isDeprovisionPending(): Boolean = prefs.getBoolean("DEPROVISION_IN_PROGRESS", false)
-
-    fun emergencyLiftLockdownKeepDeviceOwner() {
-        if (!dpm.isDeviceOwnerApp(deContext.packageName)) return
-        runCatching { dpm.setLockTaskPackages(admin, emptyArray()) }
-        runCatching { dpm.clearPackagePersistentPreferredActivities(admin, deContext.packageName) }
-        val allPkgs = queryAllKnownPackages()
-        runCatching { dpm.setPackagesSuspended(admin, allPkgs.toTypedArray(), false) }
-        for (pkg in allPkgs) {
-            runCatching { if (dpm.isApplicationHidden(admin, pkg)) dpm.setApplicationHidden(admin, pkg, false) }
-        }
-    }
-
-    fun executeAtomicDeprovision(): Result<Unit> = runCatching {
-        if (!dpm.isDeviceOwnerApp(deContext.packageName)) {
-            prefs.edit().putBoolean("DEPROVISION_IN_PROGRESS", false).commit()
-            return@runCatching
-        }
-
-        prefs.edit().putBoolean("DEPROVISION_IN_PROGRESS", true).commit()
-
-        runCatching { dpm.setLockTaskPackages(admin, emptyArray()) }
-        runCatching { dpm.setStatusBarDisabled(admin, false) }
-        runCatching { dpm.setKeyguardDisabledFeatures(admin, DevicePolicyManager.KEYGUARD_DISABLE_FEATURES_NONE) }
-
-        val allPkgs = queryAllKnownPackages()
-        runCatching { dpm.setPackagesSuspended(admin, allPkgs.toTypedArray(), false) }
-
-        for (pkg in allPkgs) {
-            runCatching {
-                if (dpm.isApplicationHidden(admin, pkg)) {
-                    dpm.setApplicationHidden(admin, pkg, false)
-                }
-            }
-            runCatching {
-                if (dpm.isUninstallBlocked(admin, pkg)) {
-                    dpm.setUninstallBlocked(admin, pkg, false)
-                }
-            }
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            runCatching { dpm.setUserControlDisabledPackages(admin, emptyList()) }
-        }
-        runCatching { dpm.setAlwaysOnVpnPackage(admin, null, false) }
-        runCatching { dpm.clearPackagePersistentPreferredActivities(admin, deContext.packageName) }
-        runCatching { dpm.setPermittedAccessibilityServices(admin, null) }
-        runCatching { dpm.setPermittedInputMethods(admin, null) }
-
-        // S-04 / Zero-Harm Guarantee: Every restriction added during lock mode MUST be cleared during deprovisioning
-        val restrictions = listOf(
-            UserManager.DISALLOW_FACTORY_RESET,
-            UserManager.DISALLOW_NETWORK_RESET,
-            UserManager.DISALLOW_SAFE_BOOT,
-            UserManager.DISALLOW_DEBUGGING_FEATURES,
-            UserManager.DISALLOW_USB_FILE_TRANSFER,
-            UserManager.DISALLOW_ADD_USER,
-            UserManager.DISALLOW_MOUNT_PHYSICAL_MEDIA,
-            UserManager.DISALLOW_INSTALL_APPS,
-            UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES,
-            UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES_GLOBALLY,
-            UserManager.DISALLOW_CONFIG_TETHERING,
-            UserManager.DISALLOW_CONFIG_DATE_TIME,
-            UserManager.DISALLOW_PRINTING,
-            UserManager.DISALLOW_APPS_CONTROL
-        )
-        for (r in restrictions) {
-            runCatching { dpm.clearUserRestriction(admin, r) }
-        }
-
-        val stillHidden = allPkgs.filter { pkg ->
-            runCatching { dpm.isApplicationHidden(admin, pkg) }.getOrDefault(false)
-        }
-        check(stillHidden.isEmpty()) {
-            "Deprovision verification failed: packages still hidden ($stillHidden)"
-        }
-
-        @Suppress("DEPRECATION")
-        dpm.clearDeviceOwnerApp(deContext.packageName)
-        prefs.edit().putBoolean("DEPROVISION_IN_PROGRESS", false).commit()
-    }
-
-    private fun queryAllKnownPackages(): List<String> {
-        val pm = deContext.packageManager
-        val flags = PackageManager.MATCH_UNINSTALLED_PACKAGES or PackageManager.MATCH_DISABLED_COMPONENTS
-        return pm.getInstalledPackages(flags).map { it.packageName }.distinct()
-    }
-}
-
---- FILE: app/src/main/java/in/swatantra/focus/ledger/MonotonicDualClockLedger.kt ---
-package `in`.swatantra.focus.ledger
-
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.os.SystemClock
-import android.provider.Settings
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
-import java.io.File
-import java.security.KeyStore
-import javax.crypto.KeyGenerator
-import javax.crypto.Mac
-import javax.crypto.SecretKey
-
-class MonotonicDualClockLedger(context: Context) {
-    private val deContext = context.createDeviceProtectedStorageContext()
-    private val db: SQLiteDatabase = deContext.openOrCreateDatabase(
-        "swatantra_ledger.db",
-        Context.MODE_PRIVATE or Context.MODE_ENABLE_WRITE_AHEAD_LOGGING,
-        null
-    ).apply {
-        execSQL("PRAGMA synchronous = FULL;")
-        execSQL("""
-            CREATE TABLE IF NOT EXISTS ledger_state (
-                slot INTEGER PRIMARY KEY,
-                seq_no INTEGER NOT NULL,
-                boot_count INTEGER NOT NULL,
-                boot_id TEXT NOT NULL,
-                last_elapsed_ms INTEGER NOT NULL,
-                high_water_wall_ms INTEGER NOT NULL,
-                daily_study_ms INTEGER NOT NULL,
-                daily_call_ms INTEGER NOT NULL,
-                monotonic_since_reset_ms INTEGER NOT NULL,
-                day_epoch INTEGER NOT NULL,
-                hmac_hex TEXT NOT NULL
-            )
-        """.trimIndent())
-    }
-
-    @Synchronized
-    fun recordHeartbeatTick(
-        isStudying: Boolean,
-        isOnNonWhitelistedCall: Boolean,
-        verifiedTlsOrGnssTimeMs: Long?
-    ): Pair<Long, Long> {
-        val nowElapsed = SystemClock.elapsedRealtime()
-        val rawWall = System.currentTimeMillis()
-        val bootCount = Settings.Global.getInt(deContext.contentResolver, Settings.Global.BOOT_COUNT, 0)
-        val bootId = runCatching { File("/proc/sys/kernel/random/boot_id").readText().trim() }.getOrDefault("unknown")
-
-        val prev = loadLatestVerifiedSlot()
-        val isSameBoot = prev != null &&
-            prev.bootCount == bootCount &&
-            prev.bootId == bootId &&
-            nowElapsed >= prev.lastElapsedMs
-
-        val deltaMs = if (isSameBoot) (nowElapsed - prev!!.lastElapsedMs).coerceAtLeast(0L) else nowElapsed
-
-        val effectiveWallMs = when {
-            prev == null -> verifiedTlsOrGnssTimeMs ?: rawWall
-            verifiedTlsOrGnssTimeMs != null -> maxOf(prev.highWaterWallMs + deltaMs, verifiedTlsOrGnssTimeMs)
-            else -> prev.highWaterWallMs + deltaMs
-        }
-
-        val candidateDayEpoch = effectiveWallMs / 86_400_000L
-        val monotonicSinceReset = (prev?.monotonicSinceResetMs ?: 0L) + deltaMs
-
-        val shouldRolloverDay = prev != null &&
-            candidateDayEpoch > prev.dayEpoch &&
-            (verifiedTlsOrGnssTimeMs != null || monotonicSinceReset >= 86_400_000L)
-
-        val persistedDayEpoch = if (prev == null || shouldRolloverDay) candidateDayEpoch else prev.dayEpoch
-
-        val nextStudyMs = (if (shouldRolloverDay) 0L else (prev?.dailyStudyMs ?: 0L)) + if (isStudying) deltaMs else 0L
-        val nextCallMs = (if (shouldRolloverDay) 0L else (prev?.dailyCallMs ?: 0L)) + if (isOnNonWhitelistedCall) deltaMs else 0L
-        val nextSeq = (prev?.seqNo ?: 0L) + 1L
-        val targetSlot = (nextSeq % 2L).toInt()
-        val nextMonotonicSinceReset = if (shouldRolloverDay) 0L else monotonicSinceReset
-
-        val payload = "$nextSeq|$bootCount|$bootId|$nowElapsed|$effectiveWallMs|$nextStudyMs|$nextCallMs|$nextMonotonicSinceReset|$persistedDayEpoch"
-        val hmac = computeHmacHex(payload)
-
-        db.beginTransactionNonExclusive()
-        try {
-            db.execSQL(
-                """INSERT OR REPLACE INTO ledger_state
-                   (slot, seq_no, boot_count, boot_id, last_elapsed_ms, high_water_wall_ms, daily_study_ms, daily_call_ms, monotonic_since_reset_ms, day_epoch, hmac_hex)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                arrayOf<Any>(
-                    targetSlot, nextSeq, bootCount, bootId, nowElapsed, effectiveWallMs,
-                    nextStudyMs, nextCallMs, nextMonotonicSinceReset, persistedDayEpoch, hmac
-                )
-            )
-            db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
-        }
-
-        deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean("daily_call_quota_exhausted", nextCallMs >= 3_600_000L)
-            .commit()
-
-        return Pair(nextStudyMs, nextCallMs)
-    }
-
-    private data class LedgerRow(
-        val seqNo: Long, val bootCount: Int, val bootId: String,
-        val lastElapsedMs: Long, val highWaterWallMs: Long,
-        val dailyStudyMs: Long, val dailyCallMs: Long,
-        val monotonicSinceResetMs: Long, val dayEpoch: Long, val hmacHex: String
-    )
-
-    private fun loadLatestVerifiedSlot(): LedgerRow? {
-        db.rawQuery(
-            "SELECT seq_no, boot_count, boot_id, last_elapsed_ms, high_water_wall_ms, daily_study_ms, daily_call_ms, monotonic_since_reset_ms, day_epoch, hmac_hex FROM ledger_state ORDER BY seq_no DESC",
-            null
-        ).use { c ->
-            while (c.moveToNext()) {
-                val row = LedgerRow(
-                    c.getLong(0), c.getInt(1), c.getString(2), c.getLong(3),
-                    c.getLong(4), c.getLong(5), c.getLong(6), c.getLong(7),
-                    c.getLong(8), c.getString(9)
-                )
-                val payload = "${row.seqNo}|${row.bootCount}|${row.bootId}|${row.lastElapsedMs}|${row.highWaterWallMs}|${row.dailyStudyMs}|${row.dailyCallMs}|${row.monotonicSinceResetMs}|${row.dayEpoch}"
-                if (computeHmacHex(payload) == row.hmacHex) return row
-            }
-        }
-        return null
-    }
-
-    private fun computeHmacHex(payload: String): String {
-        val mac = Mac.getInstance("HmacSHA256")
-        mac.init(getOrCreateDirectBootHmacKey())
-        return mac.doFinal(payload.toByteArray(Charsets.UTF_8)).joinToString("") { "%02x".format(it) }
-    }
-
-    private fun getOrCreateDirectBootHmacKey(): SecretKey {
-        val ks = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
-        val alias = "swatantra_ledger_hmac_v7"
-        (ks.getEntry(alias, null) as? KeyStore.SecretKeyEntry)?.secretKey?.let { return it }
-
-        val keyGen = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_HMAC_SHA256, "AndroidKeyStore")
-        val spec = KeyGenParameterSpec.Builder(alias, KeyProperties.PURPOSE_SIGN or KeyProperties.PURPOSE_VERIFY)
-            .setUnlockedDeviceRequired(false)
-            .build()
-        keyGen.init(spec)
-        return keyGen.generateKey()
-    }
 }
 
 --- FILE: app/src/test/java/in/swatantra/focus/SwatantraProductionVerificationTest.kt ---

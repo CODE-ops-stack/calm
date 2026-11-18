@@ -21,13 +21,15 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses || true
+
       - name: Run Unit Tests & Release Build
         run: |
-          chmod +x gradlew || true
-          ./gradlew test assembleRelease --stacktrace > build_output.log 2>&1 || true
-          tail -n 150 build_output.log > error.log
+          chmod +x gradlew && ./gradlew test assembleRelease --stacktrace > ci_build.log 2>&1
 
       - name: Prepare Email Summary Body
+        if: always()
         run: |
           echo "=== SWATANTRA v7.1 CI TELEMETRY ===" > ci_email_body.txt
           echo "Commit: ${{ github.sha }}" >> ci_email_body.txt
@@ -35,8 +37,8 @@ jobs:
           echo "=== TODO.md PROGRESS ===" >> ci_email_body.txt
           cat TODO.md >> ci_email_body.txt || true
           echo "" >> ci_email_body.txt
-          echo "=== BUILD & TEST LOG (error.log) ===" >> ci_email_body.txt
-          cat error.log >> ci_email_body.txt || true
+          echo "=== UBUNTU CI BUILD & TEST LOG (tail -n 100) ===" >> ci_email_body.txt
+          tail -n 100 ci_build.log >> ci_email_body.txt || true
 
       - name: Send Build Telemetry Email to Gmail
         if: always()
@@ -51,5 +53,5 @@ jobs:
           to: ${{ secrets.GMAIL_ADDRESS }}
           from: "Swatantra GitHub CI <${{ secrets.GMAIL_ADDRESS }}>"
           body: file://ci_email_body.txt
-          attachments: TODO.md,error.log,AUDIT_PROOF.txt
+          attachments: TODO.md,ci_build.log,AUDIT_PROOF.txt
           ignore_missing: true

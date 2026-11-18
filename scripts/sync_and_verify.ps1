@@ -7,7 +7,8 @@ Write-Host "=== Swatantra v7.1 Antigravity Build, Log Capture & GitHub Sync ==="
 # 1. Run Gradle build if gradlew.bat exists and capture output to error.log
 if (Test-Path ".\gradlew.bat") {
     Write-Host "[BUILD] Running .\gradlew.bat assembleRelease..."
-    .\gradlew.bat assembleRelease --stacktrace *>&1 | Tee-Object -FilePath "error.log"
+    .\gradlew.bat assembleRelease --stacktrace *>&1 | Tee-Object -Variable buildOut
+    $buildOut | Out-File -FilePath "error.log" -Encoding utf8
 } else {
     "Gradle wrapper not initialized yet. Run 'gradle wrapper' in Antigravity terminal." | Out-File -FilePath "error.log" -Encoding utf8
 }
@@ -37,4 +38,5 @@ if ($remotes -notcontains "origin") {
 git add .
 git commit -m "chore(antigravity): sync Swatantra v7.1 build state and error.log"
 git push -u origin main
-Write-Host "[SYNC COMPLETE] Pushed latest state to $RepoUrl" -ForegroundColor Cyan
+git push origin main:master
+Write-Host "[SYNC COMPLETE] Pushed latest state to $RepoUrl (main & master)" -ForegroundColor Cyan

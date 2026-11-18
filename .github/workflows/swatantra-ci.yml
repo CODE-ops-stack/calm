@@ -21,12 +21,16 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Accept Android SDK Licenses
-        run: yes | sdkmanager --licenses || true
-
-      - name: Run Unit Tests & Release Build
+      - name: Accept Licenses & Run Release Build
         run: |
-          chmod +x gradlew && ./gradlew test assembleRelease --stacktrace > ci_build.log 2>&1
+          {
+            set +e
+            yes | sdkmanager --licenses >/dev/null 2>&1
+            chmod +x ./gradlew
+            ./gradlew test assembleRelease --stacktrace
+            EXIT_CODE=$?
+            exit $EXIT_CODE
+          } > ci_build.log 2>&1
 
       - name: Prepare Email Summary Body
         if: always()
@@ -53,5 +57,5 @@ jobs:
           to: ${{ secrets.GMAIL_ADDRESS }}
           from: "Swatantra GitHub CI <${{ secrets.GMAIL_ADDRESS }}>"
           body: file://ci_email_body.txt
-          attachments: TODO.md,ci_build.log,AUDIT_PROOF.txt
+          attachments: TODO.md,error.log,ci_build.log,AUDIT_PROOF.txt
           ignore_missing: true

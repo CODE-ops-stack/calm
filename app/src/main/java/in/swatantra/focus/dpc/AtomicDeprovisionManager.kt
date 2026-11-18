@@ -13,6 +13,11 @@ class AtomicDeprovisionManager(context: Context) {
     private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
     private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
 
+    companion object {
+        const val AUDIT_CLEARED_FACTORY_RESET = "DISALLOW_FACTORY_RESET"
+        const val AUDIT_CLEARED_NETWORK_RESET = "DISALLOW_NETWORK_RESET"
+    }
+
     fun isDeprovisionPending(): Boolean = prefs.getBoolean("DEPROVISION_IN_PROGRESS", false)
 
     fun emergencyLiftLockdownKeepDeviceOwner() {

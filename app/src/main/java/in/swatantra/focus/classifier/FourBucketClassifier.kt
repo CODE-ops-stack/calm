@@ -18,6 +18,11 @@ class FourBucketClassifier(context: Context) {
     private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
     private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
 
+    companion object {
+        const val AUDIT_ENFORCED_FACTORY_RESET = "DISALLOW_FACTORY_RESET"
+        const val AUDIT_ENFORCED_NETWORK_RESET = "DISALLOW_NETWORK_RESET"
+    }
+
     private val immutableSystemCore = setOf(
         "android",
         "com.android.systemui",

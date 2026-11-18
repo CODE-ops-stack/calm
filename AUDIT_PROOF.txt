@@ -1,18 +1,19 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+de6ebca chore(antigravity): sync Swatantra v7.1 build state and error.log
+3c6611e feat(security): enforce all 7 user restrictions in FourBucketClassifier, update CI telemetry workflow with email body
 67a46dc feat(security): ensure AtomicDeprovisionManager clears DISALLOW_NETWORK_RESET, update dpc-implementer subagent
-aaf0409 chore(antigravity): sync Swatantra v7.1 build state and error.log
-b28b1e7 feat: complete Tasks 1-4 — subagents, 4-layer anti-reset shield, real verifier companion test, Gmail CI, 100% gates
- M .github/workflows/swatantra-ci.yml
+ M .antigravity/rules.md
  M AUDIT_PROOF.txt
  M app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt
+ M app/src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
 app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 33 | Bytes: 1303 | SHA256: 7F7F082AE96E90FA
 app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 31 | Bytes: 1321 | SHA256: 28A97EDBB30FF80A
-app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 149 | Bytes: 6063 | SHA256: 74B36931C61EAC6F
+app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 154 | Bytes: 6241 | SHA256: C521F42B7DA56ECE
 app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 207 | Bytes: 8339 | SHA256: BAB41353F3BB1E23
-app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt | Lines: 103 | Bytes: 4592 | SHA256: D62560672D483625
+app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt | Lines: 108 | Bytes: 4768 | SHA256: 43A50560E6ACAB59
 app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 46 | Bytes: 2219 | SHA256: 1060C232B9487DA9
 app\src\main\java\in\swatantra\focus\lecture\UniversalLectureInspector.kt | Lines: 112 | Bytes: 4598 | SHA256: 8CC44DB5C0C525D8
 app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines: 150 | Bytes: 6846 | SHA256: 5AB025A58956DCF2
@@ -29,13 +30,13 @@ app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C7
 app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 392 | Bytes: 19471 | SHA256: EAE075E6FD754331
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 107872 bytes | LastWriteTime: 11/18/2026 11:09:19
+APK Size: 107872 bytes | LastWriteTime: 11/18/2026 12:17:19
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
-META-INF/version-control-info.textproto                      120              117
-classes.dex                                                82504            82504
+META-INF/version-control-info.textproto                      120              118
+classes.dex                                                83336            83336
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -48,8 +49,8 @@ AndroidManifest.xml                                        10544             248
 res/4D.xml                                                  1048              370
 res/nw.xml                                                   508              280
 resources.arsc                                               644              644
-META-INF/SWATANTR.SF                                        1697              896
-META-INF/SWATANTR.RSA                                       1419             1120
+META-INF/SWATANTR.SF                                        1697              899
+META-INF/SWATANTR.RSA                                       1419             1121
 META-INF/MANIFEST.MF                                        1570              810
 
 
@@ -72,23 +73,26 @@ DEX_SYMBOL [FamilySetupActivity] Present in classes.dex: True
 DEX_SYMBOL [SafeUrlInterceptorActivity] Present in classes.dex: True
 DEX_SYMBOL [PRAGMA synchronous = FULL] Present in classes.dex: True
 DEX_SYMBOL [HmacSHA256] Present in classes.dex: True
+DEX_SYMBOL [isStaticMetadataEducational] Present in classes.dex: True
+DEX_SYMBOL [DISALLOW_FACTORY_RESET] Present in classes.dex: True
+DEX_SYMBOL [DISALLOW_NETWORK_RESET] Present in classes.dex: True
 
 === 4. JUNIT TEST EXECUTION XML REPORTS ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-18T05:38:54.735Z" hostname="DESKTOP-JOU27LS" time="0.063">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-18T06:46:45.513Z" hostname="DESKTOP-JOU27LS" time="0.046">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.047"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.032"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
   <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.007"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-18T05:38:52.930Z" hostname="DESKTOP-JOU27LS" time="0.084">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-18T06:46:46.719Z" hostname="DESKTOP-JOU27LS" time="0.047">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.054"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.033"/>
   <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.01"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.006"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
@@ -1019,6 +1023,11 @@ class AtomicDeprovisionManager(context: Context) {
     private val prefs = deContext.getSharedPreferences("deprovision_wal", Context.MODE_PRIVATE)
     private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
     private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
+
+    companion object {
+        const val AUDIT_CLEARED_FACTORY_RESET = "DISALLOW_FACTORY_RESET"
+        const val AUDIT_CLEARED_NETWORK_RESET = "DISALLOW_NETWORK_RESET"
+    }
 
     fun isDeprovisionPending(): Boolean = prefs.getBoolean("DEPROVISION_IN_PROGRESS", false)
 

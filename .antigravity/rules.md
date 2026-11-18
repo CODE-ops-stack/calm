@@ -21,3 +21,5 @@
    - Strictly enforce maximum 3 permanent family slots in `FamilySetupActivity.kt`; once locked (`family_numbers_locked`), slots cannot be edited or expanded.
    - Use `scripts/test_on_emulator.ps1` for virtual AVD/RTL provisioning tests without requiring a personal device.
 
+6. **Mandatory End-of-Response Machine Proof**:
+   - At the end of EVERY response after modifying code or running a build, you MUST regenerate `AUDIT_PROOF.txt` and print a `=== VERBATIM MACHINE PROOF ===` block at the very bottom of your response containing: (a) `git log -n 2 --oneline`, (b) file line counts & SHA-256 hashes of modified files, (c) `classes.dex` symbol verification (`True`/`False`) for modified classes/methods, (d) raw JUnit XML `<testsuite>` results, and (e) verbatim code of the newly modified methods.

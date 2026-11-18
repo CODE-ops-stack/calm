@@ -1,15 +1,8 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+c387174 chore(antigravity): sync Swatantra v7.1 build state and error.log
 2bbb422 chore(audit): update AUDIT_PROOF.txt for CI runner workflow fixes
 8433c30 ci(github-actions): set gradlew executable and group license acceptance and build execution with full stdout capture
-9170aff chore(audit): update AUDIT_PROOF.txt with latest telemetry commit
- M .github/workflows/swatantra-ci.yml
  M AUDIT_PROOF.txt
- M app/src/main/java/in/swatantra/focus/ui/FamilySetupActivity.kt
- M app/src/main/java/in/swatantra/focus/ui/MainActivity.kt
- M app/src/main/java/in/swatantra/focus/ui/SafeUrlInterceptorActivity.kt
- M app/src/test/java/in/swatantra/focus/SwatantraProductionVerificationTest.kt
- M scripts/sync_and_verify.ps1
- M scripts/test_on_emulator.ps1
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
@@ -34,7 +27,7 @@ app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C7
 app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 496 | Bytes: 24476 | SHA256: A4AAF6BBF183615B
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 111968 bytes | LastWriteTime: 11/18/2026 15:40:02
+APK Size: 111968 bytes | LastWriteTime: 11/18/2026 15:44:07
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------

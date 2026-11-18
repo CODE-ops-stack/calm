@@ -1,7 +1,7 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+99a53a2 ci(telemetry): update license acceptance, Ubuntu CI log capture, and clean UTF-8 error.log
+f8fc087 chore(audit): regenerate AUDIT_PROOF.txt with full machine proof
 4696608 chore(rules): add Rule 6 mandatory end-of-response machine proof and audit symbols
-de6ebca chore(antigravity): sync Swatantra v7.1 build state and error.log
-3c6611e feat(security): enforce all 7 user restrictions in FourBucketClassifier, update CI telemetry workflow with email body
  M AUDIT_PROOF.txt
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===

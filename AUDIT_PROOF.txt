@@ -1,7 +1,7 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+8433c30 ci(github-actions): set gradlew executable and group license acceptance and build execution with full stdout capture
+9170aff chore(audit): update AUDIT_PROOF.txt with latest telemetry commit
 99a53a2 ci(telemetry): update license acceptance, Ubuntu CI log capture, and clean UTF-8 error.log
-f8fc087 chore(audit): regenerate AUDIT_PROOF.txt with full machine proof
-4696608 chore(rules): add Rule 6 mandatory end-of-response machine proof and audit symbols
  M AUDIT_PROOF.txt
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===

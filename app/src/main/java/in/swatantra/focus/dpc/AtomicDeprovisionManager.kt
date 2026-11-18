@@ -62,8 +62,10 @@ class AtomicDeprovisionManager(context: Context) {
         runCatching { dpm.setPermittedAccessibilityServices(admin, null) }
         runCatching { dpm.setPermittedInputMethods(admin, null) }
 
+        // S-04 / Zero-Harm Guarantee: Every restriction added during lock mode MUST be cleared during deprovisioning
         val restrictions = listOf(
             UserManager.DISALLOW_FACTORY_RESET,
+            UserManager.DISALLOW_NETWORK_RESET,
             UserManager.DISALLOW_SAFE_BOOT,
             UserManager.DISALLOW_DEBUGGING_FEATURES,
             UserManager.DISALLOW_USB_FILE_TRANSFER,

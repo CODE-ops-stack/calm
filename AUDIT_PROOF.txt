@@ -1,7 +1,7 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+860907f chore(antigravity): sync Swatantra v7.1 build state and error.log
+12a6f53 chore(audit): update AUDIT_PROOF.txt with 5-test proof and tactical if-then directive
 5fcb8c8 chore(antigravity): sync Swatantra v7.1 build state and error.log
-e23db7f chore(audit): update AUDIT_PROOF.txt with ON A MISSION theme verification and test report
-c387174 chore(antigravity): sync Swatantra v7.1 build state and error.log
  M AUDIT_PROOF.txt
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
@@ -11,29 +11,30 @@ app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 31
 app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 154 | Bytes: 6241 | SHA256: C521F42B7DA56ECE
 app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 207 | Bytes: 8339 | SHA256: BAB41353F3BB1E23
 app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt | Lines: 108 | Bytes: 4768 | SHA256: 43A50560E6ACAB59
+app\src\main\java\in\swatantra\focus\dpc\ParentTotpAuthenticator.kt | Lines: 101 | Bytes: 3733 | SHA256: 869A2D54190628A6
 app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 46 | Bytes: 2219 | SHA256: 1060C232B9487DA9
 app\src\main\java\in\swatantra\focus\lecture\UniversalLectureInspector.kt | Lines: 112 | Bytes: 4598 | SHA256: 8CC44DB5C0C525D8
 app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines: 150 | Bytes: 6846 | SHA256: 5AB025A58956DCF2
 app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
 app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
-app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 225 | Bytes: 9774 | SHA256: A7D9F49A9A76397B
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 416 | Bytes: 18184 | SHA256: 2B6AC5E806A44EB9
+app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 184 | Bytes: 7442 | SHA256: 1A895F4D71A5788F
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 352 | Bytes: 15518 | SHA256: B6970D7E9BEB8CB3
 app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 79 | Bytes: 2958 | SHA256: E180843F053A47EA
 app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
 app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
 app\src\main\res\xml\device_admin_policies.xml | Lines: 14 | Bytes: 430 | SHA256: 5E61A80C8BE194CC
 app\src\main\res\xml\lecture_inspector_config.xml | Lines: 7 | Bytes: 413 | SHA256: 60F625306042349D
 app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C73DC726
-app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 513 | Bytes: 25210 | SHA256: 8B7F9491E3179A83
+app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 545 | Bytes: 27294 | SHA256: F5BBFFF7A8CC4DF8
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 111968 bytes | LastWriteTime: 11/19/2026 12:58:01
+APK Size: 116064 bytes | LastWriteTime: 11/19/2026 13:42:58
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
 META-INF/version-control-info.textproto                      120              118
-classes.dex                                                85780            85780
+classes.dex                                                88440            88440
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -46,9 +47,9 @@ AndroidManifest.xml                                        10544             248
 res/4D.xml                                                  1048              370
 res/nw.xml                                                   508              280
 resources.arsc                                               644              644
-META-INF/SWATANTR.SF                                        1697              900
-META-INF/SWATANTR.RSA                                       1419             1120
-META-INF/MANIFEST.MF                                        1570              811
+META-INF/SWATANTR.SF                                        1697              897
+META-INF/SWATANTR.RSA                                       1419             1121
+META-INF/MANIFEST.MF                                        1570              810
 
 
 
@@ -75,32 +76,139 @@ DEX_SYMBOL [DISALLOW_FACTORY_RESET] Present in classes.dex: True
 DEX_SYMBOL [DISALLOW_NETWORK_RESET] Present in classes.dex: True
 DEX_SYMBOL [ON_A_MISSION_COMMAND_DECK_V7_1] Present in classes.dex: True
 DEX_SYMBOL [TACTICAL_IF_THEN_DIRECTIVE_V7_1] Present in classes.dex: True
+DEX_SYMBOL [ParentTotpAuthenticator] Present in classes.dex: True
+DEX_SYMBOL [PARENT_TOTP_RFC6238_V7_1] Present in classes.dex: True
 
 === 4. JUNIT TEST EXECUTION XML REPORTS ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-19T07:25:53.565Z" hostname="DESKTOP-JOU27LS" time="0.078">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-19T08:09:53.366Z" hostname="DESKTOP-JOU27LS" time="0.378">
   <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.049"/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.009"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.005"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.007"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.144"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.034"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.023"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.002"/>
+  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.136"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.013"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-19T07:25:54.956Z" hostname="DESKTOP-JOU27LS" time="0.086">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-19T08:09:57.461Z" hostname="DESKTOP-JOU27LS" time="0.369">
   <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.05"/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.011"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.006"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.009"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.157"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.033"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.018"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
+  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.118"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.015"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 
 === 5. VERBATIM SOURCE CODE DUMP OF CRITICAL FILES ===
+
+--- FILE: app/src/main/java/in/swatantra/focus/dpc/ParentTotpAuthenticator.kt ---
+package `in`.swatantra.focus.dpc
+
+import java.nio.ByteBuffer
+import java.security.MessageDigest
+import java.security.SecureRandom
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
+
+/**
+ * Pure Android SDK RFC 6238 TOTP (Google Authenticator compatible, â‚¹0 offline cost)
+ * plus Offline 12-Character Recovery Key helper.
+ */
+object ParentTotpAuthenticator {
+    const val TOTP_AUDIT_SYMBOL = "PARENT_TOTP_RFC6238_V7_1"
+    private const val BASE32_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
+    private const val RECOVERY_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    private const val TIME_STEP_SECONDS = 30L
+
+    fun generateBase32Secret(length: Int = 16): String {
+        val random = SecureRandom()
+        return buildString(length) {
+            repeat(length) {
+                append(BASE32_ALPHABET[random.nextInt(BASE32_ALPHABET.length)])
+            }
+        }
+    }
+
+    fun generateRecoveryKey(): String {
+        val random = SecureRandom()
+        fun chunk(): String = buildString(4) {
+            repeat(4) { append(RECOVERY_ALPHABET[random.nextInt(RECOVERY_ALPHABET.length)]) }
+        }
+        return "SWT-${chunk()}-${chunk()}-${chunk()}"
+    }
+
+    fun normalizeRecoveryKey(input: String): String =
+        input.uppercase().replace("-", "").replace(" ", "").trim()
+
+    fun sha256Hex(input: String): String =
+        MessageDigest.getInstance("SHA-256")
+            .digest(input.toByteArray(Charsets.UTF_8))
+            .joinToString("") { "%02x".format(it) }
+
+    fun decodeBase32(base32: String): ByteArray {
+        val cleaned = base32.uppercase().replace("=", "").replace(" ", "").replace("-", "")
+        val out = ByteArray((cleaned.length * 5) / 8)
+        var buffer = 0
+        var bitsLeft = 0
+        var idx = 0
+        for (c in cleaned) {
+            val val5 = BASE32_ALPHABET.indexOf(c)
+            if (val5 < 0) continue
+            buffer = (buffer shl 5) or val5
+            bitsLeft += 5
+            if (bitsLeft >= 8) {
+                out[idx++] = ((buffer shr (bitsLeft - 8)) and 0xFF).toByte()
+                bitsLeft -= 8
+            }
+        }
+        return out.copyOf(idx)
+    }
+
+    fun generateTotpForTimeStep(secretBase32: String, timeStep: Long): String {
+        val keyBytes = decodeBase32(secretBase32)
+        if (keyBytes.isEmpty()) return ""
+        val data = ByteBuffer.allocate(8).putLong(timeStep).array()
+        val mac = Mac.getInstance("HmacSHA1")
+        mac.init(SecretKeySpec(keyBytes, "HmacSHA1"))
+        val hash = mac.doFinal(data)
+        val offset = hash[hash.size - 1].toInt() and 0x0F
+        val binary =
+            ((hash[offset].toInt() and 0x7F) shl 24) or
+            ((hash[offset + 1].toInt() and 0xFF) shl 16) or
+            ((hash[offset + 2].toInt() and 0xFF) shl 8) or
+            (hash[offset + 3].toInt() and 0xFF)
+        val otp = binary % 1_000_000
+        return "%06d".format(otp)
+    }
+
+    fun verifyTotpCode(
+        secretBase32: String,
+        enteredCode: String,
+        currentTimeMs: Long = System.currentTimeMillis()
+    ): Boolean {
+        val cleanCode = enteredCode.trim()
+        if (cleanCode.length != 6 || !cleanCode.all { it.isDigit() }) return false
+        if (secretBase32.isBlank()) return false
+        val currentStep = (currentTimeMs / 1000L) / TIME_STEP_SECONDS
+        for (offset in -1L..1L) {
+            val expected = generateTotpForTimeStep(secretBase32, currentStep + offset)
+            if (expected.isNotEmpty() && MessageDigest.isEqual(
+                    expected.toByteArray(Charsets.UTF_8),
+                    cleanCode.toByteArray(Charsets.UTF_8)
+                )
+            ) {
+                return true
+            }
+        }
+        return false
+    }
+}
 
 --- FILE: app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt ---
 package `in`.swatantra.focus.classifier
@@ -625,120 +733,6 @@ class SwatantraAdminReceiver : DeviceAdminReceiver() {
     }
 }
 
---- FILE: app/src/main/java/in/swatantra/focus/lecture/UniversalLectureInspector.kt ---
-package `in`.swatantra.focus.lecture
-
-import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.AccessibilityServiceInfo
-import android.app.admin.DevicePolicyManager
-import android.content.ComponentName
-import android.content.Context
-import android.graphics.Rect
-import android.media.AudioManager
-import android.provider.Settings
-import android.view.accessibility.AccessibilityEvent
-import android.view.accessibility.AccessibilityNodeInfo
-import android.view.accessibility.AccessibilityWindowInfo
-import `in`.swatantra.focus.dpc.SwatantraAdminReceiver
-
-class UniversalLectureInspector : AccessibilityService() {
-
-    private val blockedShortFormViewIds = setOf(
-        "com.google.android.youtube:id/reel_recycler",
-        "com.google.android.youtube:id/reel_watch_player",
-        "com.google.android.youtube:id/shorts_pivot_button"
-    )
-
-    private val blockedResetTexts = listOf(
-        "Factory data reset",
-        "Erase all data",
-        "*2767*3855#",
-        "*#*#7780#*#*"
-    )
-
-    override fun onServiceConnected() {
-        super.onServiceConnected()
-        serviceInfo = serviceInfo.apply {
-            flags = flags or
-                AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS or
-                AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
-            notificationTimeout = 1500L
-        }
-    }
-
-    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        val root = rootInActiveWindow ?: return
-        if (containsBlockedDistractionNode(root)) {
-            performGlobalAction(GLOBAL_ACTION_BACK)
-        }
-    }
-
-    override fun onInterrupt() {}
-
-    fun isVerifiedActiveLectureSession(studyPackages: Set<String>): Boolean {
-        val audioManager = getSystemService(AudioManager::class.java) ?: return false
-        if (!audioManager.isMusicActive) return false
-
-        val interactiveWindows = windows ?: return false
-        val displayMetrics = resources.displayMetrics
-        val totalScreenArea = (displayMetrics.widthPixels * displayMetrics.heightPixels).coerceAtLeast(1)
-
-        var foregroundStudyArea = 0
-        for (window in interactiveWindows) {
-            if (window.isInPictureInPictureMode) return false
-            if (window.type == AccessibilityWindowInfo.TYPE_APPLICATION) {
-                val pkg = window.root?.packageName?.toString() ?: continue
-                val bounds = Rect()
-                window.getBoundsInScreen(bounds)
-                val area = bounds.width() * bounds.height()
-
-                if (pkg in studyPackages) {
-                    if (window.root != null && containsBlockedDistractionNode(window.root)) {
-                        return false
-                    }
-                    foregroundStudyArea = maxOf(foregroundStudyArea, area)
-                }
-            }
-        }
-
-        val coverageRatio = foregroundStudyArea.toDouble() / totalScreenArea.toDouble()
-        return coverageRatio >= 0.35
-    }
-
-    private fun containsBlockedDistractionNode(root: AccessibilityNodeInfo): Boolean {
-        // Inspect for YouTube Shorts distraction view IDs
-        for (viewId in blockedShortFormViewIds) {
-            if (root.findAccessibilityNodeInfosByViewId(viewId).isNotEmpty()) return true
-        }
-        // Inspect for Settings/Dialer factory reset triggers & USSD backdoor codes
-        for (resetText in blockedResetTexts) {
-            if (root.findAccessibilityNodeInfosByText(resetText).isNotEmpty()) return true
-        }
-        return false
-    }
-
-    companion object {
-        fun ensureAccessibilityServiceBound(context: Context) {
-            val deContext = context.createDeviceProtectedStorageContext()
-            val dpm = deContext.getSystemService(DevicePolicyManager::class.java) ?: return
-            val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
-            if (!dpm.isDeviceOwnerApp(deContext.packageName)) return
-
-            val flatComponent = ComponentName(deContext, UniversalLectureInspector::class.java).flattenToString()
-            val current = Settings.Secure.getString(
-                deContext.contentResolver,
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-            ) ?: ""
-
-            if (!current.contains(flatComponent)) {
-                val updated = if (current.isBlank()) flatComponent else "$current:$flatComponent"
-                dpm.setSecureSetting(admin, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES, updated)
-                dpm.setSecureSetting(admin, Settings.Secure.ACCESSIBILITY_ENABLED, "1")
-            }
-        }
-    }
-}
-
 --- FILE: app/src/main/java/in/swatantra/focus/ui/MainActivity.kt ---
 package `in`.swatantra.focus.ui
 
@@ -761,6 +755,7 @@ import android.widget.TextView
 import android.widget.Toast
 import `in`.swatantra.focus.classifier.FourBucketClassifier
 import `in`.swatantra.focus.dpc.AtomicDeprovisionManager
+import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
 import `in`.swatantra.focus.watchdog.SwatantraWatchdogService
 import java.security.MessageDigest
 
@@ -956,47 +951,16 @@ class MainActivity : Activity() {
      * Both paths require Device-Encrypted SharedPreferences.
      */
     private fun showDeprovisionGuard(deContext: Context) {
-        val walPrefs = deContext.getSharedPreferences("deprovision_wal", Context.MODE_PRIVATE)
         val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
 
-        // Elapsed duration calculation that survives reboots
-        val requestedElapsedMs = walPrefs.getLong("deprovision_requested_elapsed_ms", -1L)
-        val requestedWallMs = walPrefs.getLong("deprovision_requested_wall_ms", -1L)
-        val nowElapsedMs = SystemClock.elapsedRealtime()
-        val nowWallMs = System.currentTimeMillis()
-
-        val elapsedSinceRequestMs = if (requestedElapsedMs > 0L && nowElapsedMs >= requestedElapsedMs) {
-            nowElapsedMs - requestedElapsedMs
-        } else if (requestedWallMs > 0L && nowWallMs >= requestedWallMs) {
-            // Fallback across reboot when elapsedRealtime reset to 0
-            nowWallMs - requestedWallMs
-        } else {
-            -1L
-        }
-
-        val isTimerRunning = elapsedSinceRequestMs >= 0L
-        val coolingOffComplete = isTimerRunning && elapsedSinceRequestMs >= 86_400_000L
-
-        if (coolingOffComplete) {
-            // 24 hours elapsed â€” clear WAL timestamps and allow PIN-free deprovisioning
-            walPrefs.edit()
-                .remove("deprovision_requested_elapsed_ms")
-                .remove("deprovision_requested_wall_ms")
-                .commit()
-            runCatching { stopLockTask() }
-            AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
-            return
-        }
-
-        // Build the guard dialog with Command Deck dark theme
         val dialogLayout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(64, 48, 64, 32)
+            setPadding(56, 44, 56, 32)
             setBackgroundColor(Color.parseColor("#0B0F17"))
         }
 
         val guardTitle = TextView(this).apply {
-            text = "Deprovision Guard"
+            text = "PARENT DUAL-KEY UNLOCK"
             textSize = 18f
             setTextColor(Color.parseColor("#10B981"))
             gravity = Gravity.CENTER_HORIZONTAL
@@ -1004,29 +968,21 @@ class MainActivity : Activity() {
         }
 
         val guardSubtitle = TextView(this).apply {
-            text = "Choose a safe path to restore this phone:"
-            textSize = 13f
+            text = "Unlock requires either the 6-Digit Parent PIN, a live 6-Digit Google Authenticator Code, or the Offline Backup Recovery Key."
+            textSize = 12f
             setTextColor(Color.parseColor("#94A3B8"))
             gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 24)
+            setPadding(0, 0, 0, 20)
         }
 
-        // â”€â”€ Option A: PIN entry â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        val optionALabel = TextView(this).apply {
-            text = "Option A â€” Immediate: Enter 6-Digit Family Unlock PIN"
-            textSize = 13f
-            setTextColor(Color.parseColor("#10B981"))
-            setPadding(0, 0, 0, 6)
-        }
-
-        val pinInput = EditText(this).apply {
-            hint = "6-digit PIN"
+        val codeInput = EditText(this).apply {
+            hint = "6-digit Parent PIN or Authenticator Code"
             setHintTextColor(Color.parseColor("#64748B"))
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
             filters = arrayOf(InputFilter.LengthFilter(6))
             setTextColor(Color.parseColor("#E2E8F0"))
             setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(32, 20, 32, 20)
+            setPadding(28, 20, 28, 20)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -1034,72 +990,55 @@ class MainActivity : Activity() {
             layoutParams = lp
         }
 
-        val verifyPinButton = Button(this).apply {
-            text = "Verify PIN & Deprovision Now"
-            textSize = 14f
+        val verifySixDigitButton = Button(this).apply {
+            text = "VERIFY PIN / AUTHENTICATOR & UNLOCK"
+            textSize = 13f
             setBackgroundColor(Color.parseColor("#059669"))
             setTextColor(Color.WHITE)
             setPadding(24, 24, 24, 24)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 24) }
+            ).apply { setMargins(0, 0, 0, 20) }
             layoutParams = lp
         }
 
-        // â”€â”€ Option B: 24-hour cooling-off â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        val divider = TextView(this).apply {
-            text = "â€” or â€”"
+        val recoveryLabel = TextView(this).apply {
+            text = "Lost PIN & Parent Phone? Enter Offline Recovery Key:"
             textSize = 12f
-            setTextColor(Color.parseColor("#94A3B8"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 16)
-        }
-
-        val optionBLabel = TextView(this).apply {
-            text = "Option B â€” Start 24-Hour Anti-Impulse Cooling-Off Timer"
-            textSize = 13f
-            setTextColor(Color.parseColor("#94A3B8"))
+            setTextColor(Color.parseColor("#F59E0B"))
             setPadding(0, 0, 0, 6)
         }
 
-        val timerStatusText = TextView(this).apply {
-            if (isTimerRunning) {
-                val remainingMs = maxOf(0L, 86_400_000L - elapsedSinceRequestMs)
-                val remainingHours = remainingMs / 3_600_000L
-                val remainingMins = (remainingMs % 3_600_000L) / 60_000L
-                text = "Timer running: ~${remainingHours}h ${remainingMins}m remaining"
-            } else {
-                text = "No timer started yet."
-            }
-            textSize = 12f
-            setTextColor(Color.parseColor("#F59E0B"))
-            setPadding(0, 0, 0, 10)
-        }
-
-        val startTimerButton = Button(this).apply {
-            text = "Start 24-Hour Cooling-Off Timer"
-            textSize = 14f
-            setBackgroundColor(Color.parseColor("#334155"))
-            setTextColor(Color.WHITE)
-            setPadding(24, 24, 24, 24)
-            isEnabled = !isTimerRunning   // only allow starting once
+        val recoveryInput = EditText(this).apply {
+            hint = "SWT-XXXX-XXXX-XXXX"
+            setHintTextColor(Color.parseColor("#64748B"))
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+            setTextColor(Color.parseColor("#E2E8F0"))
+            setBackgroundColor(Color.parseColor("#161F30"))
+            setPadding(28, 18, 28, 18)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 0) }
+            ).apply { setMargins(0, 0, 0, 12) }
             layoutParams = lp
+        }
+
+        val verifyRecoveryButton = Button(this).apply {
+            text = "VERIFY RECOVERY KEY & UNLOCK"
+            textSize = 13f
+            setBackgroundColor(Color.parseColor("#334155"))
+            setTextColor(Color.WHITE)
+            setPadding(24, 22, 24, 22)
         }
 
         dialogLayout.addView(guardTitle)
         dialogLayout.addView(guardSubtitle)
-        dialogLayout.addView(optionALabel)
-        dialogLayout.addView(pinInput)
-        dialogLayout.addView(verifyPinButton)
-        dialogLayout.addView(divider)
-        dialogLayout.addView(optionBLabel)
-        dialogLayout.addView(timerStatusText)
-        dialogLayout.addView(startTimerButton)
+        dialogLayout.addView(codeInput)
+        dialogLayout.addView(verifySixDigitButton)
+        dialogLayout.addView(recoveryLabel)
+        dialogLayout.addView(recoveryInput)
+        dialogLayout.addView(verifyRecoveryButton)
 
         val dialog = runCatching {
             AlertDialog.Builder(this)
@@ -1108,52 +1047,229 @@ class MainActivity : Activity() {
                 .create()
         }.getOrNull()
 
-        // Wire Option A â€” PIN verify
-        verifyPinButton.setOnClickListener {
-            val enteredPin = pinInput.text?.toString()?.trim().orEmpty()
-            if (enteredPin.length != 6 || !enteredPin.all { it.isDigit() }) {
-                Toast.makeText(this, "Enter a valid 6-digit PIN.", Toast.LENGTH_SHORT).show()
+        verifySixDigitButton.setOnClickListener {
+            val entered = codeInput.text?.toString()?.trim().orEmpty()
+            if (entered.length != 6 || !entered.all { it.isDigit() }) {
+                Toast.makeText(this, "Enter a valid 6-digit PIN or Authenticator code.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val enteredHash = MessageDigest.getInstance("SHA-256")
-                .digest(enteredPin.toByteArray(Charsets.UTF_8))
-                .joinToString("") { "%02x".format(it) }
+            val storedPinHash = callPrefs.getString("family_pin_sha256", null)
+            val pinMatches = storedPinHash != null && ParentTotpAuthenticator.sha256Hex(entered) == storedPinHash
 
-            val storedHash = callPrefs.getString("family_pin_sha256", null)
-            if (storedHash != null && enteredHash == storedHash) {
-                // Clear WAL timestamps before deprovisioning
-                walPrefs.edit()
-                    .remove("deprovision_requested_elapsed_ms")
-                    .remove("deprovision_requested_wall_ms")
-                    .commit()
+            val storedTotpSecret = callPrefs.getString("parent_totp_secret", "").orEmpty()
+            val totpMatches = ParentTotpAuthenticator.verifyTotpCode(storedTotpSecret, entered)
+
+            if (pinMatches || totpMatches) {
                 dialog?.dismiss()
                 runCatching { stopLockTask() }
                 AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
             } else {
-                Toast.makeText(this, "Incorrect PIN. Deprovision denied.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid Parent PIN or Authenticator code. Unlock denied.", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Wire Option B â€” 24-hour timer
-        startTimerButton.setOnClickListener {
-            val nowElapsedForTimer = SystemClock.elapsedRealtime()
-            val nowWallMsForTimer = System.currentTimeMillis()
-            walPrefs.edit()
-                .putLong("deprovision_requested_elapsed_ms", nowElapsedForTimer)
-                .putLong("deprovision_requested_wall_ms", nowWallMsForTimer)
-                .commit()
-            Toast.makeText(
-                this,
-                "24-hour cooling-off timer started. Return tomorrow to deprovision without PIN.",
-                Toast.LENGTH_LONG
-            ).show()
-            startTimerButton.isEnabled = false
-            timerStatusText.text = "Timer running: ~24h 0m remaining"
-            dialog?.dismiss()
+        verifyRecoveryButton.setOnClickListener {
+            val enteredRecovery = ParentTotpAuthenticator.normalizeRecoveryKey(recoveryInput.text?.toString().orEmpty())
+            val storedRecoveryHash = callPrefs.getString("parent_recovery_sha256", null)
+            if (enteredRecovery.isNotEmpty() && storedRecoveryHash != null &&
+                ParentTotpAuthenticator.sha256Hex(enteredRecovery) == storedRecoveryHash
+            ) {
+                dialog?.dismiss()
+                runCatching { stopLockTask() }
+                AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
+            } else {
+                Toast.makeText(this, "Invalid Recovery Key. Unlock denied.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         dialog?.show()
+    }
+}
+
+--- FILE: app/src/main/java/in/swatantra/focus/ui/FamilySetupActivity.kt ---
+package `in`.swatantra.focus.ui
+
+import android.app.Activity
+import android.content.Context
+import android.graphics.Color
+import android.os.Bundle
+import android.text.InputFilter
+import android.text.InputType
+import android.view.Gravity
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
+import android.widget.Toast
+import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
+
+class FamilySetupActivity : Activity() {
+
+    private lateinit var generatedTotpSecret: String
+    private lateinit var generatedRecoveryKey: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val deContext = createDeviceProtectedStorageContext()
+        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+        if (callPrefs.getBoolean("family_numbers_locked", false)) {
+            finish()
+            return
+        }
+
+        generatedTotpSecret = ParentTotpAuthenticator.generateBase32Secret(16)
+        generatedRecoveryKey = ParentTotpAuthenticator.generateRecoveryKey()
+
+        val scroll = ScrollView(this).apply {
+            setBackgroundColor(Color.parseColor("#0B0F17"))
+        }
+
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundColor(Color.parseColor("#0B0F17"))
+            setPadding(48, 48, 48, 48)
+        }
+
+        val title = TextView(this).apply {
+            text = "SWATANTRA // ONE-TIME FAMILY LOCK SETUP"
+            textSize = 19f
+            setTextColor(Color.parseColor("#10B981"))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 0, 0, 12)
+        }
+
+        val subtitle = TextView(this).apply {
+            text = "Lock 1 to 3 family phone numbers, set a 6-digit Parent PIN, and save the free offline Authenticator & Recovery keys with your parents."
+            textSize = 13f
+            setTextColor(Color.parseColor("#94A3B8"))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 0, 0, 24)
+        }
+
+        fun makeField(hintText: String, inputTypeFlags: Int, maxLen: Int): EditText {
+            return EditText(this).apply {
+                hint = hintText
+                setHintTextColor(Color.parseColor("#64748B"))
+                setTextColor(Color.parseColor("#E2E8F0"))
+                setBackgroundColor(Color.parseColor("#161F30"))
+                inputType = inputTypeFlags
+                filters = arrayOf(InputFilter.LengthFilter(maxLen))
+                setPadding(28, 22, 28, 22)
+                val lp = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply { setMargins(0, 0, 0, 14) }
+                layoutParams = lp
+            }
+        }
+
+        val slot1 = makeField("Family Slot 1 (10-digit mobile, required)", InputType.TYPE_CLASS_PHONE, 15)
+        val slot2 = makeField("Family Slot 2 (optional)", InputType.TYPE_CLASS_PHONE, 15)
+        val slot3 = makeField("Family Slot 3 (optional)", InputType.TYPE_CLASS_PHONE, 15)
+
+        val pinField = makeField(
+            "Set 6-Digit Parent Unlock PIN",
+            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD,
+            6
+        )
+        val confirmPinField = makeField(
+            "Confirm 6-Digit Parent Unlock PIN",
+            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD,
+            6
+        )
+
+        val totpCard = TextView(this).apply {
+            text = "OFFLINE GOOGLE AUTHENTICATOR KEY (â‚¹0 COST):\n$generatedTotpSecret\n\nAdd once in parent's Google Authenticator (+ -> Enter a setup key -> Time-based).\n\nOFFLINE BACKUP RECOVERY KEY (SAVE WITH PARENTS):\n$generatedRecoveryKey"
+            textSize = 13f
+            setTextColor(Color.parseColor("#F59E0B"))
+            setBackgroundColor(Color.parseColor("#161F30"))
+            setPadding(28, 24, 28, 24)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 8, 0, 24) }
+            layoutParams = lp
+        }
+
+        val saveButton = Button(this).apply {
+            text = "LOCK FAMILY NUMBERS, PIN & AUTHENTICATOR"
+            textSize = 14f
+            setBackgroundColor(Color.parseColor("#059669"))
+            setTextColor(Color.WHITE)
+            setPadding(28, 28, 28, 28)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams = lp
+        }
+
+        saveButton.setOnClickListener {
+            val rawNumbers = listOf(slot1.text.toString(), slot2.text.toString(), slot3.text.toString())
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
+
+            val normalized = rawNumbers.mapNotNull { normalizeIndianNumber(it) }.distinct()
+            if (normalized.isEmpty() || normalized.size > 3) {
+                Toast.makeText(this, "Enter 1 to 3 valid 10-digit family numbers.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val pin = pinField.text?.toString()?.trim().orEmpty()
+            val confirmPin = confirmPinField.text?.toString()?.trim().orEmpty()
+            if (pin.length != 6 || !pin.all { it.isDigit() }) {
+                Toast.makeText(this, "Parent PIN must be exactly 6 digits.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (pin != confirmPin) {
+                Toast.makeText(this, "PINs do not match.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val pinHash = ParentTotpAuthenticator.sha256Hex(pin)
+            val recoveryHash = ParentTotpAuthenticator.sha256Hex(
+                ParentTotpAuthenticator.normalizeRecoveryKey(generatedRecoveryKey)
+            )
+
+            callPrefs.edit()
+                .putStringSet("whitelisted_family_numbers", normalized.toSet())
+                .putString("family_pin_sha256", pinHash)
+                .putString("parent_totp_secret", generatedTotpSecret)
+                .putString("parent_recovery_sha256", recoveryHash)
+                .putBoolean("family_numbers_locked", true)
+                .commit()
+
+            Toast.makeText(this, "Family Lock, PIN & Offline Authenticator Sealed.", Toast.LENGTH_LONG).show()
+            finish()
+        }
+
+        root.addView(title)
+        root.addView(subtitle)
+        root.addView(slot1)
+        root.addView(slot2)
+        root.addView(slot3)
+        root.addView(pinField)
+        root.addView(confirmPinField)
+        root.addView(totpCard)
+        root.addView(saveButton)
+        scroll.addView(root)
+        setContentView(scroll)
+    }
+
+    private fun normalizeIndianNumber(raw: String): String? {
+        val digits = raw.filter { it.isDigit() }
+        return when {
+            digits.length == 10 -> "+91$digits"
+            digits.length == 12 && digits.startsWith("91") -> "+$digits"
+            else -> null
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        // Prevent skipping one-time family lock setup
     }
 }
 
@@ -1243,6 +1359,7 @@ package `in`.swatantra.focus
 
 import android.content.pm.ApplicationInfo
 import `in`.swatantra.focus.classifier.StrictPlayStoreAppVerifier
+import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
 import `in`.swatantra.focus.ui.MainActivity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -1750,5 +1867,36 @@ class SwatantraProductionVerificationTest {
             assertTrue("Rule must contain -> THEN : $rule", rule.contains("-> THEN "))
             assertFalse("Rule must stay universal (no exam lock-in): $rule", rule.contains("GATE", ignoreCase = true))
         }
+    }
+
+    @Test
+    fun testParentTotpRfc6238AndDualUnlockGuard() {
+        assertEquals("PARENT_TOTP_RFC6238_V7_1", ParentTotpAuthenticator.TOTP_AUDIT_SYMBOL)
+
+        val secret = ParentTotpAuthenticator.generateBase32Secret(16)
+        assertEquals("Base32 secret must be 16 chars", 16, secret.length)
+
+        val fixedTimeMs = 1_763_540_000_000L
+        val currentStep = (fixedTimeMs / 1000L) / 30L
+        val codeNow = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep)
+        val codePrev = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep - 1L)
+        val codeNext = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep + 1L)
+        val codeExpired = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep - 3L)
+
+        assertEquals("TOTP code must be 6 digits", 6, codeNow.length)
+        assertTrue("Current TOTP window must verify", ParentTotpAuthenticator.verifyTotpCode(secret, codeNow, fixedTimeMs))
+        assertTrue("Previous -30s drift window must verify", ParentTotpAuthenticator.verifyTotpCode(secret, codePrev, fixedTimeMs))
+        assertTrue("Next +30s drift window must verify", ParentTotpAuthenticator.verifyTotpCode(secret, codeNext, fixedTimeMs))
+        assertFalse("Expired TOTP window must be rejected", ParentTotpAuthenticator.verifyTotpCode(secret, codeExpired, fixedTimeMs))
+        assertFalse("Wrong 6-digit code must be rejected", ParentTotpAuthenticator.verifyTotpCode(secret, "000000", fixedTimeMs) && codeNow != "000000")
+
+        val recoveryKey = ParentTotpAuthenticator.generateRecoveryKey()
+        assertTrue("Recovery key must start with SWT-", recoveryKey.startsWith("SWT-"))
+        val norm = ParentTotpAuthenticator.normalizeRecoveryKey(recoveryKey)
+        assertEquals(
+            "Normalized recovery key hash must match",
+            ParentTotpAuthenticator.sha256Hex(norm),
+            ParentTotpAuthenticator.sha256Hex(ParentTotpAuthenticator.normalizeRecoveryKey(recoveryKey.lowercase()))
+        )
     }
 }

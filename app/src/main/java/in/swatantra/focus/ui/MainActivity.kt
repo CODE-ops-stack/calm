@@ -77,22 +77,13 @@ class MainActivity : Activity() {
             gravity = Gravity.CENTER_HORIZONTAL
         }
 
-        val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-        val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
-        val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
-        val isLocked = studyPrefs.getBoolean(KEY_MISSION_LOCK_ACTIVE, false)
-
         subHeader = TextView(this).apply {
-            text = when {
-                isDeviceOwner && isLocked -> "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
-                isDeviceOwner -> "DEVICE OWNER: ACTIVE \u2022 READY FOR MISSION"
-                else -> "DEVICE OWNER: INACTIVE \u2022 RUN ADB PROVISIONING"
-            }
             textSize = 13f
             setTextColor(Color.parseColor("#94A3B8"))
             gravity = Gravity.CENTER_HORIZONTAL
             setPadding(0, 8, 0, 20)
         }
+        refreshStatusBanner(deContext)
 
         telemetryBanner = TextView(this).apply {
             text = "TELEMETRY \u2022 SORTIE LOGGED: --m | COMMS SHIELD: --m / 60m (112 IMMUNE)"
@@ -108,7 +99,6 @@ class MainActivity : Activity() {
             layoutParams = lp
         }
 
-        // Load ledger telemetry asynchronously so UI never lags
         Thread {
             val (studyMs, callMs) = runCatching {
                 MonotonicDualClockLedger(deContext)
@@ -176,6 +166,8 @@ class MainActivity : Activity() {
             }
         }
 
+        val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+
         val selectStudyAppsTile = createTile("[SELECT MY STUDY APPS] \u2022 Choose Allowed Apps", "#0F766E") {
             showStudyAppSelector(deContext, engageLockAfterSave = false)
         }
@@ -194,19 +186,25 @@ class MainActivity : Activity() {
         }
 
         val wifiSettingsTile = createTile("[COMMS & UPLINK] \u2022 Safe Wi-Fi & Network Panel", "#1E293B") {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                startActivity(Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY))
-            } else {
-                startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+            runCatching {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    startActivity(Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY))
+                } else {
+                    startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
+                }
             }
         }
 
         val emergencyDialTile = createTile("[PRIORITY CHANNEL] \u2022 Family (3-Slot) & 112 Emergency", "#0F766E") {
-            startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:")))
+            runCatching { startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:"))) }
+        }
+
+        val resetFamilyTile = createTile("[CHANGE FAMILY PIN & NUMBERS] \u2022 Parent Auth", "#1E293B") {
+            showParentAuthDialog(deContext, mode = "RESET_FAMILY")
         }
 
         val safeDeprovisionTile = createTile("[MISSION STAND-DOWN] \u2022 Parent Dual-Key Unlock", "#334155") {
-            showDeprovisionGuard(deContext)
+            showParentAuthDialog(deContext, mode = "UNLOCK_AND_DEPROVISION")
         }
 
         root.addView(header)
@@ -219,6 +217,7 @@ class MainActivity : Activity() {
         root.addView(parkingTile)
         root.addView(wifiSettingsTile)
         root.addView(emergencyDialTile)
+        root.addView(resetFamilyTile)
         root.addView(safeDeprovisionTile)
         scroll.addView(root)
         setContentView(scroll)
@@ -227,21 +226,35 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         val deContext = createDeviceProtectedStorageContext()
+        refreshStatusBanner(deContext)
         if (!deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE).getBoolean("family_numbers_locked", false)) {
             startActivity(Intent(this, FamilySetupActivity::class.java))
             return
         }
         val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
-        if (studyPrefs.getBoolean(KEY_MISSION_LOCK_ACTIVE, false)) {
-            val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-            if (dpm?.isDeviceOwnerApp(deContext.packageName) == true) {
-                runCatching { startLockTask() }
-            }
+        val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+        // CRITICAL: Only call startLockTask() when Device Owner is truly active!
+        if (dpm?.isDeviceOwnerApp(deContext.packageName) == true &&
+            studyPrefs.getBoolean(KEY_MISSION_LOCK_ACTIVE, false)
+        ) {
+            runCatching { startLockTask() }
+        }
+    }
+
+    private fun refreshStatusBanner(deContext: Context) {
+        val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+        val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+        val isLocked = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+            .getBoolean(KEY_MISSION_LOCK_ACTIVE, false)
+        subHeader.text = when {
+            isDeviceOwner && isLocked -> "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
+            isDeviceOwner -> "DEVICE OWNER: ACTIVE \u2022 READY FOR MISSION"
+            else -> "DEVICE OWNER: INACTIVE \u2022 RUN ADB dpm set-device-owner"
         }
     }
 
     private fun showStudyAppSelector(deContext: Context, engageLockAfterSave: Boolean) {
-        Toast.makeText(this, "Loading installed apps...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Scanning installed apps...", Toast.LENGTH_SHORT).show()
         Thread {
             val launcherIntent = Intent(Intent.ACTION_MAIN).apply {
                 addCategory(Intent.CATEGORY_LAUNCHER)
@@ -304,50 +317,63 @@ class MainActivity : Activity() {
         subHeader.text = "ENGAGING MISSION LOCK..."
 
         Thread {
-            val studySet = chosenStudySet + setOf("com.android.vending")
-            runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
-            studyPrefs.edit().putBoolean(KEY_MISSION_LOCK_ACTIVE, true).commit()
+            val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+            val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+
+            if (isDeviceOwner) {
+                val studySet = chosenStudySet + setOf("com.android.vending")
+                runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
+                studyPrefs.edit().putBoolean(KEY_MISSION_LOCK_ACTIVE, true).commit()
+            }
 
             val launchable = chosenStudySet.mapNotNull { pkg ->
-                val launchIntent = packageManager.getLaunchIntentForPackage(pkg) ?: return@mapNotNull null
+                val launchIntent = packageManager.getLaunchIntentForPackage(pkg)?.apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                } ?: return@mapNotNull null
                 val label = runCatching {
                     packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
                 }.getOrDefault(pkg)
                 label to launchIntent
             }.sortedBy { it.first.lowercase() }
 
-            val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-            val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
-
             runOnUiThread {
                 if (isDeviceOwner) {
                     runCatching { startLockTask() }
                     subHeader.text = "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
                 } else {
-                    subHeader.text = "DEVICE OWNER INACTIVE \u2022 RUN ADB PROVISIONING"
+                    subHeader.text = "DEVICE OWNER INACTIVE \u2022 RUN ADB dpm set-device-owner"
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Device Owner is not active yet. Apps can still open, but full lock requires ADB provisioning.",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
 
                 if (launchable.isNotEmpty()) {
                     val labels = launchable.map { it.first }.toTypedArray()
                     runCatching {
                         AlertDialog.Builder(this@MainActivity)
-                            .setTitle("Mission Lock Active — Open Study App")
+                            .setTitle("Open Allowed Study App")
                             .setItems(labels) { _, which ->
                                 runCatching { startActivity(launchable[which].second) }
+                                    .onFailure {
+                                        Toast.makeText(this@MainActivity, "Unable to launch app.", Toast.LENGTH_SHORT).show()
+                                    }
                             }
                             .setNegativeButton("Stay on Command Deck", null)
                             .show()
                     }
                 } else {
-                    Toast.makeText(this@MainActivity, "Mission Lock Engaged. Tap [SELECT MY STUDY APPS] to add apps.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, "Tap [SELECT MY STUDY APPS] to choose apps first.", Toast.LENGTH_LONG).show()
                 }
             }
         }.start()
     }
 
-    private fun showDeprovisionGuard(deContext: Context) {
+    private fun showParentAuthDialog(deContext: Context, mode: String) {
         val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
         val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+        val isResetOnly = (mode == "RESET_FAMILY")
 
         val dialogLayout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -356,7 +382,7 @@ class MainActivity : Activity() {
         }
 
         val guardTitle = TextView(this).apply {
-            text = "PARENT DUAL-KEY UNLOCK"
+            text = if (isResetOnly) "RESET FAMILY PIN & NUMBERS" else "PARENT DUAL-KEY UNLOCK"
             textSize = 18f
             setTextColor(Color.parseColor("#10B981"))
             gravity = Gravity.CENTER_HORIZONTAL
@@ -364,7 +390,11 @@ class MainActivity : Activity() {
         }
 
         val guardSubtitle = TextView(this).apply {
-            text = "Unlock requires either the 6-Digit Parent PIN, a live 6-Digit Google Authenticator Code, or the Offline Backup Recovery Key."
+            text = if (isResetOnly) {
+                "Verify current Parent PIN, Google Authenticator Code, or Recovery Key to set new family numbers and PIN."
+            } else {
+                "Verify Parent PIN, live 6-Digit Google Authenticator Code, or Offline Recovery Key to unlock and reset Swatantra."
+            }
             textSize = 12f
             setTextColor(Color.parseColor("#94A3B8"))
             gravity = Gravity.CENTER_HORIZONTAL
@@ -387,7 +417,7 @@ class MainActivity : Activity() {
         }
 
         val verifySixDigitButton = Button(this).apply {
-            text = "VERIFY PIN / AUTHENTICATOR & UNLOCK"
+            text = if (isResetOnly) "VERIFY & RE-SETUP FAMILY LOCK" else "VERIFY PIN / AUTHENTICATOR & UNLOCK"
             textSize = 13f
             setBackgroundColor(Color.parseColor("#059669"))
             setTextColor(Color.WHITE)
@@ -421,7 +451,7 @@ class MainActivity : Activity() {
         }
 
         val verifyRecoveryButton = Button(this).apply {
-            text = "VERIFY RECOVERY KEY & UNLOCK"
+            text = if (isResetOnly) "VERIFY RECOVERY KEY & RE-SETUP" else "VERIFY RECOVERY KEY & UNLOCK"
             textSize = 13f
             setBackgroundColor(Color.parseColor("#334155"))
             setTextColor(Color.WHITE)
@@ -443,17 +473,42 @@ class MainActivity : Activity() {
                 .create()
         }.getOrNull()
 
-        fun performSafeUnlock() {
+        fun clearFamilyCredentialsForReSetup() {
+            callPrefs.edit()
+                .remove("whitelisted_family_numbers")
+                .remove("family_pin_sha256")
+                .remove("parent_totp_secret")
+                .remove("parent_recovery_sha256")
+                .putBoolean("family_numbers_locked", false)
+                .commit()
+        }
+
+        fun onParentVerified() {
             dialog?.dismiss()
-            studyPrefs.edit().putBoolean(KEY_MISSION_LOCK_ACTIVE, false).commit()
-            runCatching { stopLockTask() }
-            Thread {
-                AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
-                runOnUiThread {
-                    subHeader.text = "UNLOCKED \u2022 DEVICE RESTORED CLEANLY"
-                    Toast.makeText(this@MainActivity, "Phone unlocked and restored.", Toast.LENGTH_LONG).show()
-                }
-            }.start()
+            if (isResetOnly) {
+                clearFamilyCredentialsForReSetup()
+                Toast.makeText(this, "Verified. Enter your new family numbers & PIN.", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, FamilySetupActivity::class.java))
+            } else {
+                studyPrefs.edit()
+                    .putBoolean(KEY_MISSION_LOCK_ACTIVE, false)
+                    .putBoolean(KEY_STUDY_CONFIGURED, false)
+                    .commit()
+                clearFamilyCredentialsForReSetup()
+                runCatching { stopLockTask() }
+                Thread {
+                    AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
+                    runOnUiThread {
+                        refreshStatusBanner(deContext)
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Phone unlocked & family lock reset. Reopen Swatantra anytime to set a new PIN & numbers.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        startActivity(Intent(this@MainActivity, FamilySetupActivity::class.java))
+                    }
+                }.start()
+            }
         }
 
         verifySixDigitButton.setOnClickListener {
@@ -468,9 +523,9 @@ class MainActivity : Activity() {
             val totpMatches = ParentTotpAuthenticator.verifyTotpCode(storedTotpSecret, entered)
 
             if (pinMatches || totpMatches) {
-                performSafeUnlock()
+                onParentVerified()
             } else {
-                Toast.makeText(this, "Invalid Parent PIN or Authenticator code. Unlock denied.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid Parent PIN or Authenticator code. Access denied.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -480,9 +535,9 @@ class MainActivity : Activity() {
             if (enteredRecovery.isNotEmpty() && storedRecoveryHash != null &&
                 ParentTotpAuthenticator.sha256Hex(enteredRecovery) == storedRecoveryHash
             ) {
-                performSafeUnlock()
+                onParentVerified()
             } else {
-                Toast.makeText(this, "Invalid Recovery Key. Unlock denied.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid Recovery Key. Access denied.", Toast.LENGTH_SHORT).show()
             }
         }
 

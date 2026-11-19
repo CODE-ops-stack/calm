@@ -1,4 +1,4 @@
-﻿Starting a Gradle Daemon, 1 incompatible and 2 stopped Daemons could not be reused, use --status for details
+﻿Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
 .\gradlew.bat : Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of 
 version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were 
 released at different times.
@@ -21,10 +21,8 @@ At C:\Users\harsh\Documents\focus\scripts\sync_and_verify.ps1:10 char:5
 > Task :app:parseReleaseLocalResources UP-TO-DATE
 > Task :app:createReleaseCompatibleScreenManifests UP-TO-DATE
 > Task :app:extractDeepLinksRelease UP-TO-DATE
-> Task :app:processReleaseMainManifest UP-TO-DATE
-> Task :app:processReleaseManifest UP-TO-DATE
-> Task :app:processReleaseManifestForPackage UP-TO-DATE
-> Task :app:processReleaseResources UP-TO-DATE
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
 > Task :app:javaPreCompileRelease UP-TO-DATE
 > Task :app:preReleaseUnitTestBuild UP-TO-DATE
 > Task :app:javaPreCompileReleaseUnitTest UP-TO-DATE
@@ -43,17 +41,19 @@ At C:\Users\harsh\Documents\focus\scripts\sync_and_verify.ps1:10 char:5
 > Task :app:mergeReleaseAssets UP-TO-DATE
 > Task :app:compressReleaseAssets UP-TO-DATE
 > Task :app:extractReleaseVersionControlInfo
-> Task :app:processApplicationManifestReleaseForBundle UP-TO-DATE
-> Task :app:bundleReleaseResources UP-TO-DATE
+> Task :app:processApplicationManifestReleaseForBundle
 > Task :app:collectReleaseDependencies UP-TO-DATE
 > Task :app:sdkReleaseDependencyData UP-TO-DATE
 > Task :app:writeReleaseAppMetadata UP-TO-DATE
 > Task :app:writeReleaseSigningConfigVersions UP-TO-DATE
+> Task :app:processReleaseManifestForPackage
+> Task :app:processReleaseResources
+> Task :app:bundleReleaseResources
 > Task :app:compileReleaseKotlin
 > Task :app:compileReleaseJavaWithJavac NO-SOURCE
 > Task :app:processReleaseJavaRes UP-TO-DATE
-> Task :app:bundleReleaseClassesToRuntimeJar
 > Task :app:bundleReleaseClassesToCompileJar
+> Task :app:bundleReleaseClassesToRuntimeJar
 > Task :app:generateReleaseLintVitalReportModel
 > Task :app:expandReleaseArtProfileWildcards
 > Task :app:mergeReleaseGeneratedProguardFiles UP-TO-DATE
@@ -65,7 +65,7 @@ At C:\Users\harsh\Documents\focus\scripts\sync_and_verify.ps1:10 char:5
 > Task :app:minifyReleaseWithR8
 > Task :app:compileReleaseArtProfile
 > Task :app:shrinkReleaseRes
-> Task :app:optimizeReleaseResources UP-TO-DATE
+> Task :app:optimizeReleaseResources
 > Task :app:packageRelease
 > Task :app:createReleaseApkListingFileRedirect UP-TO-DATE
 > Task :app:lintVitalAnalyzeRelease
@@ -81,6 +81,6 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.5.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 2m 16s
-52 actionable tasks: 15 executed, 37 up-to-date
+BUILD SUCCESSFUL in 1m 42s
+52 actionable tasks: 22 executed, 30 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.5.0/userguide/configuration_cache_enabling.html

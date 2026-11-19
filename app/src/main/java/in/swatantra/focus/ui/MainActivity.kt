@@ -2,6 +2,7 @@ package `in`.swatantra.focus.ui
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -149,18 +150,59 @@ class MainActivity : Activity() {
             }
         }
 
+        val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+        val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+        subHeader.text = if (isDeviceOwner) {
+            "DEVICE OWNER: ACTIVE \u2022 ZERO ATTENTION RESIDUE"
+        } else {
+            "DEVICE OWNER: INACTIVE \u2022 RUN ADB PROVISIONING"
+        }
+
         val studyTile = createTile("[ENGAGE MISSION LOCK] \u2022 Launch Deep Study Sortie", "#059669") {
             val baseStudySet = setOf(
                 "xyz.penpencil.physicswallah",
                 "com.unacademyapp",
+                "com.google.android.youtube",
                 "org.telegram.messenger",
-                "com.adobe.reader"
+                "com.adobe.reader",
+                "com.android.vending"
             )
             val dynamicPrefs = deContext.getSharedPreferences("dynamic_study_whitelist_de", Context.MODE_PRIVATE)
             val dynamicStudySet = dynamicPrefs.getStringSet("study_pkgs", emptySet()) ?: emptySet()
             val studySet = baseStudySet + dynamicStudySet
-            FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet())
+
+            runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
             runCatching { startLockTask() }
+
+            val nowLocked = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+            subHeader.text = if (nowLocked) {
+                "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
+            } else {
+                "PINNED PREVIEW MODE \u2022 DEVICE OWNER REQUIRED FOR FULL LOCK"
+            }
+
+            val launchable = studySet.mapNotNull { pkg ->
+                val launchIntent = packageManager.getLaunchIntentForPackage(pkg) ?: return@mapNotNull null
+                val label = runCatching {
+                    packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
+                }.getOrDefault(pkg)
+                label to launchIntent
+            }
+
+            if (launchable.isNotEmpty()) {
+                val labels = launchable.map { it.first }.toTypedArray()
+                runCatching {
+                    AlertDialog.Builder(this@MainActivity)
+                        .setTitle("Mission Lock Active — Open Study App")
+                        .setItems(labels) { _, which ->
+                            runCatching { startActivity(launchable[which].second) }
+                        }
+                        .setNegativeButton("Stay on Command Deck", null)
+                        .show()
+                }
+            } else {
+                Toast.makeText(this@MainActivity, "Mission Lock Engaged.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         val parkingTile = createTile("[TACTICAL INTERCEPT] \u2022 Park Urge / Doubt (10-Min Rule)", "#D97706") {

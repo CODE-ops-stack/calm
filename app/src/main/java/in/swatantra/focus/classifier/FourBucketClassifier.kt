@@ -62,7 +62,7 @@ class FourBucketClassifier(context: Context) {
     )
 
     fun enforceFocusPolicy(whitelistedStudyApps: Set<String>, utilityApps: Set<String>) {
-        if (!dpm.isDeviceOwnerApp(deContext.packageName)) return
+        if (dpm == null || !dpm.isDeviceOwnerApp(deContext.packageName)) return
 
         val activeWebViewPkg = runCatching {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -80,19 +80,24 @@ class FourBucketClassifier(context: Context) {
             deContext.packageName,
             "com.android.server.telecom",
             "com.google.android.dialer",
-            "com.samsung.android.incallui"
+            "com.samsung.android.incallui",
+            "com.android.vending"
         )).distinct().toTypedArray()
-        dpm.setLockTaskPackages(admin, lockTaskAllowed)
+        runCatching { dpm.setLockTaskPackages(admin, lockTaskAllowed) }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // NEVER include LOCK_TASK_FEATURE_GLOBAL_ACTIONS: physical Power-button menu (Restart/Recovery) is blocked
-            val features = DevicePolicyManager.LOCK_TASK_FEATURE_SYSTEM_INFO or
-                DevicePolicyManager.LOCK_TASK_FEATURE_NOTIFICATIONS or
-                DevicePolicyManager.LOCK_TASK_FEATURE_BLOCK_ACTIVITY_START_IN_TASK
-            dpm.setLockTaskFeatures(admin, features)
+            runCatching {
+                val features = DevicePolicyManager.LOCK_TASK_FEATURE_SYSTEM_INFO or
+                    DevicePolicyManager.LOCK_TASK_FEATURE_NOTIFICATIONS or
+                    DevicePolicyManager.LOCK_TASK_FEATURE_BLOCK_ACTIVITY_START_IN_TASK
+                dpm.setLockTaskFeatures(admin, features)
+            }
         }
 
-        val installed = deContext.packageManager.getInstalledPackages(0).map { it.packageName }
+        val installed = runCatching {
+            deContext.packageManager.getInstalledPackages(0).map { it.packageName }
+        }.getOrDefault(emptyList())
+
         val toSuspend = installed.filter { pkg ->
             pkg !in protectedCore &&
             pkg !in whitelistedStudyApps &&
@@ -104,27 +109,31 @@ class FourBucketClassifier(context: Context) {
         runCatching { dpm.setPackagesSuspended(admin, toUnsuspend.toTypedArray(), false) }
         runCatching { dpm.setPackagesSuspended(admin, toSuspend.toTypedArray(), true) }
 
-        val webFilter = IntentFilter(Intent.ACTION_VIEW).apply {
-            addCategory(Intent.CATEGORY_DEFAULT)
-            addCategory(Intent.CATEGORY_BROWSABLE)
-            addDataScheme("http")
-            addDataScheme("https")
+        runCatching {
+            val webFilter = IntentFilter(Intent.ACTION_VIEW).apply {
+                addCategory(Intent.CATEGORY_DEFAULT)
+                addCategory(Intent.CATEGORY_BROWSABLE)
+                addDataScheme("http")
+                addDataScheme("https")
+            }
+            dpm.addPersistentPreferredActivity(
+                admin,
+                webFilter,
+                ComponentName(deContext, SafeUrlInterceptorActivity::class.java)
+            )
         }
-        dpm.addPersistentPreferredActivity(
-            admin,
-            webFilter,
-            ComponentName(deContext, SafeUrlInterceptorActivity::class.java)
-        )
 
-        val homeFilter = IntentFilter(Intent.ACTION_MAIN).apply {
-            addCategory(Intent.CATEGORY_HOME)
-            addCategory(Intent.CATEGORY_DEFAULT)
+        runCatching {
+            val homeFilter = IntentFilter(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_HOME)
+                addCategory(Intent.CATEGORY_DEFAULT)
+            }
+            dpm.addPersistentPreferredActivity(
+                admin,
+                homeFilter,
+                ComponentName(deContext, MainActivity::class.java)
+            )
         }
-        dpm.addPersistentPreferredActivity(
-            admin,
-            homeFilter,
-            ComponentName(deContext, MainActivity::class.java)
-        )
 
         runCatching {
             dpm.setAlwaysOnVpnPackage(admin, deContext.packageName, true)
@@ -132,17 +141,22 @@ class FourBucketClassifier(context: Context) {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            dpm.setUserControlDisabledPackages(admin, listOf(deContext.packageName))
+            runCatching { dpm.setUserControlDisabledPackages(admin, listOf(deContext.packageName)) }
         }
 
-        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus: enforce all 7 restrictions
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_PRINTING)
+        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus
+        val focusRestrictions = listOf(
+            UserManager.DISALLOW_FACTORY_RESET,
+            UserManager.DISALLOW_NETWORK_RESET,
+            UserManager.DISALLOW_SAFE_BOOT,
+            UserManager.DISALLOW_ADD_USER,
+            UserManager.DISALLOW_CONFIG_DATE_TIME,
+            UserManager.DISALLOW_DEBUGGING_FEATURES,
+            UserManager.DISALLOW_PRINTING
+        )
+        for (restriction in focusRestrictions) {
+            runCatching { dpm.addUserRestriction(admin, restriction) }
+        }
     }
 
     private fun isEssentialSystemPackage(pkg: String): Boolean {

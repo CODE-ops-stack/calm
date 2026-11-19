@@ -6,8 +6,8 @@ Write-Host "=== Swatantra v7.1 Antigravity Build, Log Capture & GitHub Sync ==="
 
 # 1. Run Gradle build if gradlew.bat exists and capture output to error.log
 if (Test-Path ".\gradlew.bat") {
-    Write-Host "[BUILD] Running .\gradlew.bat assembleRelease..."
-    .\gradlew.bat assembleRelease --stacktrace *>&1 | Tee-Object -Variable buildOut
+    Write-Host "[BUILD] Running .\gradlew.bat testReleaseUnitTest assembleRelease..."
+    .\gradlew.bat testReleaseUnitTest assembleRelease --stacktrace *>&1 | Tee-Object -Variable buildOut
     $buildOut | Out-File -FilePath "error.log" -Encoding utf8
 
     $unsignedApk = "app\build\outputs\apk\release\app-release-unsigned.apk"

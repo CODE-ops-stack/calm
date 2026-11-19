@@ -1,10 +1,10 @@
-﻿Starting a Gradle Daemon, 1 incompatible and 4 stopped Daemons could not be reused, use --status for details
+﻿Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
 .\gradlew.bat : Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of 
 version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were 
 released at different times.
 At C:\Users\harsh\Documents\focus\scripts\sync_and_verify.ps1:10 char:5
-+     .\gradlew.bat assembleRelease --stacktrace *>&1 | Tee-Object -Var ...
-+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++     .\gradlew.bat testReleaseUnitTest assembleRelease --stacktrace *> ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (Warning: SDK pr...ifferent times.:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
@@ -25,43 +25,51 @@ At C:\Users\harsh\Documents\focus\scripts\sync_and_verify.ps1:10 char:5
 > Task :app:processReleaseManifest UP-TO-DATE
 > Task :app:processReleaseManifestForPackage UP-TO-DATE
 > Task :app:processReleaseResources UP-TO-DATE
-> Task :app:compileReleaseKotlin UP-TO-DATE
 > Task :app:javaPreCompileRelease UP-TO-DATE
-> Task :app:compileReleaseJavaWithJavac NO-SOURCE
-> Task :app:extractProguardFiles
-> Task :app:generateReleaseLintVitalReportModel
-> Task :app:mergeReleaseJniLibFolders
+> Task :app:preReleaseUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileReleaseUnitTest UP-TO-DATE
+> Task :app:extractProguardFiles UP-TO-DATE
+> Task :app:mergeReleaseJniLibFolders UP-TO-DATE
 > Task :app:mergeReleaseNativeLibs NO-SOURCE
 > Task :app:stripReleaseDebugSymbols NO-SOURCE
 > Task :app:extractReleaseNativeSymbolTables NO-SOURCE
 > Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:checkReleaseDuplicateClasses UP-TO-DATE
 > Task :app:mergeReleaseArtProfile UP-TO-DATE
-> Task :app:expandReleaseArtProfileWildcards
-> Task :app:checkReleaseDuplicateClasses
-> Task :app:mergeReleaseGeneratedProguardFiles UP-TO-DATE
-> Task :app:processReleaseJavaRes UP-TO-DATE
 > Task :app:mergeReleaseStartupProfile UP-TO-DATE
-> Task :app:mergeReleaseShaders
+> Task :app:mergeReleaseShaders UP-TO-DATE
 > Task :app:compileReleaseShaders NO-SOURCE
 > Task :app:generateReleaseAssets UP-TO-DATE
-> Task :app:mergeReleaseAssets
-> Task :app:compressReleaseAssets
+> Task :app:mergeReleaseAssets UP-TO-DATE
+> Task :app:compressReleaseAssets UP-TO-DATE
 > Task :app:extractReleaseVersionControlInfo
-> Task :app:mergeReleaseJavaResource
-> Task :app:processApplicationManifestReleaseForBundle
-> Task :app:collectReleaseDependencies
-> Task :app:sdkReleaseDependencyData
-> Task :app:writeReleaseAppMetadata
-> Task :app:writeReleaseSigningConfigVersions
-> Task :app:bundleReleaseResources
+> Task :app:processApplicationManifestReleaseForBundle UP-TO-DATE
+> Task :app:bundleReleaseResources UP-TO-DATE
+> Task :app:collectReleaseDependencies UP-TO-DATE
+> Task :app:sdkReleaseDependencyData UP-TO-DATE
+> Task :app:writeReleaseAppMetadata UP-TO-DATE
+> Task :app:writeReleaseSigningConfigVersions UP-TO-DATE
+> Task :app:compileReleaseKotlin
+> Task :app:compileReleaseJavaWithJavac NO-SOURCE
+> Task :app:processReleaseJavaRes UP-TO-DATE
+> Task :app:bundleReleaseClassesToRuntimeJar
+> Task :app:bundleReleaseClassesToCompileJar
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:expandReleaseArtProfileWildcards
+> Task :app:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :app:mergeReleaseJavaResource UP-TO-DATE
+> Task :app:compileReleaseUnitTestKotlin
+> Task :app:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processReleaseUnitTestJavaRes UP-TO-DATE
+> Task :app:testReleaseUnitTest
 > Task :app:minifyReleaseWithR8
 > Task :app:compileReleaseArtProfile
-> Task :app:lintVitalAnalyzeRelease
 > Task :app:shrinkReleaseRes
-> Task :app:optimizeReleaseResources
+> Task :app:optimizeReleaseResources UP-TO-DATE
 > Task :app:packageRelease
-> Task :app:createReleaseApkListingFileRedirect
-> Task :app:lintVitalReportRelease
+> Task :app:createReleaseApkListingFileRedirect UP-TO-DATE
+> Task :app:lintVitalAnalyzeRelease
+> Task :app:lintVitalReportRelease UP-TO-DATE
 > Task :app:lintVitalRelease
 > Task :app:assembleRelease
 
@@ -73,6 +81,6 @@ You can use '--warning-mode all' to show the individual deprecation warnings and
 
 For more on this, please refer to https://docs.gradle.org/9.5.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
 
-BUILD SUCCESSFUL in 2m 30s
-46 actionable tasks: 26 executed, 20 up-to-date
+BUILD SUCCESSFUL in 1m 45s
+52 actionable tasks: 15 executed, 37 up-to-date
 Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.5.0/userguide/configuration_cache_enabling.html

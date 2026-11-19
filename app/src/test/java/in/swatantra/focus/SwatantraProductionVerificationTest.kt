@@ -2,6 +2,7 @@ package `in`.swatantra.focus
 
 import android.content.pm.ApplicationInfo
 import `in`.swatantra.focus.classifier.StrictPlayStoreAppVerifier
+import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
 import `in`.swatantra.focus.ui.MainActivity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -509,5 +510,36 @@ class SwatantraProductionVerificationTest {
             assertTrue("Rule must contain -> THEN : $rule", rule.contains("-> THEN "))
             assertFalse("Rule must stay universal (no exam lock-in): $rule", rule.contains("GATE", ignoreCase = true))
         }
+    }
+
+    @Test
+    fun testParentTotpRfc6238AndDualUnlockGuard() {
+        assertEquals("PARENT_TOTP_RFC6238_V7_1", ParentTotpAuthenticator.TOTP_AUDIT_SYMBOL)
+
+        val secret = ParentTotpAuthenticator.generateBase32Secret(16)
+        assertEquals("Base32 secret must be 16 chars", 16, secret.length)
+
+        val fixedTimeMs = 1_763_540_000_000L
+        val currentStep = (fixedTimeMs / 1000L) / 30L
+        val codeNow = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep)
+        val codePrev = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep - 1L)
+        val codeNext = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep + 1L)
+        val codeExpired = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep - 3L)
+
+        assertEquals("TOTP code must be 6 digits", 6, codeNow.length)
+        assertTrue("Current TOTP window must verify", ParentTotpAuthenticator.verifyTotpCode(secret, codeNow, fixedTimeMs))
+        assertTrue("Previous -30s drift window must verify", ParentTotpAuthenticator.verifyTotpCode(secret, codePrev, fixedTimeMs))
+        assertTrue("Next +30s drift window must verify", ParentTotpAuthenticator.verifyTotpCode(secret, codeNext, fixedTimeMs))
+        assertFalse("Expired TOTP window must be rejected", ParentTotpAuthenticator.verifyTotpCode(secret, codeExpired, fixedTimeMs))
+        assertFalse("Wrong 6-digit code must be rejected", ParentTotpAuthenticator.verifyTotpCode(secret, "000000", fixedTimeMs) && codeNow != "000000")
+
+        val recoveryKey = ParentTotpAuthenticator.generateRecoveryKey()
+        assertTrue("Recovery key must start with SWT-", recoveryKey.startsWith("SWT-"))
+        val norm = ParentTotpAuthenticator.normalizeRecoveryKey(recoveryKey)
+        assertEquals(
+            "Normalized recovery key hash must match",
+            ParentTotpAuthenticator.sha256Hex(norm),
+            ParentTotpAuthenticator.sha256Hex(ParentTotpAuthenticator.normalizeRecoveryKey(recoveryKey.lowercase()))
+        )
     }
 }

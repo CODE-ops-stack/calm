@@ -34,7 +34,8 @@ if (Test-Path ".\gradlew.bat") {
                 "SwatantraWatchdogService", "MainActivity", "FamilySetupActivity",
                 "SafeUrlInterceptorActivity", "PRAGMA synchronous = FULL", "HmacSHA256",
                 "isStaticMetadataEducational", "DISALLOW_FACTORY_RESET", "DISALLOW_NETWORK_RESET",
-                "ON_A_MISSION_COMMAND_DECK_V7_1", "TACTICAL_IF_THEN_DIRECTIVE_V7_1"
+                "ON_A_MISSION_COMMAND_DECK_V7_1", "TACTICAL_IF_THEN_DIRECTIVE_V7_1",
+                "ParentTotpAuthenticator", "PARENT_TOTP_RFC6238_V7_1"
             )
             foreach ($sym in $requiredSymbols) {
                 $present = $ascii.Contains($sym)

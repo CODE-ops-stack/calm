@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.telephony.PhoneNumberUtils
 import android.text.InputFilter
 import android.text.InputType
 import android.view.Gravity
@@ -14,212 +13,172 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
-import java.security.MessageDigest
+import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
 
 class FamilySetupActivity : Activity() {
 
+    private lateinit var generatedTotpSecret: String
+    private lateinit var generatedRecoveryKey: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val deContext = createDeviceProtectedStorageContext()
-        val prefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-
-        // If already locked, do not allow modifying slots
-        if (prefs.getBoolean("family_numbers_locked", false)) {
+        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+        if (callPrefs.getBoolean("family_numbers_locked", false)) {
             finish()
             return
         }
 
-        val scrollView = ScrollView(this).apply {
+        generatedTotpSecret = ParentTotpAuthenticator.generateBase32Secret(16)
+        generatedRecoveryKey = ParentTotpAuthenticator.generateRecoveryKey()
+
+        val scroll = ScrollView(this).apply {
             setBackgroundColor(Color.parseColor("#0B0F17"))
-            isFillViewport = true
         }
 
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(56, 64, 56, 64)
             setBackgroundColor(Color.parseColor("#0B0F17"))
+            setPadding(48, 48, 48, 48)
         }
 
-        val titleView = TextView(this).apply {
-            text = "Family Call Whitelist"
-            textSize = 22f
+        val title = TextView(this).apply {
+            text = "SWATANTRA // ONE-TIME FAMILY LOCK SETUP"
+            textSize = 19f
             setTextColor(Color.parseColor("#10B981"))
             gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 0, 0, 12)
         }
 
-        val subtitleView = TextView(this).apply {
-            text = "Permanent 3-Slot Whitelist\nOnce verified, these slots are permanently locked to protect deep study. Emergency services (112, 100, 108) remain immune by law."
-            textSize = 14f
+        val subtitle = TextView(this).apply {
+            text = "Lock 1 to 3 family phone numbers, set a 6-digit Parent PIN, and save the free offline Authenticator & Recovery keys with your parents."
+            textSize = 13f
             setTextColor(Color.parseColor("#94A3B8"))
             gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 16, 0, 40)
+            setPadding(0, 0, 0, 24)
         }
 
-        fun createSlotInput(slotLabel: String, hintText: String): Pair<TextView, EditText> {
-            val label = TextView(this).apply {
-                text = slotLabel
-                textSize = 14f
-                setTextColor(Color.parseColor("#E2E8F0"))
-                setPadding(0, 12, 0, 6)
-            }
-            val input = EditText(this).apply {
+        fun makeField(hintText: String, inputTypeFlags: Int, maxLen: Int): EditText {
+            return EditText(this).apply {
                 hint = hintText
                 setHintTextColor(Color.parseColor("#64748B"))
-                inputType = InputType.TYPE_CLASS_PHONE
                 setTextColor(Color.parseColor("#E2E8F0"))
                 setBackgroundColor(Color.parseColor("#161F30"))
-                setPadding(32, 24, 32, 24)
+                inputType = inputTypeFlags
+                filters = arrayOf(InputFilter.LengthFilter(maxLen))
+                setPadding(28, 22, 28, 22)
                 val lp = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { setMargins(0, 0, 0, 20) }
+                ).apply { setMargins(0, 0, 0, 14) }
                 layoutParams = lp
             }
-            return Pair(label, input)
         }
 
-        // Strictly 3 phone number slots
-        val (label1, slot1) = createSlotInput("Slot 1: Mother / Primary Guardian", "Enter 10-digit mobile number...")
-        val (label2, slot2) = createSlotInput("Slot 2: Father / Guardian", "Enter 10-digit mobile number (optional)...")
-        val (label3, slot3) = createSlotInput("Slot 3: Brother / Family Member", "Enter 10-digit mobile number (optional)...")
+        val slot1 = makeField("Family Slot 1 (10-digit mobile, required)", InputType.TYPE_CLASS_PHONE, 15)
+        val slot2 = makeField("Family Slot 2 (optional)", InputType.TYPE_CLASS_PHONE, 15)
+        val slot3 = makeField("Family Slot 3 (optional)", InputType.TYPE_CLASS_PHONE, 15)
 
-        // ── 6-Digit Family Unlock PIN ─────────────────────────────────────────
-        val pinLabel = TextView(this).apply {
-            text = "6-Digit Family Unlock PIN"
-            textSize = 14f
-            setTextColor(Color.parseColor("#E2E8F0"))
-            setPadding(0, 20, 0, 6)
-        }
-        val pinInput = EditText(this).apply {
-            hint = "Enter 6-digit PIN..."
-            setHintTextColor(Color.parseColor("#64748B"))
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-            filters = arrayOf(InputFilter.LengthFilter(6))
-            setTextColor(Color.parseColor("#E2E8F0"))
+        val pinField = makeField(
+            "Set 6-Digit Parent Unlock PIN",
+            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD,
+            6
+        )
+        val confirmPinField = makeField(
+            "Confirm 6-Digit Parent Unlock PIN",
+            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD,
+            6
+        )
+
+        val totpCard = TextView(this).apply {
+            text = "OFFLINE GOOGLE AUTHENTICATOR KEY (₹0 COST):\n$generatedTotpSecret\n\nAdd once in parent's Google Authenticator (+ -> Enter a setup key -> Time-based).\n\nOFFLINE BACKUP RECOVERY KEY (SAVE WITH PARENTS):\n$generatedRecoveryKey"
+            textSize = 13f
+            setTextColor(Color.parseColor("#F59E0B"))
             setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(32, 24, 32, 24)
+            setPadding(28, 24, 28, 24)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 20) }
+            ).apply { setMargins(0, 8, 0, 24) }
             layoutParams = lp
         }
-        // ─────────────────────────────────────────────────────────────────────
 
-        val lockButton = Button(this).apply {
-            text = "Verify & Permanently Lock Family Numbers"
-            textSize = 15f
+        val saveButton = Button(this).apply {
+            text = "LOCK FAMILY NUMBERS, PIN & AUTHENTICATOR"
+            textSize = 14f
             setBackgroundColor(Color.parseColor("#059669"))
             setTextColor(Color.WHITE)
-            setPadding(32, 32, 32, 32)
+            setPadding(28, 28, 28, 28)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 24, 0, 0) }
+            )
             layoutParams = lp
-
-            setOnClickListener {
-                // ── Validate PIN ──────────────────────────────────────────────
-                val pin = pinInput.text?.toString()?.trim().orEmpty()
-                if (pin.length != 6 || !pin.all { it.isDigit() }) {
-                    Toast.makeText(
-                        this@FamilySetupActivity,
-                        "Please enter a valid 6-digit numeric PIN.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                // Compute SHA-256 hex of the PIN using Device-Encrypted bootclasspath only
-                val pinBytes = pin.toByteArray(Charsets.UTF_8)
-                val pinSha256 = MessageDigest.getInstance("SHA-256")
-                    .digest(pinBytes)
-                    .joinToString("") { "%02x".format(it) }
-                // ─────────────────────────────────────────────────────────────
-
-                val rawInputs = listOf(
-                    slot1.text?.toString()?.trim().orEmpty(),
-                    slot2.text?.toString()?.trim().orEmpty(),
-                    slot3.text?.toString()?.trim().orEmpty()
-                )
-
-                val normalizedE164List = mutableSetOf<String>()
-                for (raw in rawInputs) {
-                    if (raw.isNotBlank()) {
-                        val networkPortion = PhoneNumberUtils.extractNetworkPortion(raw).trim()
-                        val formattedE164 = PhoneNumberUtils.formatNumberToE164(networkPortion, "IN")
-                            ?: if (networkPortion.startsWith("+")) {
-                                networkPortion
-                            } else if (networkPortion.length == 10) {
-                                "+91$networkPortion"
-                            } else {
-                                networkPortion
-                            }
-
-                        if (formattedE164.isNotBlank() && formattedE164.length >= 10) {
-                            normalizedE164List.add(formattedE164)
-                        } else {
-                            Toast.makeText(
-                                this@FamilySetupActivity,
-                                "Invalid phone number entered: $raw",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            return@setOnClickListener
-                        }
-                    }
-                }
-
-                if (normalizedE164List.isEmpty()) {
-                    Toast.makeText(
-                        this@FamilySetupActivity,
-                        "Please provide at least 1 valid family phone number.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                // Permanently seal the 3 slots + PIN hash in Device-Encrypted storage
-                prefs.edit()
-                    .putStringSet("whitelisted_e164", normalizedE164List)
-                    .putString("family_pin_sha256", pinSha256)
-                    .putBoolean("family_numbers_locked", true)
-                    .commit()
-
-                Toast.makeText(
-                    this@FamilySetupActivity,
-                    "Family numbers permanently locked (${normalizedE164List.size} slots active).",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                finish()
-            }
         }
 
-        root.addView(titleView)
-        root.addView(subtitleView)
-        root.addView(label1)
-        root.addView(slot1)
-        root.addView(label2)
-        root.addView(slot2)
-        root.addView(label3)
-        root.addView(slot3)
-        root.addView(pinLabel)
-        root.addView(pinInput)
-        root.addView(lockButton)
+        saveButton.setOnClickListener {
+            val rawNumbers = listOf(slot1.text.toString(), slot2.text.toString(), slot3.text.toString())
+                .map { it.trim() }
+                .filter { it.isNotEmpty() }
 
-        scrollView.addView(root)
-        setContentView(scrollView)
+            val normalized = rawNumbers.mapNotNull { normalizeIndianNumber(it) }.distinct()
+            if (normalized.isEmpty() || normalized.size > 3) {
+                Toast.makeText(this, "Enter 1 to 3 valid 10-digit family numbers.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val pin = pinField.text?.toString()?.trim().orEmpty()
+            val confirmPin = confirmPinField.text?.toString()?.trim().orEmpty()
+            if (pin.length != 6 || !pin.all { it.isDigit() }) {
+                Toast.makeText(this, "Parent PIN must be exactly 6 digits.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (pin != confirmPin) {
+                Toast.makeText(this, "PINs do not match.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val pinHash = ParentTotpAuthenticator.sha256Hex(pin)
+            val recoveryHash = ParentTotpAuthenticator.sha256Hex(
+                ParentTotpAuthenticator.normalizeRecoveryKey(generatedRecoveryKey)
+            )
+
+            callPrefs.edit()
+                .putStringSet("whitelisted_family_numbers", normalized.toSet())
+                .putString("family_pin_sha256", pinHash)
+                .putString("parent_totp_secret", generatedTotpSecret)
+                .putString("parent_recovery_sha256", recoveryHash)
+                .putBoolean("family_numbers_locked", true)
+                .commit()
+
+            Toast.makeText(this, "Family Lock, PIN & Offline Authenticator Sealed.", Toast.LENGTH_LONG).show()
+            finish()
+        }
+
+        root.addView(title)
+        root.addView(subtitle)
+        root.addView(slot1)
+        root.addView(slot2)
+        root.addView(slot3)
+        root.addView(pinField)
+        root.addView(confirmPinField)
+        root.addView(totpCard)
+        root.addView(saveButton)
+        scroll.addView(root)
+        setContentView(scroll)
+    }
+
+    private fun normalizeIndianNumber(raw: String): String? {
+        val digits = raw.filter { it.isDigit() }
+        return when {
+            digits.length == 10 -> "+91$digits"
+            digits.length == 12 && digits.startsWith("91") -> "+$digits"
+            else -> null
+        }
     }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        val dePrefs = createDeviceProtectedStorageContext().getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-        if (dePrefs.getBoolean("family_numbers_locked", false)) {
-            super.onBackPressed()
-        } else {
-            Toast.makeText(this, "You must lock 1-3 family numbers and a 6-digit PIN first.", Toast.LENGTH_SHORT).show()
-        }
+        // Prevent skipping one-time family lock setup
     }
 }

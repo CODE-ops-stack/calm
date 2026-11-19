@@ -19,6 +19,7 @@ import android.widget.TextView
 import android.widget.Toast
 import `in`.swatantra.focus.classifier.FourBucketClassifier
 import `in`.swatantra.focus.dpc.AtomicDeprovisionManager
+import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
 import `in`.swatantra.focus.watchdog.SwatantraWatchdogService
 import java.security.MessageDigest
 
@@ -214,47 +215,16 @@ class MainActivity : Activity() {
      * Both paths require Device-Encrypted SharedPreferences.
      */
     private fun showDeprovisionGuard(deContext: Context) {
-        val walPrefs = deContext.getSharedPreferences("deprovision_wal", Context.MODE_PRIVATE)
         val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
 
-        // Elapsed duration calculation that survives reboots
-        val requestedElapsedMs = walPrefs.getLong("deprovision_requested_elapsed_ms", -1L)
-        val requestedWallMs = walPrefs.getLong("deprovision_requested_wall_ms", -1L)
-        val nowElapsedMs = SystemClock.elapsedRealtime()
-        val nowWallMs = System.currentTimeMillis()
-
-        val elapsedSinceRequestMs = if (requestedElapsedMs > 0L && nowElapsedMs >= requestedElapsedMs) {
-            nowElapsedMs - requestedElapsedMs
-        } else if (requestedWallMs > 0L && nowWallMs >= requestedWallMs) {
-            // Fallback across reboot when elapsedRealtime reset to 0
-            nowWallMs - requestedWallMs
-        } else {
-            -1L
-        }
-
-        val isTimerRunning = elapsedSinceRequestMs >= 0L
-        val coolingOffComplete = isTimerRunning && elapsedSinceRequestMs >= 86_400_000L
-
-        if (coolingOffComplete) {
-            // 24 hours elapsed — clear WAL timestamps and allow PIN-free deprovisioning
-            walPrefs.edit()
-                .remove("deprovision_requested_elapsed_ms")
-                .remove("deprovision_requested_wall_ms")
-                .commit()
-            runCatching { stopLockTask() }
-            AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
-            return
-        }
-
-        // Build the guard dialog with Command Deck dark theme
         val dialogLayout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(64, 48, 64, 32)
+            setPadding(56, 44, 56, 32)
             setBackgroundColor(Color.parseColor("#0B0F17"))
         }
 
         val guardTitle = TextView(this).apply {
-            text = "Deprovision Guard"
+            text = "PARENT DUAL-KEY UNLOCK"
             textSize = 18f
             setTextColor(Color.parseColor("#10B981"))
             gravity = Gravity.CENTER_HORIZONTAL
@@ -262,29 +232,21 @@ class MainActivity : Activity() {
         }
 
         val guardSubtitle = TextView(this).apply {
-            text = "Choose a safe path to restore this phone:"
-            textSize = 13f
+            text = "Unlock requires either the 6-Digit Parent PIN, a live 6-Digit Google Authenticator Code, or the Offline Backup Recovery Key."
+            textSize = 12f
             setTextColor(Color.parseColor("#94A3B8"))
             gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 24)
+            setPadding(0, 0, 0, 20)
         }
 
-        // ── Option A: PIN entry ───────────────────────────────────────────────
-        val optionALabel = TextView(this).apply {
-            text = "Option A — Immediate: Enter 6-Digit Family Unlock PIN"
-            textSize = 13f
-            setTextColor(Color.parseColor("#10B981"))
-            setPadding(0, 0, 0, 6)
-        }
-
-        val pinInput = EditText(this).apply {
-            hint = "6-digit PIN"
+        val codeInput = EditText(this).apply {
+            hint = "6-digit Parent PIN or Authenticator Code"
             setHintTextColor(Color.parseColor("#64748B"))
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
             filters = arrayOf(InputFilter.LengthFilter(6))
             setTextColor(Color.parseColor("#E2E8F0"))
             setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(32, 20, 32, 20)
+            setPadding(28, 20, 28, 20)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -292,72 +254,55 @@ class MainActivity : Activity() {
             layoutParams = lp
         }
 
-        val verifyPinButton = Button(this).apply {
-            text = "Verify PIN & Deprovision Now"
-            textSize = 14f
+        val verifySixDigitButton = Button(this).apply {
+            text = "VERIFY PIN / AUTHENTICATOR & UNLOCK"
+            textSize = 13f
             setBackgroundColor(Color.parseColor("#059669"))
             setTextColor(Color.WHITE)
             setPadding(24, 24, 24, 24)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 24) }
+            ).apply { setMargins(0, 0, 0, 20) }
             layoutParams = lp
         }
 
-        // ── Option B: 24-hour cooling-off ─────────────────────────────────────
-        val divider = TextView(this).apply {
-            text = "— or —"
+        val recoveryLabel = TextView(this).apply {
+            text = "Lost PIN & Parent Phone? Enter Offline Recovery Key:"
             textSize = 12f
-            setTextColor(Color.parseColor("#94A3B8"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 16)
-        }
-
-        val optionBLabel = TextView(this).apply {
-            text = "Option B — Start 24-Hour Anti-Impulse Cooling-Off Timer"
-            textSize = 13f
-            setTextColor(Color.parseColor("#94A3B8"))
+            setTextColor(Color.parseColor("#F59E0B"))
             setPadding(0, 0, 0, 6)
         }
 
-        val timerStatusText = TextView(this).apply {
-            if (isTimerRunning) {
-                val remainingMs = maxOf(0L, 86_400_000L - elapsedSinceRequestMs)
-                val remainingHours = remainingMs / 3_600_000L
-                val remainingMins = (remainingMs % 3_600_000L) / 60_000L
-                text = "Timer running: ~${remainingHours}h ${remainingMins}m remaining"
-            } else {
-                text = "No timer started yet."
-            }
-            textSize = 12f
-            setTextColor(Color.parseColor("#F59E0B"))
-            setPadding(0, 0, 0, 10)
-        }
-
-        val startTimerButton = Button(this).apply {
-            text = "Start 24-Hour Cooling-Off Timer"
-            textSize = 14f
-            setBackgroundColor(Color.parseColor("#334155"))
-            setTextColor(Color.WHITE)
-            setPadding(24, 24, 24, 24)
-            isEnabled = !isTimerRunning   // only allow starting once
+        val recoveryInput = EditText(this).apply {
+            hint = "SWT-XXXX-XXXX-XXXX"
+            setHintTextColor(Color.parseColor("#64748B"))
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+            setTextColor(Color.parseColor("#E2E8F0"))
+            setBackgroundColor(Color.parseColor("#161F30"))
+            setPadding(28, 18, 28, 18)
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 0) }
+            ).apply { setMargins(0, 0, 0, 12) }
             layoutParams = lp
+        }
+
+        val verifyRecoveryButton = Button(this).apply {
+            text = "VERIFY RECOVERY KEY & UNLOCK"
+            textSize = 13f
+            setBackgroundColor(Color.parseColor("#334155"))
+            setTextColor(Color.WHITE)
+            setPadding(24, 22, 24, 22)
         }
 
         dialogLayout.addView(guardTitle)
         dialogLayout.addView(guardSubtitle)
-        dialogLayout.addView(optionALabel)
-        dialogLayout.addView(pinInput)
-        dialogLayout.addView(verifyPinButton)
-        dialogLayout.addView(divider)
-        dialogLayout.addView(optionBLabel)
-        dialogLayout.addView(timerStatusText)
-        dialogLayout.addView(startTimerButton)
+        dialogLayout.addView(codeInput)
+        dialogLayout.addView(verifySixDigitButton)
+        dialogLayout.addView(recoveryLabel)
+        dialogLayout.addView(recoveryInput)
+        dialogLayout.addView(verifyRecoveryButton)
 
         val dialog = runCatching {
             AlertDialog.Builder(this)
@@ -366,49 +311,40 @@ class MainActivity : Activity() {
                 .create()
         }.getOrNull()
 
-        // Wire Option A — PIN verify
-        verifyPinButton.setOnClickListener {
-            val enteredPin = pinInput.text?.toString()?.trim().orEmpty()
-            if (enteredPin.length != 6 || !enteredPin.all { it.isDigit() }) {
-                Toast.makeText(this, "Enter a valid 6-digit PIN.", Toast.LENGTH_SHORT).show()
+        verifySixDigitButton.setOnClickListener {
+            val entered = codeInput.text?.toString()?.trim().orEmpty()
+            if (entered.length != 6 || !entered.all { it.isDigit() }) {
+                Toast.makeText(this, "Enter a valid 6-digit PIN or Authenticator code.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val enteredHash = MessageDigest.getInstance("SHA-256")
-                .digest(enteredPin.toByteArray(Charsets.UTF_8))
-                .joinToString("") { "%02x".format(it) }
+            val storedPinHash = callPrefs.getString("family_pin_sha256", null)
+            val pinMatches = storedPinHash != null && ParentTotpAuthenticator.sha256Hex(entered) == storedPinHash
 
-            val storedHash = callPrefs.getString("family_pin_sha256", null)
-            if (storedHash != null && enteredHash == storedHash) {
-                // Clear WAL timestamps before deprovisioning
-                walPrefs.edit()
-                    .remove("deprovision_requested_elapsed_ms")
-                    .remove("deprovision_requested_wall_ms")
-                    .commit()
+            val storedTotpSecret = callPrefs.getString("parent_totp_secret", "").orEmpty()
+            val totpMatches = ParentTotpAuthenticator.verifyTotpCode(storedTotpSecret, entered)
+
+            if (pinMatches || totpMatches) {
                 dialog?.dismiss()
                 runCatching { stopLockTask() }
                 AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
             } else {
-                Toast.makeText(this, "Incorrect PIN. Deprovision denied.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Invalid Parent PIN or Authenticator code. Unlock denied.", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // Wire Option B — 24-hour timer
-        startTimerButton.setOnClickListener {
-            val nowElapsedForTimer = SystemClock.elapsedRealtime()
-            val nowWallMsForTimer = System.currentTimeMillis()
-            walPrefs.edit()
-                .putLong("deprovision_requested_elapsed_ms", nowElapsedForTimer)
-                .putLong("deprovision_requested_wall_ms", nowWallMsForTimer)
-                .commit()
-            Toast.makeText(
-                this,
-                "24-hour cooling-off timer started. Return tomorrow to deprovision without PIN.",
-                Toast.LENGTH_LONG
-            ).show()
-            startTimerButton.isEnabled = false
-            timerStatusText.text = "Timer running: ~24h 0m remaining"
-            dialog?.dismiss()
+        verifyRecoveryButton.setOnClickListener {
+            val enteredRecovery = ParentTotpAuthenticator.normalizeRecoveryKey(recoveryInput.text?.toString().orEmpty())
+            val storedRecoveryHash = callPrefs.getString("parent_recovery_sha256", null)
+            if (enteredRecovery.isNotEmpty() && storedRecoveryHash != null &&
+                ParentTotpAuthenticator.sha256Hex(enteredRecovery) == storedRecoveryHash
+            ) {
+                dialog?.dismiss()
+                runCatching { stopLockTask() }
+                AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
+            } else {
+                Toast.makeText(this, "Invalid Recovery Key. Unlock denied.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         dialog?.show()

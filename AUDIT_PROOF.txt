@@ -1,9 +1,9 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+69c7668 chore(antigravity): sync Swatantra v7.1 build state and error.log
+708253b chore(audit): update AUDIT_PROOF.txt with non-blocking ScrollView MainActivity proof
 f88a1e5 chore(antigravity): sync Swatantra v7.1 build state and error.log
 86b6408 chore(audit): update AUDIT_PROOF.txt with crash-proof FourBucketClassifier and study launcher
 0b47652 chore(antigravity): sync Swatantra v7.1 build state and error.log
-34a4039 chore(audit): update AUDIT_PROOF.txt with ParentTotpAuthenticator and 6-test verification
-860907f chore(antigravity): sync Swatantra v7.1 build state and error.log
 
 On branch main
 Your branch is up to date with 'origin/main'.
@@ -22,23 +22,23 @@ app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines:
 app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
 app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
 app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 184 | Bytes: 7442 | SHA256: 1A895F4D71A5788F
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 491 | Bytes: 22164 | SHA256: 6B9989C239A530EB
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 546 | Bytes: 24826 | SHA256: 2E9830AD60B5DFB9
 app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 79 | Bytes: 2958 | SHA256: E180843F053A47EA
 app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
 app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
 app\src\main\res\xml\device_admin_policies.xml | Lines: 14 | Bytes: 430 | SHA256: 5E61A80C8BE194CC
 app\src\main\res\xml\lecture_inspector_config.xml | Lines: 7 | Bytes: 413 | SHA256: 60F625306042349D
-app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C73DC726
+app\src\main\AndroidManifest.xml | Lines: 140 | Bytes: 6160 | SHA256: 58D38D9D8548A2DA
 app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 545 | Bytes: 27294 | SHA256: F5BBFFF7A8CC4DF8
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 124256 bytes | LastWriteTime: 11/19/2026 20:03:43
+APK Size: 128352 bytes | LastWriteTime: 11/19/2026 23:46:14
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
 META-INF/version-control-info.textproto                      120              117
-classes.dex                                                98816            98816
+classes.dex                                               101856           101856
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -47,7 +47,7 @@ kotlin/internal/internal.kotlin_builtins                     646              39
 kotlin/kotlin.kotlin_builtins                              18640             5252
 kotlin/ranges/ranges.kotlin_builtins                        3399             1292
 kotlin/reflect/reflect.kotlin_builtins                      2426             1286
-AndroidManifest.xml                                        10544             2480
+AndroidManifest.xml                                        10604             2495
 res/4D.xml                                                  1048              370
 res/nw.xml                                                   508              280
 resources.arsc                                               644              644
@@ -83,122 +83,199 @@ DEX_SYMBOL [PARENT_TOTP_RFC6238_V7_1] Present in classes.dex: True
 
 === 4. TEST EXECUTION (RAW XML TESTSUITE PROOF) ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-19T14:33:25.545Z" hostname="DESKTOP-JOU27LS" time="0.22">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-19T18:15:57.278Z" hostname="DESKTOP-JOU27LS" time="0.288">
   <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.064"/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.017"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.013"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
-  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.109"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.005"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.108"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.029"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.025"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
+  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.078"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.006"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 
 === 5. VERBATIM MODIFIED / HARDENED CODE ===
 
---- MainActivity.kt (Asynchronous Study Apps Selector & Lock Engagement) ---
-    private fun showStudyAppSelector(deContext: Context, engageLockAfterSave: Boolean) {
-        Toast.makeText(this, "Loading installed apps...", Toast.LENGTH_SHORT).show()
-        Thread {
-            val launcherIntent = Intent(Intent.ACTION_MAIN).apply {
-                addCategory(Intent.CATEGORY_LAUNCHER)
-            }
-            val resolved = runCatching {
-                packageManager.queryIntentActivities(launcherIntent, 0)
-            }.getOrDefault(emptyList())
+--- AndroidManifest.xml (<queries> block) ---
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
 
-            val candidates = resolved
-                .mapNotNull { info ->
-                    val pkg = info.activityInfo?.packageName ?: return@mapNotNull null
-                    if (pkg == packageName) return@mapNotNull null
-                    val label = runCatching { info.loadLabel(packageManager).toString() }.getOrDefault(pkg)
-                    pkg to label
-                }
-                .distinctBy { it.first }
-                .sortedBy { it.second.lowercase() }
-
-            val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
-            val savedSet = studyPrefs.getStringSet(KEY_STUDY_PKGS, emptySet())?.toMutableSet() ?: mutableSetOf()
-
-            val labels = candidates.map { it.second }.toTypedArray()
-            val checked = BooleanArray(candidates.size) { idx -> candidates[idx].first in savedSet }
-
-            runOnUiThread {
-                if (candidates.isEmpty()) {
-                    Toast.makeText(this, "No launchable apps found.", Toast.LENGTH_SHORT).show()
-                    return@runOnUiThread
-                }
-                runCatching {
-                    AlertDialog.Builder(this)
-                        .setTitle("Select Your Allowed Study Apps")
-                        .setMultiChoiceItems(labels, checked) { _, which, isChecked ->
-                            checked[which] = isChecked
-                        }
-                        .setPositiveButton(if (engageLockAfterSave) "Save & Lock Now" else "Save Study Apps") { _, _ ->
-                            val chosen = candidates.indices
-                                .filter { checked[it] }
-                                .map { candidates[it].first }
-                                .toSet()
-                            studyPrefs.edit()
-                                .putStringSet(KEY_STUDY_PKGS, chosen)
-                                .putBoolean(KEY_STUDY_CONFIGURED, true)
-                                .commit()
-                            Toast.makeText(this, "Saved ${chosen.size} study app(s).", Toast.LENGTH_SHORT).show()
-                            if (engageLockAfterSave) {
-                                engageMissionLockAsync(deContext)
-                            }
-                        }
-                        .setNegativeButton("Cancel", null)
-                        .show()
-                }
-            }
-        }.start()
-    }
-
-    private fun engageMissionLockAsync(deContext: Context) {
+--- MainActivity.kt (Parent Auth & Family Re-Setup flow) ---
+    private fun showParentAuthDialog(deContext: Context, mode: String) {
+        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
         val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
-        val chosenStudySet = studyPrefs.getStringSet(KEY_STUDY_PKGS, emptySet()) ?: emptySet()
-        subHeader.text = "ENGAGING MISSION LOCK..."
+        val isResetOnly = (mode == "RESET_FAMILY")
 
-        Thread {
-            val studySet = chosenStudySet + setOf("com.android.vending")
-            runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
-            studyPrefs.edit().putBoolean(KEY_MISSION_LOCK_ACTIVE, true).commit()
+        val dialogLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(56, 44, 56, 32)
+            setBackgroundColor(Color.parseColor("#0B0F17"))
+        }
 
-            val launchable = chosenStudySet.mapNotNull { pkg ->
-                val launchIntent = packageManager.getLaunchIntentForPackage(pkg) ?: return@mapNotNull null
-                val label = runCatching {
-                    packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
-                }.getOrDefault(pkg)
-                label to launchIntent
-            }.sortedBy { it.first.lowercase() }
+        val guardTitle = TextView(this).apply {
+            text = if (isResetOnly) "RESET FAMILY PIN & NUMBERS" else "PARENT DUAL-KEY UNLOCK"
+            textSize = 18f
+            setTextColor(Color.parseColor("#10B981"))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 0, 0, 8)
+        }
 
-            val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-            val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
-
-            runOnUiThread {
-                if (isDeviceOwner) {
-                    runCatching { startLockTask() }
-                    subHeader.text = "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
-                } else {
-                    subHeader.text = "DEVICE OWNER INACTIVE \u2022 RUN ADB PROVISIONING"
-                }
-
-                if (launchable.isNotEmpty()) {
-                    val labels = launchable.map { it.first }.toTypedArray()
-                    runCatching {
-                        AlertDialog.Builder(this@MainActivity)
-                            .setTitle("Mission Lock Active — Open Study App")
-                            .setItems(labels) { _, which ->
-                                runCatching { startActivity(launchable[which].second) }
-                            }
-                            .setNegativeButton("Stay on Command Deck", null)
-                            .show()
-                    }
-                } else {
-                    Toast.makeText(this@MainActivity, "Mission Lock Engaged. Tap [SELECT MY STUDY APPS] to add apps.", Toast.LENGTH_LONG).show()
-                }
+        val guardSubtitle = TextView(this).apply {
+            text = if (isResetOnly) {
+                "Verify current Parent PIN, Google Authenticator Code, or Recovery Key to set new family numbers and PIN."
+            } else {
+                "Verify Parent PIN, live 6-Digit Google Authenticator Code, or Offline Recovery Key to unlock and reset Swatantra."
             }
-        }.start()
+            textSize = 12f
+            setTextColor(Color.parseColor("#94A3B8"))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 0, 0, 20)
+        }
+
+        val codeInput = EditText(this).apply {
+            hint = "6-digit Parent PIN or Authenticator Code"
+            setHintTextColor(Color.parseColor("#64748B"))
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
+            filters = arrayOf(InputFilter.LengthFilter(6))
+            setTextColor(Color.parseColor("#E2E8F0"))
+            setBackgroundColor(Color.parseColor("#161F30"))
+            setPadding(28, 20, 28, 20)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 12) }
+            layoutParams = lp
+        }
+
+        val verifySixDigitButton = Button(this).apply {
+            text = if (isResetOnly) "VERIFY & RE-SETUP FAMILY LOCK" else "VERIFY PIN / AUTHENTICATOR & UNLOCK"
+            textSize = 13f
+            setBackgroundColor(Color.parseColor("#059669"))
+            setTextColor(Color.WHITE)
+            setPadding(24, 24, 24, 24)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 20) }
+            layoutParams = lp
+        }
+
+        val recoveryLabel = TextView(this).apply {
+            text = "Lost PIN & Parent Phone? Enter Offline Recovery Key:"
+            textSize = 12f
+            setTextColor(Color.parseColor("#F59E0B"))
+            setPadding(0, 0, 0, 6)
+        }
+
+        val recoveryInput = EditText(this).apply {
+            hint = "SWT-XXXX-XXXX-XXXX"
+            setHintTextColor(Color.parseColor("#64748B"))
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
+            setTextColor(Color.parseColor("#E2E8F0"))
+            setBackgroundColor(Color.parseColor("#161F30"))
+            setPadding(28, 18, 28, 18)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 12) }
+            layoutParams = lp
+        }
+
+        val verifyRecoveryButton = Button(this).apply {
+            text = if (isResetOnly) "VERIFY RECOVERY KEY & RE-SETUP" else "VERIFY RECOVERY KEY & UNLOCK"
+            textSize = 13f
+            setBackgroundColor(Color.parseColor("#334155"))
+            setTextColor(Color.WHITE)
+            setPadding(24, 22, 24, 22)
+        }
+
+        dialogLayout.addView(guardTitle)
+        dialogLayout.addView(guardSubtitle)
+        dialogLayout.addView(codeInput)
+        dialogLayout.addView(verifySixDigitButton)
+        dialogLayout.addView(recoveryLabel)
+        dialogLayout.addView(recoveryInput)
+        dialogLayout.addView(verifyRecoveryButton)
+
+        val dialog = runCatching {
+            AlertDialog.Builder(this)
+                .setView(dialogLayout)
+                .setCancelable(true)
+                .create()
+        }.getOrNull()
+
+        fun clearFamilyCredentialsForReSetup() {
+            callPrefs.edit()
+                .remove("whitelisted_family_numbers")
+                .remove("family_pin_sha256")
+                .remove("parent_totp_secret")
+                .remove("parent_recovery_sha256")
+                .putBoolean("family_numbers_locked", false)
+                .commit()
+        }
+
+        fun onParentVerified() {
+            dialog?.dismiss()
+            if (isResetOnly) {
+                clearFamilyCredentialsForReSetup()
+                Toast.makeText(this, "Verified. Enter your new family numbers & PIN.", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, FamilySetupActivity::class.java))
+            } else {
+                studyPrefs.edit()
+                    .putBoolean(KEY_MISSION_LOCK_ACTIVE, false)
+                    .putBoolean(KEY_STUDY_CONFIGURED, false)
+                    .commit()
+                clearFamilyCredentialsForReSetup()
+                runCatching { stopLockTask() }
+                Thread {
+                    AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
+                    runOnUiThread {
+                        refreshStatusBanner(deContext)
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Phone unlocked & family lock reset. Reopen Swatantra anytime to set a new PIN & numbers.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        startActivity(Intent(this@MainActivity, FamilySetupActivity::class.java))
+                    }
+                }.start()
+            }
+        }
+
+        verifySixDigitButton.setOnClickListener {
+            val entered = codeInput.text?.toString()?.trim().orEmpty()
+            if (entered.length != 6 || !entered.all { it.isDigit() }) {
+                Toast.makeText(this, "Enter a valid 6-digit PIN or Authenticator code.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val storedPinHash = callPrefs.getString("family_pin_sha256", null)
+            val pinMatches = storedPinHash != null && ParentTotpAuthenticator.sha256Hex(entered) == storedPinHash
+            val storedTotpSecret = callPrefs.getString("parent_totp_secret", "").orEmpty()
+            val totpMatches = ParentTotpAuthenticator.verifyTotpCode(storedTotpSecret, entered)
+
+            if (pinMatches || totpMatches) {
+                onParentVerified()
+            } else {
+                Toast.makeText(this, "Invalid Parent PIN or Authenticator code. Access denied.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        verifyRecoveryButton.setOnClickListener {
+            val enteredRecovery = ParentTotpAuthenticator.normalizeRecoveryKey(recoveryInput.text?.toString().orEmpty())
+            val storedRecoveryHash = callPrefs.getString("parent_recovery_sha256", null)
+            if (enteredRecovery.isNotEmpty() && storedRecoveryHash != null &&
+                ParentTotpAuthenticator.sha256Hex(enteredRecovery) == storedRecoveryHash
+            ) {
+                onParentVerified()
+            } else {
+                Toast.makeText(this, "Invalid Recovery Key. Access denied.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        dialog?.show()
     }

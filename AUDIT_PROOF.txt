@@ -1,7 +1,7 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+5fcb8c8 chore(antigravity): sync Swatantra v7.1 build state and error.log
+e23db7f chore(audit): update AUDIT_PROOF.txt with ON A MISSION theme verification and test report
 c387174 chore(antigravity): sync Swatantra v7.1 build state and error.log
-2bbb422 chore(audit): update AUDIT_PROOF.txt for CI runner workflow fixes
-8433c30 ci(github-actions): set gradlew executable and group license acceptance and build execution with full stdout capture
  M AUDIT_PROOF.txt
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
@@ -17,23 +17,23 @@ app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines:
 app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
 app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
 app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 225 | Bytes: 9774 | SHA256: A7D9F49A9A76397B
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 367 | Bytes: 15519 | SHA256: E20C07052E1DC365
-app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 70 | Bytes: 2711 | SHA256: A3C5154FCA72D869
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 416 | Bytes: 18184 | SHA256: 2B6AC5E806A44EB9
+app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 79 | Bytes: 2958 | SHA256: E180843F053A47EA
 app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
 app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
 app\src\main\res\xml\device_admin_policies.xml | Lines: 14 | Bytes: 430 | SHA256: 5E61A80C8BE194CC
 app\src\main\res\xml\lecture_inspector_config.xml | Lines: 7 | Bytes: 413 | SHA256: 60F625306042349D
 app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C73DC726
-app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 496 | Bytes: 24476 | SHA256: A4AAF6BBF183615B
+app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 513 | Bytes: 25210 | SHA256: 8B7F9491E3179A83
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 111968 bytes | LastWriteTime: 11/18/2026 15:44:07
+APK Size: 111968 bytes | LastWriteTime: 11/19/2026 12:58:01
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
-META-INF/version-control-info.textproto                      120              117
-classes.dex                                                84296            84296
+META-INF/version-control-info.textproto                      120              118
+classes.dex                                                85780            85780
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -46,9 +46,9 @@ AndroidManifest.xml                                        10544             248
 res/4D.xml                                                  1048              370
 res/nw.xml                                                   508              280
 resources.arsc                                               644              644
-META-INF/SWATANTR.SF                                        1697              899
+META-INF/SWATANTR.SF                                        1697              900
 META-INF/SWATANTR.RSA                                       1419             1120
-META-INF/MANIFEST.MF                                        1570              810
+META-INF/MANIFEST.MF                                        1570              811
 
 
 
@@ -74,25 +74,28 @@ DEX_SYMBOL [isStaticMetadataEducational] Present in classes.dex: True
 DEX_SYMBOL [DISALLOW_FACTORY_RESET] Present in classes.dex: True
 DEX_SYMBOL [DISALLOW_NETWORK_RESET] Present in classes.dex: True
 DEX_SYMBOL [ON_A_MISSION_COMMAND_DECK_V7_1] Present in classes.dex: True
+DEX_SYMBOL [TACTICAL_IF_THEN_DIRECTIVE_V7_1] Present in classes.dex: True
 
 === 4. JUNIT TEST EXECUTION XML REPORTS ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-18T10:08:27.878Z" hostname="DESKTOP-JOU27LS" time="0.09">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-19T07:25:53.565Z" hostname="DESKTOP-JOU27LS" time="0.078">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.058"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.008"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.049"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.009"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.005"/>
   <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.01"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.007"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-18T10:08:30.287Z" hostname="DESKTOP-JOU27LS" time="0.098">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-19T07:25:54.956Z" hostname="DESKTOP-JOU27LS" time="0.086">
   <properties/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.063"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.011"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.05"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.011"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.006"/>
   <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.013"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.009"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
@@ -765,6 +768,14 @@ class MainActivity : Activity() {
 
     companion object {
         const val MISSION_THEME_ID = "ON_A_MISSION_COMMAND_DECK_V7_1"
+        const val TACTICAL_IF_THEN_DIRECTIVE_V7_1 = "TACTICAL_IF_THEN_DIRECTIVE_V7_1"
+        const val PREFS_DIRECTIVES = "mission_directives_de"
+        const val KEY_ACTIVE_DIRECTIVE = "active_if_then_directive"
+        val UNIVERSAL_IF_THEN_DIRECTIVES = listOf(
+            "IF urge to browse hits -> THEN solve 2 practice questions now. Your big goal is waiting.",
+            "IF stuck on a problem > 5m -> THEN write 1 known formula & test a simple case. Every mark counts.",
+            "IF focus drops mid-lecture -> THEN pause & summarize the last 3 minutes on paper. Stay on mission."
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -824,6 +835,45 @@ class MainActivity : Activity() {
             layoutParams = lp
         }
 
+        val directivePrefs = deContext.getSharedPreferences(PREFS_DIRECTIVES, Context.MODE_PRIVATE)
+        var activeDirective = directivePrefs.getString(KEY_ACTIVE_DIRECTIVE, UNIVERSAL_IF_THEN_DIRECTIVES[0])
+            ?: UNIVERSAL_IF_THEN_DIRECTIVES[0]
+
+        val directiveBanner = TextView(this).apply {
+            text = "ARMED IF-THEN DIRECTIVE:\n$activeDirective"
+            textSize = 12f
+            setTextColor(Color.parseColor("#E2E8F0"))
+            setBackgroundColor(Color.parseColor("#161F30"))
+            setPadding(24, 20, 24, 20)
+            gravity = Gravity.CENTER_HORIZONTAL
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 12) }
+            layoutParams = lp
+        }
+
+        val cycleDirectiveTile = Button(this).apply {
+            text = "[ARM IF-THEN DIRECTIVE] \u2022 Cycle Motivating Rule"
+            textSize = 13f
+            setBackgroundColor(Color.parseColor("#1E293B"))
+            setTextColor(Color.parseColor("#F59E0B"))
+            setPadding(24, 20, 24, 20)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 20) }
+            layoutParams = lp
+            setOnClickListener {
+                val currentIdx = UNIVERSAL_IF_THEN_DIRECTIVES.indexOf(activeDirective)
+                val nextIdx = (currentIdx + 1) % UNIVERSAL_IF_THEN_DIRECTIVES.size
+                activeDirective = UNIVERSAL_IF_THEN_DIRECTIVES[nextIdx]
+                directivePrefs.edit().putString(KEY_ACTIVE_DIRECTIVE, activeDirective).commit()
+                directiveBanner.text = "ARMED IF-THEN DIRECTIVE:\n$activeDirective"
+                Toast.makeText(this@MainActivity, "If-Then Directive Armed", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         fun createTile(label: String, bgHex: String, onClick: () -> Unit): Button {
             return Button(this).apply {
                 text = label
@@ -877,6 +927,8 @@ class MainActivity : Activity() {
         root.addView(header)
         root.addView(subHeader)
         root.addView(telemetryBanner)
+        root.addView(directiveBanner)
+        root.addView(cycleDirectiveTile)
         root.addView(studyTile)
         root.addView(parkingTile)
         root.addView(wifiSettingsTile)
@@ -1102,6 +1154,87 @@ class MainActivity : Activity() {
         }
 
         dialog?.show()
+    }
+}
+
+--- FILE: app/src/main/java/in/swatantra/focus/ui/SafeUrlInterceptorActivity.kt ---
+package `in`.swatantra.focus.ui
+
+import android.app.Activity
+import android.content.Context
+import android.graphics.Color
+import android.os.Bundle
+import android.view.Gravity
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+
+class SafeUrlInterceptorActivity : Activity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val deContext = createDeviceProtectedStorageContext()
+        val directivePrefs = deContext.getSharedPreferences(MainActivity.PREFS_DIRECTIVES, Context.MODE_PRIVATE)
+        val armedDirective = directivePrefs.getString(
+            MainActivity.KEY_ACTIVE_DIRECTIVE,
+            MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES[0]
+        ) ?: MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES[0]
+
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            setBackgroundColor(Color.parseColor("#0B0F17"))
+            setPadding(56, 56, 56, 56)
+        }
+
+        val title = TextView(this).apply {
+            text = "TACTICAL INTERCEPT // STAY ON MISSION"
+            textSize = 20f
+            setTextColor(Color.parseColor("#F59E0B"))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 0, 0, 16)
+        }
+
+        val directiveCard = TextView(this).apply {
+            text = "YOUR ARMED PROTOCOL:\n\n$armedDirective"
+            textSize = 15f
+            setTextColor(Color.parseColor("#F59E0B"))
+            setBackgroundColor(Color.parseColor("#161F30"))
+            setPadding(36, 36, 36, 36)
+            gravity = Gravity.CENTER_HORIZONTAL
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 28) }
+            layoutParams = lp
+        }
+
+        val subtitle = TextView(this).apply {
+            text = "Distractions fade. Your future achievement stays. Execute your rule and return to your sortie."
+            textSize = 13f
+            setTextColor(Color.parseColor("#94A3B8"))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(0, 0, 0, 32)
+        }
+
+        val returnButton = Button(this).apply {
+            text = "EXECUTE 'THEN' PROTOCOL & RETURN TO SORTIE"
+            textSize = 14f
+            setBackgroundColor(Color.parseColor("#059669"))
+            setTextColor(Color.WHITE)
+            setPadding(32, 32, 32, 32)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams = lp
+            setOnClickListener { finish() }
+        }
+
+        root.addView(title)
+        root.addView(directiveCard)
+        root.addView(subtitle)
+        root.addView(returnButton)
+        setContentView(root)
     }
 }
 
@@ -1599,6 +1732,23 @@ class SwatantraProductionVerificationTest {
                     hasVpnService = false
                 )
             )
+        }
+    }
+
+    @Test
+    fun testUniversalIfThenDirectiveAndMotivatingProtocol() {
+        assertEquals(
+            "TACTICAL_IF_THEN_DIRECTIVE_V7_1",
+            MainActivity.TACTICAL_IF_THEN_DIRECTIVE_V7_1
+        )
+        assertTrue(
+            "Must provide 3 universal motivating directives",
+            MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES.size == 3
+        )
+        for (rule in MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES) {
+            assertTrue("Rule must start with IF: $rule", rule.startsWith("IF "))
+            assertTrue("Rule must contain -> THEN : $rule", rule.contains("-> THEN "))
+            assertFalse("Rule must stay universal (no exam lock-in): $rule", rule.contains("GATE", ignoreCase = true))
         }
     }
 }

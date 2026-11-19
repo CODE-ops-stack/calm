@@ -8,7 +8,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.SystemClock
 import android.provider.Settings
 import android.text.InputFilter
 import android.text.InputType
@@ -16,13 +15,14 @@ import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import `in`.swatantra.focus.classifier.FourBucketClassifier
 import `in`.swatantra.focus.dpc.AtomicDeprovisionManager
 import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
+import `in`.swatantra.focus.ledger.MonotonicDualClockLedger
 import `in`.swatantra.focus.watchdog.SwatantraWatchdogService
-import java.security.MessageDigest
 
 class MainActivity : Activity() {
 
@@ -31,12 +31,20 @@ class MainActivity : Activity() {
         const val TACTICAL_IF_THEN_DIRECTIVE_V7_1 = "TACTICAL_IF_THEN_DIRECTIVE_V7_1"
         const val PREFS_DIRECTIVES = "mission_directives_de"
         const val KEY_ACTIVE_DIRECTIVE = "active_if_then_directive"
+        const val PREFS_STUDY = "dynamic_study_whitelist_de"
+        const val KEY_STUDY_PKGS = "study_pkgs"
+        const val KEY_STUDY_CONFIGURED = "study_apps_configured"
+        const val KEY_MISSION_LOCK_ACTIVE = "mission_lock_active"
+
         val UNIVERSAL_IF_THEN_DIRECTIVES = listOf(
             "IF urge to browse hits -> THEN solve 2 practice questions now. Your big goal is waiting.",
             "IF stuck on a problem > 5m -> THEN write 1 known formula & test a simple case. Every mark counts.",
             "IF focus drops mid-lecture -> THEN pause & summarize the last 3 minutes on paper. Stay on mission."
         )
     }
+
+    private lateinit var subHeader: TextView
+    private lateinit var telemetryBanner: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,20 +58,16 @@ class MainActivity : Activity() {
             startActivity(Intent(this, FamilySetupActivity::class.java))
         }
 
-        // Live Mission Telemetry Status Bar
-        val (studyMs, callMs) = runCatching {
-            `in`.swatantra.focus.ledger.MonotonicDualClockLedger(deContext)
-                .recordHeartbeatTick(isStudying = false, isOnNonWhitelistedCall = false, verifiedTlsOrGnssTimeMs = null)
-        }.getOrDefault(Pair(0L, 0L))
-        val studyMins = studyMs / 60_000L
-        val callMins = callMs / 60_000L
+        val scroll = ScrollView(this).apply {
+            setBackgroundColor(Color.parseColor("#0B0F17"))
+            isFillViewport = true
+        }
 
-        // Flight-Deck Deep-Space Obsidian (#0B0F17) background
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
+            gravity = Gravity.CENTER_HORIZONTAL
             setBackgroundColor(Color.parseColor("#0B0F17"))
-            setPadding(56, 56, 56, 56)
+            setPadding(48, 48, 48, 48)
         }
 
         val header = TextView(this).apply {
@@ -73,27 +77,49 @@ class MainActivity : Activity() {
             gravity = Gravity.CENTER_HORIZONTAL
         }
 
-        val subHeader = TextView(this).apply {
-            text = "MISSION OBJECTIVE: DEEP WORK COMMAND \u2022 ZERO ATTENTION RESIDUE"
+        val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+        val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+        val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+        val isLocked = studyPrefs.getBoolean(KEY_MISSION_LOCK_ACTIVE, false)
+
+        subHeader = TextView(this).apply {
+            text = when {
+                isDeviceOwner && isLocked -> "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
+                isDeviceOwner -> "DEVICE OWNER: ACTIVE \u2022 READY FOR MISSION"
+                else -> "DEVICE OWNER: INACTIVE \u2022 RUN ADB PROVISIONING"
+            }
             textSize = 13f
             setTextColor(Color.parseColor("#94A3B8"))
             gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 8, 0, 24)
+            setPadding(0, 8, 0, 20)
         }
 
-        val telemetryBanner = TextView(this).apply {
-            text = "TELEMETRY \u2022 SORTIE LOGGED: ${studyMins}m | COMMS SHIELD: ${callMins}m / 60m (112 IMMUNE)"
+        telemetryBanner = TextView(this).apply {
+            text = "TELEMETRY \u2022 SORTIE LOGGED: --m | COMMS SHIELD: --m / 60m (112 IMMUNE)"
             textSize = 13f
             setTextColor(Color.parseColor("#F59E0B"))
             setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(24, 24, 24, 24)
+            setPadding(24, 22, 24, 22)
             gravity = Gravity.CENTER_HORIZONTAL
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 28) }
+            ).apply { setMargins(0, 0, 0, 20) }
             layoutParams = lp
         }
+
+        // Load ledger telemetry asynchronously so UI never lags
+        Thread {
+            val (studyMs, callMs) = runCatching {
+                MonotonicDualClockLedger(deContext)
+                    .recordHeartbeatTick(isStudying = false, isOnNonWhitelistedCall = false, verifiedTlsOrGnssTimeMs = null)
+            }.getOrDefault(Pair(0L, 0L))
+            val studyMins = studyMs / 60_000L
+            val callMins = callMs / 60_000L
+            runOnUiThread {
+                telemetryBanner.text = "TELEMETRY \u2022 SORTIE LOGGED: ${studyMins}m | COMMS SHIELD: ${callMins}m / 60m (112 IMMUNE)"
+            }
+        }.start()
 
         val directivePrefs = deContext.getSharedPreferences(PREFS_DIRECTIVES, Context.MODE_PRIVATE)
         var activeDirective = directivePrefs.getString(KEY_ACTIVE_DIRECTIVE, UNIVERSAL_IF_THEN_DIRECTIVES[0])
@@ -122,7 +148,7 @@ class MainActivity : Activity() {
             val lp = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 20) }
+            ).apply { setMargins(0, 0, 0, 16) }
             layoutParams = lp
             setOnClickListener {
                 val currentIdx = UNIVERSAL_IF_THEN_DIRECTIVES.indexOf(activeDirective)
@@ -137,71 +163,29 @@ class MainActivity : Activity() {
         fun createTile(label: String, bgHex: String, onClick: () -> Unit): Button {
             return Button(this).apply {
                 text = label
-                textSize = 15f
+                textSize = 14f
                 setBackgroundColor(Color.parseColor(bgHex))
                 setTextColor(Color.WHITE)
-                setPadding(32, 32, 32, 32)
+                setPadding(28, 28, 28, 28)
                 val lp = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { setMargins(0, 0, 0, 20) }
+                ).apply { setMargins(0, 0, 0, 16) }
                 layoutParams = lp
                 setOnClickListener { onClick() }
             }
         }
 
-        val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-        val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
-        subHeader.text = if (isDeviceOwner) {
-            "DEVICE OWNER: ACTIVE \u2022 ZERO ATTENTION RESIDUE"
-        } else {
-            "DEVICE OWNER: INACTIVE \u2022 RUN ADB PROVISIONING"
+        val selectStudyAppsTile = createTile("[SELECT MY STUDY APPS] \u2022 Choose Allowed Apps", "#0F766E") {
+            showStudyAppSelector(deContext, engageLockAfterSave = false)
         }
 
-        val studyTile = createTile("[ENGAGE MISSION LOCK] \u2022 Launch Deep Study Sortie", "#059669") {
-            val baseStudySet = setOf(
-                "xyz.penpencil.physicswallah",
-                "com.unacademyapp",
-                "com.google.android.youtube",
-                "org.telegram.messenger",
-                "com.adobe.reader",
-                "com.android.vending"
-            )
-            val dynamicPrefs = deContext.getSharedPreferences("dynamic_study_whitelist_de", Context.MODE_PRIVATE)
-            val dynamicStudySet = dynamicPrefs.getStringSet("study_pkgs", emptySet()) ?: emptySet()
-            val studySet = baseStudySet + dynamicStudySet
-
-            runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
-            runCatching { startLockTask() }
-
-            val nowLocked = dpm?.isDeviceOwnerApp(deContext.packageName) == true
-            subHeader.text = if (nowLocked) {
-                "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
+        val studyTile = createTile("[ENGAGE MISSION LOCK] \u2022 Lock Phone & Open Study Apps", "#059669") {
+            val configured = studyPrefs.getBoolean(KEY_STUDY_CONFIGURED, false)
+            if (!configured) {
+                showStudyAppSelector(deContext, engageLockAfterSave = true)
             } else {
-                "PINNED PREVIEW MODE \u2022 DEVICE OWNER REQUIRED FOR FULL LOCK"
-            }
-
-            val launchable = studySet.mapNotNull { pkg ->
-                val launchIntent = packageManager.getLaunchIntentForPackage(pkg) ?: return@mapNotNull null
-                val label = runCatching {
-                    packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
-                }.getOrDefault(pkg)
-                label to launchIntent
-            }
-
-            if (launchable.isNotEmpty()) {
-                val labels = launchable.map { it.first }.toTypedArray()
-                runCatching {
-                    AlertDialog.Builder(this@MainActivity)
-                        .setTitle("Mission Lock Active — Open Study App")
-                        .setItems(labels) { _, which ->
-                            runCatching { startActivity(launchable[which].second) }
-                        }
-                        .setNegativeButton("Stay on Command Deck", null)
-                        .show()
-                }
-            } else {
-                Toast.makeText(this@MainActivity, "Mission Lock Engaged.", Toast.LENGTH_SHORT).show()
+                engageMissionLockAsync(deContext)
             }
         }
 
@@ -221,7 +205,7 @@ class MainActivity : Activity() {
             startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:")))
         }
 
-        val safeDeprovisionTile = createTile("[MISSION STAND-DOWN] \u2022 Dual-Key Deprovision Guard", "#334155") {
+        val safeDeprovisionTile = createTile("[MISSION STAND-DOWN] \u2022 Parent Dual-Key Unlock", "#334155") {
             showDeprovisionGuard(deContext)
         }
 
@@ -230,12 +214,14 @@ class MainActivity : Activity() {
         root.addView(telemetryBanner)
         root.addView(directiveBanner)
         root.addView(cycleDirectiveTile)
+        root.addView(selectStudyAppsTile)
         root.addView(studyTile)
         root.addView(parkingTile)
         root.addView(wifiSettingsTile)
         root.addView(emergencyDialTile)
         root.addView(safeDeprovisionTile)
-        setContentView(root)
+        scroll.addView(root)
+        setContentView(scroll)
     }
 
     override fun onResume() {
@@ -245,19 +231,123 @@ class MainActivity : Activity() {
             startActivity(Intent(this, FamilySetupActivity::class.java))
             return
         }
-        // Keep pinned when Swatantra is the active LockTask home
-        runCatching { startLockTask() }
+        val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+        if (studyPrefs.getBoolean(KEY_MISSION_LOCK_ACTIVE, false)) {
+            val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+            if (dpm?.isDeviceOwnerApp(deContext.packageName) == true) {
+                runCatching { startLockTask() }
+            }
+        }
     }
 
-    // ── Dual-Safe Deprovision Guard ───────────────────────────────────────────
-    /**
-     * Shows an inline AlertDialog offering two safe paths to deprovision:
-     *   Option A: Immediate 6-digit Family PIN verification (SHA-256)
-     *   Option B: 24-hour cooling-off timer fallback (survives reboots)
-     * Both paths require Device-Encrypted SharedPreferences.
-     */
+    private fun showStudyAppSelector(deContext: Context, engageLockAfterSave: Boolean) {
+        Toast.makeText(this, "Loading installed apps...", Toast.LENGTH_SHORT).show()
+        Thread {
+            val launcherIntent = Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_LAUNCHER)
+            }
+            val resolved = runCatching {
+                packageManager.queryIntentActivities(launcherIntent, 0)
+            }.getOrDefault(emptyList())
+
+            val candidates = resolved
+                .mapNotNull { info ->
+                    val pkg = info.activityInfo?.packageName ?: return@mapNotNull null
+                    if (pkg == packageName) return@mapNotNull null
+                    val label = runCatching { info.loadLabel(packageManager).toString() }.getOrDefault(pkg)
+                    pkg to label
+                }
+                .distinctBy { it.first }
+                .sortedBy { it.second.lowercase() }
+
+            val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+            val savedSet = studyPrefs.getStringSet(KEY_STUDY_PKGS, emptySet())?.toMutableSet() ?: mutableSetOf()
+
+            val labels = candidates.map { it.second }.toTypedArray()
+            val checked = BooleanArray(candidates.size) { idx -> candidates[idx].first in savedSet }
+
+            runOnUiThread {
+                if (candidates.isEmpty()) {
+                    Toast.makeText(this, "No launchable apps found.", Toast.LENGTH_SHORT).show()
+                    return@runOnUiThread
+                }
+                runCatching {
+                    AlertDialog.Builder(this)
+                        .setTitle("Select Your Allowed Study Apps")
+                        .setMultiChoiceItems(labels, checked) { _, which, isChecked ->
+                            checked[which] = isChecked
+                        }
+                        .setPositiveButton(if (engageLockAfterSave) "Save & Lock Now" else "Save Study Apps") { _, _ ->
+                            val chosen = candidates.indices
+                                .filter { checked[it] }
+                                .map { candidates[it].first }
+                                .toSet()
+                            studyPrefs.edit()
+                                .putStringSet(KEY_STUDY_PKGS, chosen)
+                                .putBoolean(KEY_STUDY_CONFIGURED, true)
+                                .commit()
+                            Toast.makeText(this, "Saved ${chosen.size} study app(s).", Toast.LENGTH_SHORT).show()
+                            if (engageLockAfterSave) {
+                                engageMissionLockAsync(deContext)
+                            }
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .show()
+                }
+            }
+        }.start()
+    }
+
+    private fun engageMissionLockAsync(deContext: Context) {
+        val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+        val chosenStudySet = studyPrefs.getStringSet(KEY_STUDY_PKGS, emptySet()) ?: emptySet()
+        subHeader.text = "ENGAGING MISSION LOCK..."
+
+        Thread {
+            val studySet = chosenStudySet + setOf("com.android.vending")
+            runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
+            studyPrefs.edit().putBoolean(KEY_MISSION_LOCK_ACTIVE, true).commit()
+
+            val launchable = chosenStudySet.mapNotNull { pkg ->
+                val launchIntent = packageManager.getLaunchIntentForPackage(pkg) ?: return@mapNotNull null
+                val label = runCatching {
+                    packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
+                }.getOrDefault(pkg)
+                label to launchIntent
+            }.sortedBy { it.first.lowercase() }
+
+            val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+            val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+
+            runOnUiThread {
+                if (isDeviceOwner) {
+                    runCatching { startLockTask() }
+                    subHeader.text = "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
+                } else {
+                    subHeader.text = "DEVICE OWNER INACTIVE \u2022 RUN ADB PROVISIONING"
+                }
+
+                if (launchable.isNotEmpty()) {
+                    val labels = launchable.map { it.first }.toTypedArray()
+                    runCatching {
+                        AlertDialog.Builder(this@MainActivity)
+                            .setTitle("Mission Lock Active — Open Study App")
+                            .setItems(labels) { _, which ->
+                                runCatching { startActivity(launchable[which].second) }
+                            }
+                            .setNegativeButton("Stay on Command Deck", null)
+                            .show()
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Mission Lock Engaged. Tap [SELECT MY STUDY APPS] to add apps.", Toast.LENGTH_LONG).show()
+                }
+            }
+        }.start()
+    }
+
     private fun showDeprovisionGuard(deContext: Context) {
         val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+        val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
 
         val dialogLayout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -353,23 +443,32 @@ class MainActivity : Activity() {
                 .create()
         }.getOrNull()
 
+        fun performSafeUnlock() {
+            dialog?.dismiss()
+            studyPrefs.edit().putBoolean(KEY_MISSION_LOCK_ACTIVE, false).commit()
+            runCatching { stopLockTask() }
+            Thread {
+                AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
+                runOnUiThread {
+                    subHeader.text = "UNLOCKED \u2022 DEVICE RESTORED CLEANLY"
+                    Toast.makeText(this@MainActivity, "Phone unlocked and restored.", Toast.LENGTH_LONG).show()
+                }
+            }.start()
+        }
+
         verifySixDigitButton.setOnClickListener {
             val entered = codeInput.text?.toString()?.trim().orEmpty()
             if (entered.length != 6 || !entered.all { it.isDigit() }) {
                 Toast.makeText(this, "Enter a valid 6-digit PIN or Authenticator code.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             val storedPinHash = callPrefs.getString("family_pin_sha256", null)
             val pinMatches = storedPinHash != null && ParentTotpAuthenticator.sha256Hex(entered) == storedPinHash
-
             val storedTotpSecret = callPrefs.getString("parent_totp_secret", "").orEmpty()
             val totpMatches = ParentTotpAuthenticator.verifyTotpCode(storedTotpSecret, entered)
 
             if (pinMatches || totpMatches) {
-                dialog?.dismiss()
-                runCatching { stopLockTask() }
-                AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
+                performSafeUnlock()
             } else {
                 Toast.makeText(this, "Invalid Parent PIN or Authenticator code. Unlock denied.", Toast.LENGTH_SHORT).show()
             }
@@ -381,9 +480,7 @@ class MainActivity : Activity() {
             if (enteredRecovery.isNotEmpty() && storedRecoveryHash != null &&
                 ParentTotpAuthenticator.sha256Hex(enteredRecovery) == storedRecoveryHash
             ) {
-                dialog?.dismiss()
-                runCatching { stopLockTask() }
-                AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
+                performSafeUnlock()
             } else {
                 Toast.makeText(this, "Invalid Recovery Key. Unlock denied.", Toast.LENGTH_SHORT).show()
             }

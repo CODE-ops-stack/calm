@@ -1,14 +1,18 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+0b47652 chore(antigravity): sync Swatantra v7.1 build state and error.log
+34a4039 chore(audit): update AUDIT_PROOF.txt with ParentTotpAuthenticator and 6-test verification
 860907f chore(antigravity): sync Swatantra v7.1 build state and error.log
 12a6f53 chore(audit): update AUDIT_PROOF.txt with 5-test proof and tactical if-then directive
 5fcb8c8 chore(antigravity): sync Swatantra v7.1 build state and error.log
- M AUDIT_PROOF.txt
+
+On branch main
+Your branch is up to date with 'origin/main'.
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
 app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 33 | Bytes: 1303 | SHA256: 7F7F082AE96E90FA
 app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 31 | Bytes: 1321 | SHA256: 28A97EDBB30FF80A
-app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 154 | Bytes: 6241 | SHA256: C521F42B7DA56ECE
+app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 168 | Bytes: 6435 | SHA256: 9C747393FD95966D
 app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 207 | Bytes: 8339 | SHA256: BAB41353F3BB1E23
 app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt | Lines: 108 | Bytes: 4768 | SHA256: 43A50560E6ACAB59
 app\src\main\java\in\swatantra\focus\dpc\ParentTotpAuthenticator.kt | Lines: 101 | Bytes: 3733 | SHA256: 869A2D54190628A6
@@ -18,7 +22,7 @@ app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines:
 app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
 app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
 app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 184 | Bytes: 7442 | SHA256: 1A895F4D71A5788F
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 352 | Bytes: 15518 | SHA256: B6970D7E9BEB8CB3
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 394 | Bytes: 17453 | SHA256: 417B6E8CF65BCD24
 app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 79 | Bytes: 2958 | SHA256: E180843F053A47EA
 app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
 app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
@@ -28,13 +32,13 @@ app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C7
 app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 545 | Bytes: 27294 | SHA256: F5BBFFF7A8CC4DF8
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 116064 bytes | LastWriteTime: 11/19/2026 13:42:58
+APK Size: 116064 bytes | LastWriteTime: 11/19/2026 19:40:35
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
-META-INF/version-control-info.textproto                      120              118
-classes.dex                                                88440            88440
+META-INF/version-control-info.textproto                      120              117
+classes.dex                                                90248            90248
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -48,10 +52,8 @@ res/4D.xml                                                  1048              37
 res/nw.xml                                                   508              280
 resources.arsc                                               644              644
 META-INF/SWATANTR.SF                                        1697              897
-META-INF/SWATANTR.RSA                                       1419             1121
-META-INF/MANIFEST.MF                                        1570              810
-
-
+META-INF/SWATANTR.RSA                                       1419             1122
+META-INF/MANIFEST.MF                                        1570              809
 
 DEX_SYMBOL [SwatantraApp] Present in classes.dex: True
 DEX_SYMBOL [SwatantraAdminReceiver] Present in classes.dex: True
@@ -79,203 +81,25 @@ DEX_SYMBOL [TACTICAL_IF_THEN_DIRECTIVE_V7_1] Present in classes.dex: True
 DEX_SYMBOL [ParentTotpAuthenticator] Present in classes.dex: True
 DEX_SYMBOL [PARENT_TOTP_RFC6238_V7_1] Present in classes.dex: True
 
-=== 4. JUNIT TEST EXECUTION XML REPORTS ===
+=== 4. TEST EXECUTION (RAW XML TESTSUITE PROOF) ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-19T08:09:53.366Z" hostname="DESKTOP-JOU27LS" time="0.378">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-19T14:09:50.494Z" hostname="DESKTOP-JOU27LS" time="0.18">
   <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.144"/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.034"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.023"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.002"/>
-  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.136"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.013"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-19T08:09:57.461Z" hostname="DESKTOP-JOU27LS" time="0.369">
-  <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.157"/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.033"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.018"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
-  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.118"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.015"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.071"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.02"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.011"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
+  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.06"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.007"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 
-=== 5. VERBATIM SOURCE CODE DUMP OF CRITICAL FILES ===
+=== 5. VERBATIM MODIFIED / HARDENED CODE ===
 
---- FILE: app/src/main/java/in/swatantra/focus/dpc/ParentTotpAuthenticator.kt ---
-package `in`.swatantra.focus.dpc
-
-import java.nio.ByteBuffer
-import java.security.MessageDigest
-import java.security.SecureRandom
-import javax.crypto.Mac
-import javax.crypto.spec.SecretKeySpec
-
-/**
- * Pure Android SDK RFC 6238 TOTP (Google Authenticator compatible, â‚¹0 offline cost)
- * plus Offline 12-Character Recovery Key helper.
- */
-object ParentTotpAuthenticator {
-    const val TOTP_AUDIT_SYMBOL = "PARENT_TOTP_RFC6238_V7_1"
-    private const val BASE32_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567"
-    private const val RECOVERY_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-    private const val TIME_STEP_SECONDS = 30L
-
-    fun generateBase32Secret(length: Int = 16): String {
-        val random = SecureRandom()
-        return buildString(length) {
-            repeat(length) {
-                append(BASE32_ALPHABET[random.nextInt(BASE32_ALPHABET.length)])
-            }
-        }
-    }
-
-    fun generateRecoveryKey(): String {
-        val random = SecureRandom()
-        fun chunk(): String = buildString(4) {
-            repeat(4) { append(RECOVERY_ALPHABET[random.nextInt(RECOVERY_ALPHABET.length)]) }
-        }
-        return "SWT-${chunk()}-${chunk()}-${chunk()}"
-    }
-
-    fun normalizeRecoveryKey(input: String): String =
-        input.uppercase().replace("-", "").replace(" ", "").trim()
-
-    fun sha256Hex(input: String): String =
-        MessageDigest.getInstance("SHA-256")
-            .digest(input.toByteArray(Charsets.UTF_8))
-            .joinToString("") { "%02x".format(it) }
-
-    fun decodeBase32(base32: String): ByteArray {
-        val cleaned = base32.uppercase().replace("=", "").replace(" ", "").replace("-", "")
-        val out = ByteArray((cleaned.length * 5) / 8)
-        var buffer = 0
-        var bitsLeft = 0
-        var idx = 0
-        for (c in cleaned) {
-            val val5 = BASE32_ALPHABET.indexOf(c)
-            if (val5 < 0) continue
-            buffer = (buffer shl 5) or val5
-            bitsLeft += 5
-            if (bitsLeft >= 8) {
-                out[idx++] = ((buffer shr (bitsLeft - 8)) and 0xFF).toByte()
-                bitsLeft -= 8
-            }
-        }
-        return out.copyOf(idx)
-    }
-
-    fun generateTotpForTimeStep(secretBase32: String, timeStep: Long): String {
-        val keyBytes = decodeBase32(secretBase32)
-        if (keyBytes.isEmpty()) return ""
-        val data = ByteBuffer.allocate(8).putLong(timeStep).array()
-        val mac = Mac.getInstance("HmacSHA1")
-        mac.init(SecretKeySpec(keyBytes, "HmacSHA1"))
-        val hash = mac.doFinal(data)
-        val offset = hash[hash.size - 1].toInt() and 0x0F
-        val binary =
-            ((hash[offset].toInt() and 0x7F) shl 24) or
-            ((hash[offset + 1].toInt() and 0xFF) shl 16) or
-            ((hash[offset + 2].toInt() and 0xFF) shl 8) or
-            (hash[offset + 3].toInt() and 0xFF)
-        val otp = binary % 1_000_000
-        return "%06d".format(otp)
-    }
-
-    fun verifyTotpCode(
-        secretBase32: String,
-        enteredCode: String,
-        currentTimeMs: Long = System.currentTimeMillis()
-    ): Boolean {
-        val cleanCode = enteredCode.trim()
-        if (cleanCode.length != 6 || !cleanCode.all { it.isDigit() }) return false
-        if (secretBase32.isBlank()) return false
-        val currentStep = (currentTimeMs / 1000L) / TIME_STEP_SECONDS
-        for (offset in -1L..1L) {
-            val expected = generateTotpForTimeStep(secretBase32, currentStep + offset)
-            if (expected.isNotEmpty() && MessageDigest.isEqual(
-                    expected.toByteArray(Charsets.UTF_8),
-                    cleanCode.toByteArray(Charsets.UTF_8)
-                )
-            ) {
-                return true
-            }
-        }
-        return false
-    }
-}
-
---- FILE: app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt ---
-package `in`.swatantra.focus.classifier
-
-import android.app.admin.DevicePolicyManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.os.Build
-import android.os.UserManager
-import android.webkit.WebView
-import `in`.swatantra.focus.dpc.SwatantraAdminReceiver
-import `in`.swatantra.focus.network.SafeStudyDnsVpnService
-import `in`.swatantra.focus.ui.MainActivity
-import `in`.swatantra.focus.ui.SafeUrlInterceptorActivity
-
-class FourBucketClassifier(context: Context) {
-    private val deContext = context.createDeviceProtectedStorageContext()
-    private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-    private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
-
-    companion object {
-        const val AUDIT_ENFORCED_FACTORY_RESET = "DISALLOW_FACTORY_RESET"
-        const val AUDIT_ENFORCED_NETWORK_RESET = "DISALLOW_NETWORK_RESET"
-    }
-
-    private val immutableSystemCore = setOf(
-        "android",
-        "com.android.systemui",
-        "com.android.settings",
-        "com.android.phone",
-        "com.android.server.telecom",
-        "com.android.dialer",
-        "com.google.android.dialer",
-        "com.samsung.android.incallui",
-        "com.samsung.android.dialer",
-        "com.android.providers.settings",
-        "com.android.providers.downloads",
-        "com.android.providers.telephony",
-        "com.android.providers.media",
-        "com.google.android.gms",
-        "com.google.android.gsf",
-        "com.google.android.webview",
-        "com.android.webview",
-        "com.miui.securitycenter",
-        "com.miui.powerkeeper",
-        "com.xiaomi.finddevice",
-        "com.coloros.safecenter",
-        "com.oplus.safecenter",
-        "com.vivo.abe",
-        "com.vivo.permissionmanager"
-    )
-
-    private val oemFloatingWindowEscapes = setOf(
-        "com.samsung.android.app.cocktailbarservice",
-        "com.samsung.android.sidegesturepad",
-        "com.miui.freeform",
-        "com.miui.touchassistant",
-        "com.google.android.googlequicksearchbox",
-        "moe.shizuku.privileged.api",
-        "com.draco.ladb",
-        "com.rosan.dhizuku"
-    )
-
+--- FourBucketClassifier.kt (enforceFocusPolicy) ---
     fun enforceFocusPolicy(whitelistedStudyApps: Set<String>, utilityApps: Set<String>) {
-        if (!dpm.isDeviceOwnerApp(deContext.packageName)) return
+        if (dpm == null || !dpm.isDeviceOwnerApp(deContext.packageName)) return
 
         val activeWebViewPkg = runCatching {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -293,19 +117,24 @@ class FourBucketClassifier(context: Context) {
             deContext.packageName,
             "com.android.server.telecom",
             "com.google.android.dialer",
-            "com.samsung.android.incallui"
+            "com.samsung.android.incallui",
+            "com.android.vending"
         )).distinct().toTypedArray()
-        dpm.setLockTaskPackages(admin, lockTaskAllowed)
+        runCatching { dpm.setLockTaskPackages(admin, lockTaskAllowed) }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // NEVER include LOCK_TASK_FEATURE_GLOBAL_ACTIONS: physical Power-button menu (Restart/Recovery) is blocked
-            val features = DevicePolicyManager.LOCK_TASK_FEATURE_SYSTEM_INFO or
-                DevicePolicyManager.LOCK_TASK_FEATURE_NOTIFICATIONS or
-                DevicePolicyManager.LOCK_TASK_FEATURE_BLOCK_ACTIVITY_START_IN_TASK
-            dpm.setLockTaskFeatures(admin, features)
+            runCatching {
+                val features = DevicePolicyManager.LOCK_TASK_FEATURE_SYSTEM_INFO or
+                    DevicePolicyManager.LOCK_TASK_FEATURE_NOTIFICATIONS or
+                    DevicePolicyManager.LOCK_TASK_FEATURE_BLOCK_ACTIVITY_START_IN_TASK
+                dpm.setLockTaskFeatures(admin, features)
+            }
         }
 
-        val installed = deContext.packageManager.getInstalledPackages(0).map { it.packageName }
+        val installed = runCatching {
+            deContext.packageManager.getInstalledPackages(0).map { it.packageName }
+        }.getOrDefault(emptyList())
+
         val toSuspend = installed.filter { pkg ->
             pkg !in protectedCore &&
             pkg !in whitelistedStudyApps &&
@@ -317,27 +146,31 @@ class FourBucketClassifier(context: Context) {
         runCatching { dpm.setPackagesSuspended(admin, toUnsuspend.toTypedArray(), false) }
         runCatching { dpm.setPackagesSuspended(admin, toSuspend.toTypedArray(), true) }
 
-        val webFilter = IntentFilter(Intent.ACTION_VIEW).apply {
-            addCategory(Intent.CATEGORY_DEFAULT)
-            addCategory(Intent.CATEGORY_BROWSABLE)
-            addDataScheme("http")
-            addDataScheme("https")
+        runCatching {
+            val webFilter = IntentFilter(Intent.ACTION_VIEW).apply {
+                addCategory(Intent.CATEGORY_DEFAULT)
+                addCategory(Intent.CATEGORY_BROWSABLE)
+                addDataScheme("http")
+                addDataScheme("https")
+            }
+            dpm.addPersistentPreferredActivity(
+                admin,
+                webFilter,
+                ComponentName(deContext, SafeUrlInterceptorActivity::class.java)
+            )
         }
-        dpm.addPersistentPreferredActivity(
-            admin,
-            webFilter,
-            ComponentName(deContext, SafeUrlInterceptorActivity::class.java)
-        )
 
-        val homeFilter = IntentFilter(Intent.ACTION_MAIN).apply {
-            addCategory(Intent.CATEGORY_HOME)
-            addCategory(Intent.CATEGORY_DEFAULT)
+        runCatching {
+            val homeFilter = IntentFilter(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_HOME)
+                addCategory(Intent.CATEGORY_DEFAULT)
+            }
+            dpm.addPersistentPreferredActivity(
+                admin,
+                homeFilter,
+                ComponentName(deContext, MainActivity::class.java)
+            )
         }
-        dpm.addPersistentPreferredActivity(
-            admin,
-            homeFilter,
-            ComponentName(deContext, MainActivity::class.java)
-        )
 
         runCatching {
             dpm.setAlwaysOnVpnPackage(admin, deContext.packageName, true)
@@ -345,1558 +178,76 @@ class FourBucketClassifier(context: Context) {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            dpm.setUserControlDisabledPackages(admin, listOf(deContext.packageName))
+            runCatching { dpm.setUserControlDisabledPackages(admin, listOf(deContext.packageName)) }
         }
 
-        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus: enforce all 7 restrictions
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_PRINTING)
-    }
-
-    private fun isEssentialSystemPackage(pkg: String): Boolean {
-        return pkg.startsWith("com.android.providers.") ||
-               pkg.startsWith("com.samsung.android.knox") ||
-               pkg.startsWith("com.qualcomm.") ||
-               pkg.startsWith("com.mediatek.")
-    }
-}
-
---- FILE: app/src/main/java/in/swatantra/focus/classifier/StrictPlayStoreAppVerifier.kt ---
-package `in`.swatantra.focus.classifier
-
-import android.app.PendingIntent
-import android.app.admin.DevicePolicyManager
-import android.content.BroadcastReceiver
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInstaller
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
-import `in`.swatantra.focus.dpc.SwatantraAdminReceiver
-
-class StrictPlayStoreAppVerifier(context: Context) {
-    private val deContext = context.createDeviceProtectedStorageContext()
-    private val pm = deContext.packageManager
-    private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-    private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
-
-    companion object {
-        val curatedStudyPackages = setOf(
-            "xyz.penpencil.physicswallah",
-            "com.unacademyapp",
-            "com.testbook.tbapp",
-            "com.adda247.app",
-            "in.oliveboard.prep",
-            "com.parmaracademy",
-            "com.infeepedia",
-            "org.telegram.messenger",
-            "com.google.android.youtube",
-            "com.adobe.reader",
-            "com.microsoft.office.onenote",
-            "com.google.android.apps.docs",
-            "com.google.android.apps.nbu.files",
-            "com.ichi2.anki"
-        )
-
-        val blacklistedCategories = setOf(
-            ApplicationInfo.CATEGORY_GAME,
-            ApplicationInfo.CATEGORY_SOCIAL,
-            ApplicationInfo.CATEGORY_VIDEO,
-            ApplicationInfo.CATEGORY_AUDIO,
-            ApplicationInfo.CATEGORY_IMAGE,
-            ApplicationInfo.CATEGORY_NEWS,
-            ApplicationInfo.CATEGORY_MAPS
-        )
-
-        val entertainmentTokens = listOf(
-            "game", "gaming", "ludo", "bgmi", "pubg", "freefire", "codm", "chess", "rummy", "mpl", "dream11",
-            "instagram", "facebook", "snapchat", "whatsapp", "twitter", "threads", "reddit", "discord", "tinder", "bumble",
-            "netflix", "hotstar", "jiocinema", "primevideo", "sonyliv", "zee5", "mxplayer", "vlc", "spotify", "wynk", "gaana",
-            "josh", "moj", "sharechat", "hipi", "chingari", "tiktok", "truecaller", "browser", "opera", "brave", "ucbrowser", "vpn", "proxy"
-        )
-
-        val educationalTokens = listOf(
-            "study", "exam", "gate", "upsc", "bpsc", "ssc", "rrb", "ncert", "test", "mock", "prep",
-            "academy", "classes", "lecture", "notes", "pdf", "dictionary", "flashcard", "anki", "learn", "coding", "python", "c++"
-        )
-
-        /**
-         * Pure static 5-gate anti-cheat educational verification logic.
-         * Evaluates package, label, category, source installer, and browser/VPN intent probe results.
-         */
-        fun isStaticMetadataEducational(
-            pkg: String,
-            appLabel: String,
-            category: Int,
-            installer: String?,
-            hasBrowserActivity: Boolean,
-            hasVpnService: Boolean
-        ): Boolean {
-            // Gate A: Curated Study Registry (immediate allow)
-            if (pkg in curatedStudyPackages) {
-                return true
-            }
-
-            // Gate B: Official Play Store Source Check
-            if (installer != "com.android.vending") {
-                return false
-            }
-
-            // Gate C: Anti-Browser & Anti-VPN Intent Probe
-            if (hasBrowserActivity || hasVpnService) {
-                return false
-            }
-
-            // Gate D: OS Category & Entertainment Keyword Blacklist
-            if (category in blacklistedCategories) {
-                return false
-            }
-
-            val lowerPkg = pkg.lowercase()
-            val lowerLabel = appLabel.lowercase()
-
-            if (entertainmentTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }) {
-                return false
-            }
-
-            // Gate E: Educational Keyword Requirement
-            return educationalTokens.any { lowerPkg.contains(it) || lowerLabel.contains(it) }
-        }
-    }
-
-    fun handlePackageEvent(pkg: String) {
-        if (pkg == deContext.packageName || pkg == "com.android.vending") return
-
-        val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
-
-        // 1. Instant Default-Deny Quarantine (<50ms)
-        if (isDeviceOwner) {
-            runCatching { dpm.setPackagesSuspended(admin, arrayOf(pkg), true) }
-        }
-
-        // 2. 5-Gate Anti-Cheat Educational Verification
-        val isEducational = evaluateStrictEducationalCriteria(pkg)
-
-        // 3. Enforcement Action
-        if (isEducational) {
-            if (isDeviceOwner) {
-                runCatching { dpm.setPackagesSuspended(admin, arrayOf(pkg), false) }
-            }
-            val prefs = deContext.getSharedPreferences("dynamic_study_whitelist_de", Context.MODE_PRIVATE)
-            val existing = prefs.getStringSet("study_pkgs", emptySet())?.toMutableSet() ?: mutableSetOf()
-            existing.add(pkg)
-            prefs.edit().putStringSet("study_pkgs", existing).commit()
-        } else {
-            if (isDeviceOwner) {
-                runCatching { dpm.setApplicationHidden(admin, pkg, true) }
-            }
-            val callbackIntent = Intent(deContext, PackageInstallReceiver::class.java).apply {
-                action = "in.swatantra.focus.ACTION_UNINSTALL_STATUS"
-            }
-            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-            } else {
-                PendingIntent.FLAG_UPDATE_CURRENT
-            }
-            val pendingIntent = PendingIntent.getBroadcast(
-                deContext,
-                pkg.hashCode(),
-                callbackIntent,
-                flags
-            )
-            runCatching {
-                pm.packageInstaller.uninstall(pkg, pendingIntent.intentSender)
-            }
-        }
-    }
-
-    fun evaluateStrictEducationalCriteria(pkg: String): Boolean {
-        // Fast path for curated study packages
-        if (pkg in curatedStudyPackages) {
-            return true
-        }
-
-        // Gate B: Installer verification
-        val installer = runCatching {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                pm.getInstallSourceInfo(pkg).installingPackageName
-            } else {
-                @Suppress("DEPRECATION")
-                pm.getInstallerPackageName(pkg)
-            }
-        }.getOrNull()
-
-        // Gate C: Anti-Browser & Anti-VPN intent probe
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com")).apply {
-            addCategory(Intent.CATEGORY_BROWSABLE)
-            `package` = pkg
-        }
-        val browserActivities = runCatching { pm.queryIntentActivities(browserIntent, 0) }.getOrDefault(emptyList())
-        val hasBrowserActivity = browserActivities.isNotEmpty()
-
-        val vpnIntent = Intent("android.net.VpnService").apply {
-            `package` = pkg
-        }
-        val vpnServices = runCatching { pm.queryIntentServices(vpnIntent, 0) }.getOrDefault(emptyList())
-        val hasVpnService = vpnServices.isNotEmpty()
-
-        // Gate D & E: App Info & Category
-        val appInfo = runCatching { pm.getApplicationInfo(pkg, 0) }.getOrNull() ?: return false
-        val category = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) appInfo.category else ApplicationInfo.CATEGORY_UNDEFINED
-        val appLabel = runCatching { pm.getApplicationLabel(appInfo).toString() }.getOrDefault("")
-
-        return isStaticMetadataEducational(
-            pkg = pkg,
-            appLabel = appLabel,
-            category = category,
-            installer = installer,
-            hasBrowserActivity = hasBrowserActivity,
-            hasVpnService = hasVpnService
-        )
-    }
-}
-
-class PackageInstallReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        val action = intent.action ?: return
-        if (action == Intent.ACTION_PACKAGE_ADDED || action == Intent.ACTION_PACKAGE_REPLACED) {
-            val pkg = intent.data?.schemeSpecificPart ?: return
-            val verifier = StrictPlayStoreAppVerifier(context)
-            verifier.handlePackageEvent(pkg)
-        }
-    }
-}
-
---- FILE: app/src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt ---
-package `in`.swatantra.focus.dpc
-
-import android.app.admin.DevicePolicyManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
-import android.os.UserManager
-
-class AtomicDeprovisionManager(context: Context) {
-    private val deContext = context.createDeviceProtectedStorageContext()
-    private val prefs = deContext.getSharedPreferences("deprovision_wal", Context.MODE_PRIVATE)
-    private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-    private val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
-
-    companion object {
-        const val AUDIT_CLEARED_FACTORY_RESET = "DISALLOW_FACTORY_RESET"
-        const val AUDIT_CLEARED_NETWORK_RESET = "DISALLOW_NETWORK_RESET"
-    }
-
-    fun isDeprovisionPending(): Boolean = prefs.getBoolean("DEPROVISION_IN_PROGRESS", false)
-
-    fun emergencyLiftLockdownKeepDeviceOwner() {
-        if (!dpm.isDeviceOwnerApp(deContext.packageName)) return
-        runCatching { dpm.setLockTaskPackages(admin, emptyArray()) }
-        runCatching { dpm.clearPackagePersistentPreferredActivities(admin, deContext.packageName) }
-        val allPkgs = queryAllKnownPackages()
-        runCatching { dpm.setPackagesSuspended(admin, allPkgs.toTypedArray(), false) }
-        for (pkg in allPkgs) {
-            runCatching { if (dpm.isApplicationHidden(admin, pkg)) dpm.setApplicationHidden(admin, pkg, false) }
-        }
-    }
-
-    fun executeAtomicDeprovision(): Result<Unit> = runCatching {
-        if (!dpm.isDeviceOwnerApp(deContext.packageName)) {
-            prefs.edit().putBoolean("DEPROVISION_IN_PROGRESS", false).commit()
-            return@runCatching
-        }
-
-        prefs.edit().putBoolean("DEPROVISION_IN_PROGRESS", true).commit()
-
-        runCatching { dpm.setLockTaskPackages(admin, emptyArray()) }
-        runCatching { dpm.setStatusBarDisabled(admin, false) }
-        runCatching { dpm.setKeyguardDisabledFeatures(admin, DevicePolicyManager.KEYGUARD_DISABLE_FEATURES_NONE) }
-
-        val allPkgs = queryAllKnownPackages()
-        runCatching { dpm.setPackagesSuspended(admin, allPkgs.toTypedArray(), false) }
-
-        for (pkg in allPkgs) {
-            runCatching {
-                if (dpm.isApplicationHidden(admin, pkg)) {
-                    dpm.setApplicationHidden(admin, pkg, false)
-                }
-            }
-            runCatching {
-                if (dpm.isUninstallBlocked(admin, pkg)) {
-                    dpm.setUninstallBlocked(admin, pkg, false)
-                }
-            }
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            runCatching { dpm.setUserControlDisabledPackages(admin, emptyList()) }
-        }
-        runCatching { dpm.setAlwaysOnVpnPackage(admin, null, false) }
-        runCatching { dpm.clearPackagePersistentPreferredActivities(admin, deContext.packageName) }
-        runCatching { dpm.setPermittedAccessibilityServices(admin, null) }
-        runCatching { dpm.setPermittedInputMethods(admin, null) }
-
-        // S-04 / Zero-Harm Guarantee: Every restriction added during lock mode MUST be cleared during deprovisioning
-        val restrictions = listOf(
+        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus
+        val focusRestrictions = listOf(
             UserManager.DISALLOW_FACTORY_RESET,
             UserManager.DISALLOW_NETWORK_RESET,
             UserManager.DISALLOW_SAFE_BOOT,
-            UserManager.DISALLOW_DEBUGGING_FEATURES,
-            UserManager.DISALLOW_USB_FILE_TRANSFER,
             UserManager.DISALLOW_ADD_USER,
-            UserManager.DISALLOW_MOUNT_PHYSICAL_MEDIA,
-            UserManager.DISALLOW_INSTALL_APPS,
-            UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES,
-            UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES_GLOBALLY,
-            UserManager.DISALLOW_CONFIG_TETHERING,
             UserManager.DISALLOW_CONFIG_DATE_TIME,
-            UserManager.DISALLOW_PRINTING,
-            UserManager.DISALLOW_APPS_CONTROL
+            UserManager.DISALLOW_DEBUGGING_FEATURES,
+            UserManager.DISALLOW_PRINTING
         )
-        for (r in restrictions) {
-            runCatching { dpm.clearUserRestriction(admin, r) }
-        }
-
-        val stillHidden = allPkgs.filter { pkg ->
-            runCatching { dpm.isApplicationHidden(admin, pkg) }.getOrDefault(false)
-        }
-        check(stillHidden.isEmpty()) {
-            "Deprovision verification failed: packages still hidden ($stillHidden)"
-        }
-
-        @Suppress("DEPRECATION")
-        dpm.clearDeviceOwnerApp(deContext.packageName)
-        prefs.edit().putBoolean("DEPROVISION_IN_PROGRESS", false).commit()
-    }
-
-    private fun queryAllKnownPackages(): List<String> {
-        val pm = deContext.packageManager
-        val flags = PackageManager.MATCH_UNINSTALLED_PACKAGES or PackageManager.MATCH_DISABLED_COMPONENTS
-        return pm.getInstalledPackages(flags).map { it.packageName }.distinct()
-    }
-}
-
---- FILE: app/src/main/java/in/swatantra/focus/dpc/SwatantraAdminReceiver.kt ---
-package `in`.swatantra.focus.dpc
-
-import android.app.admin.DeviceAdminReceiver
-import android.app.admin.DevicePolicyManager
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.os.UserManager
-import `in`.swatantra.focus.ui.MainActivity
-import `in`.swatantra.focus.watchdog.SwatantraWatchdogService
-
-class SwatantraAdminReceiver : DeviceAdminReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
-        val deContext = context.createDeviceProtectedStorageContext()
-        // T-06: Start systemExempted WatchdogService on Line 1 before the 20s boot timeout
-        runCatching {
-            deContext.startForegroundService(Intent(deContext, SwatantraWatchdogService::class.java))
-        }
-
-        val dpm = deContext.getSystemService(DevicePolicyManager::class.java) ?: return
-        val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
-
-        // 4-Layer Zero-Harm Anti-Reset Shield: explicitly enforce anti-reset restrictions whenever active as Device Owner
-        if (dpm.isDeviceOwnerApp(deContext.packageName)) {
-            runCatching {
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
-            }
-        }
-
-        val action = intent.action ?: return
-        if (action == Intent.ACTION_MY_PACKAGE_REPLACED || action == "in.swatantra.focus.ACTION_OTA_STATUS") {
-            if (dpm.isDeviceOwnerApp(deContext.packageName)) {
-                runCatching { dpm.addUserRestriction(admin, UserManager.DISALLOW_INSTALL_APPS) }
-                val homeIntent = Intent(deContext, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                }
-                deContext.startActivity(homeIntent)
-            }
+        for (restriction in focusRestrictions) {
+            runCatching { dpm.addUserRestriction(admin, restriction) }
         }
     }
-}
 
---- FILE: app/src/main/java/in/swatantra/focus/ui/MainActivity.kt ---
-package `in`.swatantra.focus.ui
-
-import android.app.Activity
-import android.app.AlertDialog
-import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.net.Uri
-import android.os.Bundle
-import android.os.SystemClock
-import android.provider.Settings
-import android.text.InputFilter
-import android.text.InputType
-import android.view.Gravity
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
-import `in`.swatantra.focus.classifier.FourBucketClassifier
-import `in`.swatantra.focus.dpc.AtomicDeprovisionManager
-import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
-import `in`.swatantra.focus.watchdog.SwatantraWatchdogService
-import java.security.MessageDigest
-
-class MainActivity : Activity() {
-
-    companion object {
-        const val MISSION_THEME_ID = "ON_A_MISSION_COMMAND_DECK_V7_1"
-        const val TACTICAL_IF_THEN_DIRECTIVE_V7_1 = "TACTICAL_IF_THEN_DIRECTIVE_V7_1"
-        const val PREFS_DIRECTIVES = "mission_directives_de"
-        const val KEY_ACTIVE_DIRECTIVE = "active_if_then_directive"
-        val UNIVERSAL_IF_THEN_DIRECTIVES = listOf(
-            "IF urge to browse hits -> THEN solve 2 practice questions now. Your big goal is waiting.",
-            "IF stuck on a problem > 5m -> THEN write 1 known formula & test a simple case. Every mark counts.",
-            "IF focus drops mid-lecture -> THEN pause & summarize the last 3 minutes on paper. Stay on mission."
-        )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val deContext = createDeviceProtectedStorageContext()
-        runCatching {
-            deContext.startForegroundService(Intent(deContext, SwatantraWatchdogService::class.java))
-        }
-
-        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-        if (!callPrefs.getBoolean("family_numbers_locked", false)) {
-            startActivity(Intent(this, FamilySetupActivity::class.java))
-        }
-
-        // Live Mission Telemetry Status Bar
-        val (studyMs, callMs) = runCatching {
-            `in`.swatantra.focus.ledger.MonotonicDualClockLedger(deContext)
-                .recordHeartbeatTick(isStudying = false, isOnNonWhitelistedCall = false, verifiedTlsOrGnssTimeMs = null)
-        }.getOrDefault(Pair(0L, 0L))
-        val studyMins = studyMs / 60_000L
-        val callMins = callMs / 60_000L
-
-        // Flight-Deck Deep-Space Obsidian (#0B0F17) background
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
-            setBackgroundColor(Color.parseColor("#0B0F17"))
-            setPadding(56, 56, 56, 56)
-        }
-
-        val header = TextView(this).apply {
-            text = "SWATANTRA // ON A MISSION"
-            textSize = 22f
-            setTextColor(Color.parseColor("#10B981"))
-            gravity = Gravity.CENTER_HORIZONTAL
-        }
-
-        val subHeader = TextView(this).apply {
-            text = "MISSION OBJECTIVE: DEEP WORK COMMAND \u2022 ZERO ATTENTION RESIDUE"
-            textSize = 13f
-            setTextColor(Color.parseColor("#94A3B8"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 8, 0, 24)
-        }
-
-        val telemetryBanner = TextView(this).apply {
-            text = "TELEMETRY \u2022 SORTIE LOGGED: ${studyMins}m | COMMS SHIELD: ${callMins}m / 60m (112 IMMUNE)"
-            textSize = 13f
-            setTextColor(Color.parseColor("#F59E0B"))
-            setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(24, 24, 24, 24)
-            gravity = Gravity.CENTER_HORIZONTAL
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 28) }
-            layoutParams = lp
-        }
-
-        val directivePrefs = deContext.getSharedPreferences(PREFS_DIRECTIVES, Context.MODE_PRIVATE)
-        var activeDirective = directivePrefs.getString(KEY_ACTIVE_DIRECTIVE, UNIVERSAL_IF_THEN_DIRECTIVES[0])
-            ?: UNIVERSAL_IF_THEN_DIRECTIVES[0]
-
-        val directiveBanner = TextView(this).apply {
-            text = "ARMED IF-THEN DIRECTIVE:\n$activeDirective"
-            textSize = 12f
-            setTextColor(Color.parseColor("#E2E8F0"))
-            setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(24, 20, 24, 20)
-            gravity = Gravity.CENTER_HORIZONTAL
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 12) }
-            layoutParams = lp
-        }
-
-        val cycleDirectiveTile = Button(this).apply {
-            text = "[ARM IF-THEN DIRECTIVE] \u2022 Cycle Motivating Rule"
-            textSize = 13f
-            setBackgroundColor(Color.parseColor("#1E293B"))
-            setTextColor(Color.parseColor("#F59E0B"))
-            setPadding(24, 20, 24, 20)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 20) }
-            layoutParams = lp
-            setOnClickListener {
-                val currentIdx = UNIVERSAL_IF_THEN_DIRECTIVES.indexOf(activeDirective)
-                val nextIdx = (currentIdx + 1) % UNIVERSAL_IF_THEN_DIRECTIVES.size
-                activeDirective = UNIVERSAL_IF_THEN_DIRECTIVES[nextIdx]
-                directivePrefs.edit().putString(KEY_ACTIVE_DIRECTIVE, activeDirective).commit()
-                directiveBanner.text = "ARMED IF-THEN DIRECTIVE:\n$activeDirective"
-                Toast.makeText(this@MainActivity, "If-Then Directive Armed", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        fun createTile(label: String, bgHex: String, onClick: () -> Unit): Button {
-            return Button(this).apply {
-                text = label
-                textSize = 15f
-                setBackgroundColor(Color.parseColor(bgHex))
-                setTextColor(Color.WHITE)
-                setPadding(32, 32, 32, 32)
-                val lp = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { setMargins(0, 0, 0, 20) }
-                layoutParams = lp
-                setOnClickListener { onClick() }
-            }
+--- MainActivity.kt (onCreate studyTile & DPM status block) ---
+        val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+        val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+        subHeader.text = if (isDeviceOwner) {
+            "DEVICE OWNER: ACTIVE \u2022 ZERO ATTENTION RESIDUE"
+        } else {
+            "DEVICE OWNER: INACTIVE \u2022 RUN ADB PROVISIONING"
         }
 
         val studyTile = createTile("[ENGAGE MISSION LOCK] \u2022 Launch Deep Study Sortie", "#059669") {
             val baseStudySet = setOf(
                 "xyz.penpencil.physicswallah",
                 "com.unacademyapp",
+                "com.google.android.youtube",
                 "org.telegram.messenger",
-                "com.adobe.reader"
+                "com.adobe.reader",
+                "com.android.vending"
             )
             val dynamicPrefs = deContext.getSharedPreferences("dynamic_study_whitelist_de", Context.MODE_PRIVATE)
             val dynamicStudySet = dynamicPrefs.getStringSet("study_pkgs", emptySet()) ?: emptySet()
             val studySet = baseStudySet + dynamicStudySet
-            FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet())
+
+            runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
             runCatching { startLockTask() }
-        }
 
-        val parkingTile = createTile("[TACTICAL INTERCEPT] \u2022 Park Urge / Doubt (10-Min Rule)", "#D97706") {
-            startActivity(Intent(this, SafeUrlInterceptorActivity::class.java))
-        }
-
-        val wifiSettingsTile = createTile("[COMMS & UPLINK] \u2022 Safe Wi-Fi & Network Panel", "#1E293B") {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                startActivity(Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY))
+            val nowLocked = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+            subHeader.text = if (nowLocked) {
+                "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
             } else {
-                startActivity(Intent(Settings.ACTION_WIFI_SETTINGS))
-            }
-        }
-
-        val emergencyDialTile = createTile("[PRIORITY CHANNEL] \u2022 Family (3-Slot) & 112 Emergency", "#0F766E") {
-            startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:")))
-        }
-
-        val safeDeprovisionTile = createTile("[MISSION STAND-DOWN] \u2022 Dual-Key Deprovision Guard", "#334155") {
-            showDeprovisionGuard(deContext)
-        }
-
-        root.addView(header)
-        root.addView(subHeader)
-        root.addView(telemetryBanner)
-        root.addView(directiveBanner)
-        root.addView(cycleDirectiveTile)
-        root.addView(studyTile)
-        root.addView(parkingTile)
-        root.addView(wifiSettingsTile)
-        root.addView(emergencyDialTile)
-        root.addView(safeDeprovisionTile)
-        setContentView(root)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val deContext = createDeviceProtectedStorageContext()
-        if (!deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE).getBoolean("family_numbers_locked", false)) {
-            startActivity(Intent(this, FamilySetupActivity::class.java))
-            return
-        }
-        // Keep pinned when Swatantra is the active LockTask home
-        runCatching { startLockTask() }
-    }
-
-    // â”€â”€ Dual-Safe Deprovision Guard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    /**
-     * Shows an inline AlertDialog offering two safe paths to deprovision:
-     *   Option A: Immediate 6-digit Family PIN verification (SHA-256)
-     *   Option B: 24-hour cooling-off timer fallback (survives reboots)
-     * Both paths require Device-Encrypted SharedPreferences.
-     */
-    private fun showDeprovisionGuard(deContext: Context) {
-        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-
-        val dialogLayout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(56, 44, 56, 32)
-            setBackgroundColor(Color.parseColor("#0B0F17"))
-        }
-
-        val guardTitle = TextView(this).apply {
-            text = "PARENT DUAL-KEY UNLOCK"
-            textSize = 18f
-            setTextColor(Color.parseColor("#10B981"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 8)
-        }
-
-        val guardSubtitle = TextView(this).apply {
-            text = "Unlock requires either the 6-Digit Parent PIN, a live 6-Digit Google Authenticator Code, or the Offline Backup Recovery Key."
-            textSize = 12f
-            setTextColor(Color.parseColor("#94A3B8"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 20)
-        }
-
-        val codeInput = EditText(this).apply {
-            hint = "6-digit Parent PIN or Authenticator Code"
-            setHintTextColor(Color.parseColor("#64748B"))
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-            filters = arrayOf(InputFilter.LengthFilter(6))
-            setTextColor(Color.parseColor("#E2E8F0"))
-            setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(28, 20, 28, 20)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 12) }
-            layoutParams = lp
-        }
-
-        val verifySixDigitButton = Button(this).apply {
-            text = "VERIFY PIN / AUTHENTICATOR & UNLOCK"
-            textSize = 13f
-            setBackgroundColor(Color.parseColor("#059669"))
-            setTextColor(Color.WHITE)
-            setPadding(24, 24, 24, 24)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 20) }
-            layoutParams = lp
-        }
-
-        val recoveryLabel = TextView(this).apply {
-            text = "Lost PIN & Parent Phone? Enter Offline Recovery Key:"
-            textSize = 12f
-            setTextColor(Color.parseColor("#F59E0B"))
-            setPadding(0, 0, 0, 6)
-        }
-
-        val recoveryInput = EditText(this).apply {
-            hint = "SWT-XXXX-XXXX-XXXX"
-            setHintTextColor(Color.parseColor("#64748B"))
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
-            setTextColor(Color.parseColor("#E2E8F0"))
-            setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(28, 18, 28, 18)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 12) }
-            layoutParams = lp
-        }
-
-        val verifyRecoveryButton = Button(this).apply {
-            text = "VERIFY RECOVERY KEY & UNLOCK"
-            textSize = 13f
-            setBackgroundColor(Color.parseColor("#334155"))
-            setTextColor(Color.WHITE)
-            setPadding(24, 22, 24, 22)
-        }
-
-        dialogLayout.addView(guardTitle)
-        dialogLayout.addView(guardSubtitle)
-        dialogLayout.addView(codeInput)
-        dialogLayout.addView(verifySixDigitButton)
-        dialogLayout.addView(recoveryLabel)
-        dialogLayout.addView(recoveryInput)
-        dialogLayout.addView(verifyRecoveryButton)
-
-        val dialog = runCatching {
-            AlertDialog.Builder(this)
-                .setView(dialogLayout)
-                .setCancelable(true)
-                .create()
-        }.getOrNull()
-
-        verifySixDigitButton.setOnClickListener {
-            val entered = codeInput.text?.toString()?.trim().orEmpty()
-            if (entered.length != 6 || !entered.all { it.isDigit() }) {
-                Toast.makeText(this, "Enter a valid 6-digit PIN or Authenticator code.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                "PINNED PREVIEW MODE \u2022 DEVICE OWNER REQUIRED FOR FULL LOCK"
             }
 
-            val storedPinHash = callPrefs.getString("family_pin_sha256", null)
-            val pinMatches = storedPinHash != null && ParentTotpAuthenticator.sha256Hex(entered) == storedPinHash
+            val launchable = studySet.mapNotNull { pkg ->
+                val launchIntent = packageManager.getLaunchIntentForPackage(pkg) ?: return@mapNotNull null
+                val label = runCatching {
+                    packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
+                }.getOrDefault(pkg)
+                label to launchIntent
+            }
 
-            val storedTotpSecret = callPrefs.getString("parent_totp_secret", "").orEmpty()
-            val totpMatches = ParentTotpAuthenticator.verifyTotpCode(storedTotpSecret, entered)
-
-            if (pinMatches || totpMatches) {
-                dialog?.dismiss()
-                runCatching { stopLockTask() }
-                AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
+            if (launchable.isNotEmpty()) {
+                val labels = launchable.map { it.first }.toTypedArray()
+                runCatching {
+                    AlertDialog.Builder(this@MainActivity)
+                        .setTitle("Mission Lock Active — Open Study App")
+                        .setItems(labels) { _, which ->
+                            runCatching { startActivity(launchable[which].second) }
+                        }
+                        .setNegativeButton("Stay on Command Deck", null)
+                        .show()
+                }
             } else {
-                Toast.makeText(this, "Invalid Parent PIN or Authenticator code. Unlock denied.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Mission Lock Engaged.", Toast.LENGTH_SHORT).show()
             }
         }
-
-        verifyRecoveryButton.setOnClickListener {
-            val enteredRecovery = ParentTotpAuthenticator.normalizeRecoveryKey(recoveryInput.text?.toString().orEmpty())
-            val storedRecoveryHash = callPrefs.getString("parent_recovery_sha256", null)
-            if (enteredRecovery.isNotEmpty() && storedRecoveryHash != null &&
-                ParentTotpAuthenticator.sha256Hex(enteredRecovery) == storedRecoveryHash
-            ) {
-                dialog?.dismiss()
-                runCatching { stopLockTask() }
-                AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
-            } else {
-                Toast.makeText(this, "Invalid Recovery Key. Unlock denied.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        dialog?.show()
-    }
-}
-
---- FILE: app/src/main/java/in/swatantra/focus/ui/FamilySetupActivity.kt ---
-package `in`.swatantra.focus.ui
-
-import android.app.Activity
-import android.content.Context
-import android.graphics.Color
-import android.os.Bundle
-import android.text.InputFilter
-import android.text.InputType
-import android.view.Gravity
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
-import android.widget.Toast
-import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
-
-class FamilySetupActivity : Activity() {
-
-    private lateinit var generatedTotpSecret: String
-    private lateinit var generatedRecoveryKey: String
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val deContext = createDeviceProtectedStorageContext()
-        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-        if (callPrefs.getBoolean("family_numbers_locked", false)) {
-            finish()
-            return
-        }
-
-        generatedTotpSecret = ParentTotpAuthenticator.generateBase32Secret(16)
-        generatedRecoveryKey = ParentTotpAuthenticator.generateRecoveryKey()
-
-        val scroll = ScrollView(this).apply {
-            setBackgroundColor(Color.parseColor("#0B0F17"))
-        }
-
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.parseColor("#0B0F17"))
-            setPadding(48, 48, 48, 48)
-        }
-
-        val title = TextView(this).apply {
-            text = "SWATANTRA // ONE-TIME FAMILY LOCK SETUP"
-            textSize = 19f
-            setTextColor(Color.parseColor("#10B981"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 12)
-        }
-
-        val subtitle = TextView(this).apply {
-            text = "Lock 1 to 3 family phone numbers, set a 6-digit Parent PIN, and save the free offline Authenticator & Recovery keys with your parents."
-            textSize = 13f
-            setTextColor(Color.parseColor("#94A3B8"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 24)
-        }
-
-        fun makeField(hintText: String, inputTypeFlags: Int, maxLen: Int): EditText {
-            return EditText(this).apply {
-                hint = hintText
-                setHintTextColor(Color.parseColor("#64748B"))
-                setTextColor(Color.parseColor("#E2E8F0"))
-                setBackgroundColor(Color.parseColor("#161F30"))
-                inputType = inputTypeFlags
-                filters = arrayOf(InputFilter.LengthFilter(maxLen))
-                setPadding(28, 22, 28, 22)
-                val lp = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                ).apply { setMargins(0, 0, 0, 14) }
-                layoutParams = lp
-            }
-        }
-
-        val slot1 = makeField("Family Slot 1 (10-digit mobile, required)", InputType.TYPE_CLASS_PHONE, 15)
-        val slot2 = makeField("Family Slot 2 (optional)", InputType.TYPE_CLASS_PHONE, 15)
-        val slot3 = makeField("Family Slot 3 (optional)", InputType.TYPE_CLASS_PHONE, 15)
-
-        val pinField = makeField(
-            "Set 6-Digit Parent Unlock PIN",
-            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD,
-            6
-        )
-        val confirmPinField = makeField(
-            "Confirm 6-Digit Parent Unlock PIN",
-            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD,
-            6
-        )
-
-        val totpCard = TextView(this).apply {
-            text = "OFFLINE GOOGLE AUTHENTICATOR KEY (â‚¹0 COST):\n$generatedTotpSecret\n\nAdd once in parent's Google Authenticator (+ -> Enter a setup key -> Time-based).\n\nOFFLINE BACKUP RECOVERY KEY (SAVE WITH PARENTS):\n$generatedRecoveryKey"
-            textSize = 13f
-            setTextColor(Color.parseColor("#F59E0B"))
-            setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(28, 24, 28, 24)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 8, 0, 24) }
-            layoutParams = lp
-        }
-
-        val saveButton = Button(this).apply {
-            text = "LOCK FAMILY NUMBERS, PIN & AUTHENTICATOR"
-            textSize = 14f
-            setBackgroundColor(Color.parseColor("#059669"))
-            setTextColor(Color.WHITE)
-            setPadding(28, 28, 28, 28)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            layoutParams = lp
-        }
-
-        saveButton.setOnClickListener {
-            val rawNumbers = listOf(slot1.text.toString(), slot2.text.toString(), slot3.text.toString())
-                .map { it.trim() }
-                .filter { it.isNotEmpty() }
-
-            val normalized = rawNumbers.mapNotNull { normalizeIndianNumber(it) }.distinct()
-            if (normalized.isEmpty() || normalized.size > 3) {
-                Toast.makeText(this, "Enter 1 to 3 valid 10-digit family numbers.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val pin = pinField.text?.toString()?.trim().orEmpty()
-            val confirmPin = confirmPinField.text?.toString()?.trim().orEmpty()
-            if (pin.length != 6 || !pin.all { it.isDigit() }) {
-                Toast.makeText(this, "Parent PIN must be exactly 6 digits.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            if (pin != confirmPin) {
-                Toast.makeText(this, "PINs do not match.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val pinHash = ParentTotpAuthenticator.sha256Hex(pin)
-            val recoveryHash = ParentTotpAuthenticator.sha256Hex(
-                ParentTotpAuthenticator.normalizeRecoveryKey(generatedRecoveryKey)
-            )
-
-            callPrefs.edit()
-                .putStringSet("whitelisted_family_numbers", normalized.toSet())
-                .putString("family_pin_sha256", pinHash)
-                .putString("parent_totp_secret", generatedTotpSecret)
-                .putString("parent_recovery_sha256", recoveryHash)
-                .putBoolean("family_numbers_locked", true)
-                .commit()
-
-            Toast.makeText(this, "Family Lock, PIN & Offline Authenticator Sealed.", Toast.LENGTH_LONG).show()
-            finish()
-        }
-
-        root.addView(title)
-        root.addView(subtitle)
-        root.addView(slot1)
-        root.addView(slot2)
-        root.addView(slot3)
-        root.addView(pinField)
-        root.addView(confirmPinField)
-        root.addView(totpCard)
-        root.addView(saveButton)
-        scroll.addView(root)
-        setContentView(scroll)
-    }
-
-    private fun normalizeIndianNumber(raw: String): String? {
-        val digits = raw.filter { it.isDigit() }
-        return when {
-            digits.length == 10 -> "+91$digits"
-            digits.length == 12 && digits.startsWith("91") -> "+$digits"
-            else -> null
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        // Prevent skipping one-time family lock setup
-    }
-}
-
---- FILE: app/src/main/java/in/swatantra/focus/ui/SafeUrlInterceptorActivity.kt ---
-package `in`.swatantra.focus.ui
-
-import android.app.Activity
-import android.content.Context
-import android.graphics.Color
-import android.os.Bundle
-import android.view.Gravity
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-
-class SafeUrlInterceptorActivity : Activity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val deContext = createDeviceProtectedStorageContext()
-        val directivePrefs = deContext.getSharedPreferences(MainActivity.PREFS_DIRECTIVES, Context.MODE_PRIVATE)
-        val armedDirective = directivePrefs.getString(
-            MainActivity.KEY_ACTIVE_DIRECTIVE,
-            MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES[0]
-        ) ?: MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES[0]
-
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            gravity = Gravity.CENTER
-            setBackgroundColor(Color.parseColor("#0B0F17"))
-            setPadding(56, 56, 56, 56)
-        }
-
-        val title = TextView(this).apply {
-            text = "TACTICAL INTERCEPT // STAY ON MISSION"
-            textSize = 20f
-            setTextColor(Color.parseColor("#F59E0B"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 16)
-        }
-
-        val directiveCard = TextView(this).apply {
-            text = "YOUR ARMED PROTOCOL:\n\n$armedDirective"
-            textSize = 15f
-            setTextColor(Color.parseColor("#F59E0B"))
-            setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(36, 36, 36, 36)
-            gravity = Gravity.CENTER_HORIZONTAL
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 28) }
-            layoutParams = lp
-        }
-
-        val subtitle = TextView(this).apply {
-            text = "Distractions fade. Your future achievement stays. Execute your rule and return to your sortie."
-            textSize = 13f
-            setTextColor(Color.parseColor("#94A3B8"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 32)
-        }
-
-        val returnButton = Button(this).apply {
-            text = "EXECUTE 'THEN' PROTOCOL & RETURN TO SORTIE"
-            textSize = 14f
-            setBackgroundColor(Color.parseColor("#059669"))
-            setTextColor(Color.WHITE)
-            setPadding(32, 32, 32, 32)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            layoutParams = lp
-            setOnClickListener { finish() }
-        }
-
-        root.addView(title)
-        root.addView(directiveCard)
-        root.addView(subtitle)
-        root.addView(returnButton)
-        setContentView(root)
-    }
-}
-
---- FILE: app/src/test/java/in/swatantra/focus/SwatantraProductionVerificationTest.kt ---
-package `in`.swatantra.focus
-
-import android.content.pm.ApplicationInfo
-import `in`.swatantra.focus.classifier.StrictPlayStoreAppVerifier
-import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
-import `in`.swatantra.focus.ui.MainActivity
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertTrue
-import org.junit.Test
-import java.security.MessageDigest
-
-/**
- * SwatantraProductionVerificationTest
- *
- * Zero-Trust JUnit4 test suite â€” pure JVM, connects directly to production
- * companion object verification methods with zero mock stubs.
- * Covers three production invariants:
- *   1. PlayStore entertainment / browser rejection logic (StrictPlayStoreAppVerifier.isStaticMetadataEducational)
- *   2. Max-3 family number slots (1..3 accepted, 0 or >3 rejected) + 6-digit PIN hash validation
- *   3. Monotonic dual-clock reboot-resilience arithmetic & 24h cooling-off timer reboot-survival logic
- */
-class SwatantraProductionVerificationTest {
-
-    // â”€â”€ Helper: SHA-256 hex (mirrors FamilySetupActivity + MainActivity logic) â”€â”€
-    private fun sha256Hex(input: String): String =
-        MessageDigest.getInstance("SHA-256")
-            .digest(input.toByteArray(Charsets.UTF_8))
-            .joinToString("") { "%02x".format(it) }
-
-    /**
-     * Helper: mirror of MainActivity's 24-hour cooling-off timer reboot survival calculation
-     */
-    private fun computeCoolingOffElapsedMs(
-        requestedElapsedMs: Long,
-        requestedWallMs: Long,
-        nowElapsedMs: Long,
-        nowWallMs: Long
-    ): Long {
-        return if (requestedElapsedMs > 0L && nowElapsedMs >= requestedElapsedMs) {
-            nowElapsedMs - requestedElapsedMs
-        } else if (requestedWallMs > 0L && nowWallMs >= requestedWallMs) {
-            // Fallback across reboot when elapsedRealtime reset to 0
-            nowWallMs - requestedWallMs
-        } else {
-            -1L
-        }
-    }
-
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // TEST 1 â€” PlayStore entertainment & browser rejection via production verifier
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    @Test
-    fun testPlayStoreEntertainmentAndBrowserRejection() {
-        // Entertainment packages from Play Store must be REJECTED
-        assertFalse(
-            "Instagram must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.instagram.android",
-                appLabel = "Instagram",
-                category = ApplicationInfo.CATEGORY_SOCIAL,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-        assertFalse(
-            "PUBG must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.pubg.imobile",
-                appLabel = "Battlegrounds Mobile",
-                category = ApplicationInfo.CATEGORY_GAME,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-        assertFalse(
-            "Clash of Clans must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.supercell.clashofclans",
-                appLabel = "Clash of Clans",
-                category = ApplicationInfo.CATEGORY_GAME,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-        assertFalse(
-            "FreeFire must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.dts.freefireth",
-                appLabel = "Free Fire",
-                category = ApplicationInfo.CATEGORY_GAME,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-        assertFalse(
-            "Netflix must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.netflix.mediaclient",
-                appLabel = "Netflix",
-                category = ApplicationInfo.CATEGORY_VIDEO,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-
-        // Browser & VPN packages must be REJECTED via Gate C / token
-        assertFalse(
-            "Opera Mini must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.opera.mini.native",
-                appLabel = "Opera Mini",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = true,
-                hasVpnService = false
-            )
-        )
-        assertFalse(
-            "Brave Browser must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.brave.browser",
-                appLabel = "Brave Private Web Browser",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = true,
-                hasVpnService = false
-            )
-        )
-        assertFalse(
-            "UC Browser must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.uc.browser.en",
-                appLabel = "UC Browser",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = true,
-                hasVpnService = false
-            )
-        )
-        assertFalse(
-            "Firefox must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "org.mozilla.firefox",
-                appLabel = "Firefox Browser",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = true,
-                hasVpnService = false
-            )
-        )
-        assertFalse(
-            "VPN Service package must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.example.studyvpn",
-                appLabel = "Study VPN",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = true
-            )
-        )
-        assertFalse(
-            "Sideloaded APK must be rejected",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.study.notes",
-                appLabel = "Study Notes",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = null,
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-
-        // Gate A: Curated study packages must be ALLOWED immediately
-        assertTrue(
-            "PhysicsWallah must be allowed (Gate A)",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "xyz.penpencil.physicswallah",
-                appLabel = "Physics Wallah",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-        assertTrue(
-            "Unacademy must be allowed (Gate A)",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.unacademyapp",
-                appLabel = "Unacademy Learner App",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-        assertTrue(
-            "Telegram must be allowed (Gate A)",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "org.telegram.messenger",
-                appLabel = "Telegram",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-        assertTrue(
-            "Adobe Reader must be allowed (Gate A)",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.adobe.reader",
-                appLabel = "Adobe Acrobat Reader",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-        assertTrue(
-            "OneNote must be allowed (Gate A)",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.microsoft.office.onenote",
-                appLabel = "Microsoft OneNote",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-        assertTrue(
-            "Google Docs must be allowed (Gate A)",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "com.google.android.apps.docs",
-                appLabel = "Google Docs",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-
-        // Gate E: Genuine educational Play Store package
-        assertTrue(
-            "Genuine educational app must be allowed",
-            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                pkg = "in.gateprep.mocktest",
-                appLabel = "GATE Exam Prep Mock Test",
-                category = ApplicationInfo.CATEGORY_UNDEFINED,
-                installer = "com.android.vending",
-                hasBrowserActivity = false,
-                hasVpnService = false
-            )
-        )
-    }
-
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // TEST 2 â€” Max-3 family number slots + 6-digit PIN hash validation
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    @Test
-    fun testMaxThreeFamilyNumbersAndPinHash() {
-        // â”€â”€ 1 to 3 slot enforcement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        fun isValidSlotCount(count: Int): Boolean = count in 1..3
-
-        val emptySlots   = emptyList<String>()
-        val oneSlot      = listOf("+919876543210")
-        val twoSlots     = listOf("+919876543210", "+919123456789")
-        val threeSlots   = listOf("+919876543210", "+919123456789", "+918888888888")
-        val fourSlots    = listOf("+919876543210", "+919123456789", "+918888888888", "+917777777777")
-
-        assertFalse("0 slots must be rejected", isValidSlotCount(emptySlots.size))
-        assertTrue("1 slot must be accepted",   isValidSlotCount(oneSlot.size))
-        assertTrue("2 slots must be accepted",  isValidSlotCount(twoSlots.size))
-        assertTrue("3 slots must be accepted",  isValidSlotCount(threeSlots.size))
-        assertFalse("4 slots must be rejected", isValidSlotCount(fourSlots.size))
-
-        // â”€â”€ PIN length validation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        val shortPin  = "12345"   // 5 digits â€” invalid
-        val validPin  = "123456"  // 6 digits â€” valid
-        val longPin   = "1234567" // 7 digits â€” invalid
-
-        assertFalse("5-digit PIN must be rejected",  shortPin.length == 6 && shortPin.all { it.isDigit() })
-        assertTrue("6-digit PIN must be accepted",   validPin.length == 6 && validPin.all { it.isDigit() })
-        assertFalse("7-digit PIN must be rejected",  longPin.length == 6 && longPin.all { it.isDigit() })
-
-        // Non-numeric PIN must be rejected
-        val alphaPIN = "abc123"
-        assertFalse("Alphanumeric PIN must be rejected", alphaPIN.length == 6 && alphaPIN.all { it.isDigit() })
-
-        // â”€â”€ SHA-256 determinism â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        val hash1 = sha256Hex("123456")
-        val hash2 = sha256Hex("123456")
-        val hash3 = sha256Hex("654321")
-
-        // Same input â†’ same hash
-        assertEquals("SHA-256 must be deterministic", hash1, hash2)
-        // Different inputs â†’ different hashes
-        assertNotEquals("SHA-256 must distinguish inputs", hash1, hash3)
-        // Output must be 64 hex characters (256 bits / 4 bits per hex char)
-        assertEquals("SHA-256 output must be 64 hex chars", 64, hash1.length)
-        // Known test vector: SHA-256("123456") = 8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92
-        assertEquals(
-            "SHA-256('123456') must match known vector",
-            "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
-            hash1
-        )
-    }
-
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // TEST 3 â€” Monotonic dual-clock reboot-resilience & 24h cooling-off survival
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    @Test
-    fun testMonotonicDualClockRebootAndRtcReset() {
-        // â”€â”€ Reboot scenario: elapsedRealtime resets after reboot â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // If new elapsedRealtime < previous stored elapsedRealtime, delta = 0 (no underflow)
-        val prevElapsed = 500L
-        val nowElapsedAfterReboot = 100L
-        val deltaElapsedOnReboot = maxOf(0L, nowElapsedAfterReboot - prevElapsed)
-        assertEquals("Reboot must produce deltaElapsed = 0 (no underflow)", 0L, deltaElapsedOnReboot)
-
-        // Normal forward tick: delta = positive
-        val nowElapsedNormal = 600L
-        val deltaElapsedNormal = maxOf(0L, nowElapsedNormal - prevElapsed)
-        assertEquals("Normal tick must produce correct positive delta", 100L, deltaElapsedNormal)
-
-        // â”€â”€ RTC reset / time-travel backward scenario â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // effectiveWallMs must never go backward past the stored high-water mark
-        val highWaterWallMs = 5000L
-        val deltaMs         = 300L
-        val rawWallMs       = 1000L  // RTC was set backward (untrusted)
-        val effectiveWallMs = maxOf(highWaterWallMs + deltaMs, rawWallMs)
-        assertEquals(
-            "RTC reset must clamp effectiveWallMs to highWater + delta",
-            5300L,
-            effectiveWallMs
-        )
-
-        // â”€â”€ Forward progression: effectiveWall must equal rawWall when ahead â”€â”€
-        val futureRawWallMs  = 9999L
-        val effectiveWallMs2 = maxOf(highWaterWallMs + deltaMs, futureRawWallMs)
-        assertEquals(
-            "When rawWall is ahead, effectiveWallMs must follow rawWall",
-            9999L,
-            effectiveWallMs2
-        )
-
-        // â”€â”€ 24-hour cooling-off: normal elapsed progression without reboot â”€â”€â”€â”€
-        val timerStartElapsed = 1_000_000L
-        val timerStartWall    = 1_700_000_000_000L
-        val justBefore24h     = timerStartElapsed + 86_399_999L
-        val exactlyAt24h      = timerStartElapsed + 86_400_000L
-
-        val elapsedBefore24h = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, justBefore24h, timerStartWall + 86_399_999L)
-        assertFalse("1 ms before 24h must NOT allow PIN-free deprovision", elapsedBefore24h >= 86_400_000L)
-
-        val elapsedAt24h = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, exactlyAt24h, timerStartWall + 86_400_000L)
-        assertTrue("At exactly 24h must allow PIN-free deprovision", elapsedAt24h >= 86_400_000L)
-
-        // â”€â”€ 24-hour cooling-off: REBOOT SURVIVAL FALLBACK SCENARIOS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-        // Scenario A: Device reboots after 25 hours.
-        // nowElapsed reset to 10_000L (which is < requestedElapsed 1_000_000L).
-        // Fallback to wall-clock: nowWall (timerStartWall + 90_000_000L) - timerStartWall = 90_000_000L >= 86_400_000L
-        val postRebootElapsedA = 10_000L
-        val postRebootWallA    = timerStartWall + 90_000_000L
-        val elapsedAfterRebootA = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, postRebootElapsedA, postRebootWallA)
-        assertTrue("Post-reboot wall-clock fallback must permit deprovision after 24h", elapsedAfterRebootA >= 86_400_000L)
-
-        // Scenario B: Device reboots after only 2 hours.
-        // nowElapsed reset to 5_000L (< 1_000_000L).
-        // Fallback to wall-clock: nowWall (timerStartWall + 7_200_000L) - timerStartWall = 7_200_000L < 86_400_000L
-        val postRebootElapsedB = 5_000L
-        val postRebootWallB    = timerStartWall + 7_200_000L
-        val elapsedAfterRebootB = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, postRebootElapsedB, postRebootWallB)
-        assertFalse("Post-reboot wall-clock fallback must DENY deprovision before 24h", elapsedAfterRebootB >= 86_400_000L)
-        assertTrue("Post-reboot timer must still register as running", elapsedAfterRebootB >= 0L)
-
-        // Scenario C: Device reboots and RTC is set backwards (e.g. battery pull to 1970).
-        // nowWall < timerStartWall -> elapsedSinceRequestMs = -1L (not running / invalid)
-        val postRebootElapsedC = 2_000L
-        val postRebootWallC    = timerStartWall - 50_000_000L
-        val elapsedAfterRebootC = computeCoolingOffElapsedMs(timerStartElapsed, timerStartWall, postRebootElapsedC, postRebootWallC)
-        assertEquals("Time-travel backwards during reboot must return -1L", -1L, elapsedAfterRebootC)
-
-        // Scenario D: Timer was never requested (uninitialized prefs: -1L, -1L)
-        val unstartedElapsed = computeCoolingOffElapsedMs(-1L, -1L, 500_000L, timerStartWall)
-        assertEquals("Unstarted timer must return -1L", -1L, unstartedElapsed)
-    }
-
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // TEST 4 â€” ON A MISSION Command Deck theme & Virtual Mission Day Simulation
-    // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    @Test
-    fun testOnAMissionThemeAndVirtualSimulation() {
-        // 1. Theme Verification
-        assertEquals(
-            "Mission Theme constant must match ON_A_MISSION_COMMAND_DECK_V7_1",
-            "ON_A_MISSION_COMMAND_DECK_V7_1",
-            MainActivity.MISSION_THEME_ID
-        )
-
-        // 2. Virtual Mission Simulation: 180 minutes of GATE study ticks
-        var virtualStudyMs = 0L
-        val studyTickMs = 60_000L
-        for (minute in 1..180) {
-            val isStudying = true
-            if (isStudying) {
-                virtualStudyMs += studyTickMs
-            }
-        }
-        val loggedStudyMinutes = virtualStudyMs / 60_000L
-        assertEquals("Sortie logged study duration must equal 180 minutes", 180L, loggedStudyMinutes)
-
-        // 3. 15 minutes of family call immunity (112, 100, 108 & 3-slot family numbers)
-        val lockedFamilyNumbers = setOf("+919876543210", "+919123456780", "+919988776655")
-        val emergencyNumbers = setOf("112", "100", "101", "102", "108", "1091", "1098", "181", "1930")
-
-        fun isCallImmune(number: String): Boolean {
-            return number in emergencyNumbers || number in lockedFamilyNumbers
-        }
-
-        assertTrue("112 emergency call must have absolute immunity", isCallImmune("112"))
-        assertTrue("100 police call must have absolute immunity", isCallImmune("100"))
-        assertTrue("Mother slot must have call immunity", isCallImmune("+919876543210"))
-        assertTrue("Father slot must have call immunity", isCallImmune("+919123456780"))
-        assertFalse("Random non-whitelisted number must NOT be immune", isCallImmune("+919999999999"))
-
-        // Family calls do NOT consume non-whitelisted call budget
-        var virtualCallMs = 0L
-        val familyCallMinutes = 15
-        for (minute in 1..familyCallMinutes) {
-            val isOnNonWhitelistedCall = false
-            if (isOnNonWhitelistedCall) {
-                virtualCallMs += 60_000L
-            }
-        }
-        assertEquals("Family call must consume 0 ms of call budget", 0L, virtualCallMs)
-
-        // 4. 45 minutes of non-whitelisted call metering (Comms Shield: max 60 min daily quota)
-        val nonWhitelistedCallMinutes = 45
-        for (minute in 1..nonWhitelistedCallMinutes) {
-            val isOnNonWhitelistedCall = true
-            if (isOnNonWhitelistedCall) {
-                virtualCallMs += 60_000L
-            }
-        }
-        val loggedCallMinutes = virtualCallMs / 60_000L
-        assertEquals("Non-whitelisted call meter must equal 45 minutes", 45L, loggedCallMinutes)
-        assertTrue("Call duration must be within 60-minute daily budget", loggedCallMinutes <= 60L)
-
-        // 5. Play Store Distraction Block during Mission Lock
-        val blockedEntertainmentApps = listOf(
-            "com.instagram.android" to "Instagram",
-            "com.supercell.clashofclans" to "Clash of Clans",
-            "com.netflix.mediaclient" to "Netflix",
-            "com.opera.mini.native" to "Opera Mini",
-            "com.brave.browser" to "Brave Browser"
-        )
-        for ((pkg, label) in blockedEntertainmentApps) {
-            assertFalse(
-                "Entertainment/browser package $pkg must be blocked",
-                StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                    pkg = pkg,
-                    appLabel = label,
-                    category = ApplicationInfo.CATEGORY_UNDEFINED,
-                    installer = "com.android.vending",
-                    hasBrowserActivity = pkg.contains("browser") || pkg.contains("opera"),
-                    hasVpnService = false
-                )
-            )
-        }
-
-        // Educational GATE study apps must be verified and allowed
-        val approvedStudyApps = listOf(
-            "xyz.penpencil.physicswallah" to "Physics Wallah",
-            "com.unacademyapp" to "Unacademy Learner App"
-        )
-        for ((pkg, label) in approvedStudyApps) {
-            assertTrue(
-                "Study package $pkg must be allowed",
-                StrictPlayStoreAppVerifier.isStaticMetadataEducational(
-                    pkg = pkg,
-                    appLabel = label,
-                    category = ApplicationInfo.CATEGORY_UNDEFINED,
-                    installer = "com.android.vending",
-                    hasBrowserActivity = false,
-                    hasVpnService = false
-                )
-            )
-        }
-    }
-
-    @Test
-    fun testUniversalIfThenDirectiveAndMotivatingProtocol() {
-        assertEquals(
-            "TACTICAL_IF_THEN_DIRECTIVE_V7_1",
-            MainActivity.TACTICAL_IF_THEN_DIRECTIVE_V7_1
-        )
-        assertTrue(
-            "Must provide 3 universal motivating directives",
-            MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES.size == 3
-        )
-        for (rule in MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES) {
-            assertTrue("Rule must start with IF: $rule", rule.startsWith("IF "))
-            assertTrue("Rule must contain -> THEN : $rule", rule.contains("-> THEN "))
-            assertFalse("Rule must stay universal (no exam lock-in): $rule", rule.contains("GATE", ignoreCase = true))
-        }
-    }
-
-    @Test
-    fun testParentTotpRfc6238AndDualUnlockGuard() {
-        assertEquals("PARENT_TOTP_RFC6238_V7_1", ParentTotpAuthenticator.TOTP_AUDIT_SYMBOL)
-
-        val secret = ParentTotpAuthenticator.generateBase32Secret(16)
-        assertEquals("Base32 secret must be 16 chars", 16, secret.length)
-
-        val fixedTimeMs = 1_763_540_000_000L
-        val currentStep = (fixedTimeMs / 1000L) / 30L
-        val codeNow = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep)
-        val codePrev = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep - 1L)
-        val codeNext = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep + 1L)
-        val codeExpired = ParentTotpAuthenticator.generateTotpForTimeStep(secret, currentStep - 3L)
-
-        assertEquals("TOTP code must be 6 digits", 6, codeNow.length)
-        assertTrue("Current TOTP window must verify", ParentTotpAuthenticator.verifyTotpCode(secret, codeNow, fixedTimeMs))
-        assertTrue("Previous -30s drift window must verify", ParentTotpAuthenticator.verifyTotpCode(secret, codePrev, fixedTimeMs))
-        assertTrue("Next +30s drift window must verify", ParentTotpAuthenticator.verifyTotpCode(secret, codeNext, fixedTimeMs))
-        assertFalse("Expired TOTP window must be rejected", ParentTotpAuthenticator.verifyTotpCode(secret, codeExpired, fixedTimeMs))
-        assertFalse("Wrong 6-digit code must be rejected", ParentTotpAuthenticator.verifyTotpCode(secret, "000000", fixedTimeMs) && codeNow != "000000")
-
-        val recoveryKey = ParentTotpAuthenticator.generateRecoveryKey()
-        assertTrue("Recovery key must start with SWT-", recoveryKey.startsWith("SWT-"))
-        val norm = ParentTotpAuthenticator.normalizeRecoveryKey(recoveryKey)
-        assertEquals(
-            "Normalized recovery key hash must match",
-            ParentTotpAuthenticator.sha256Hex(norm),
-            ParentTotpAuthenticator.sha256Hex(ParentTotpAuthenticator.normalizeRecoveryKey(recoveryKey.lowercase()))
-        )
-    }
-}

@@ -1,9 +1,9 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+f88a1e5 chore(antigravity): sync Swatantra v7.1 build state and error.log
+86b6408 chore(audit): update AUDIT_PROOF.txt with crash-proof FourBucketClassifier and study launcher
 0b47652 chore(antigravity): sync Swatantra v7.1 build state and error.log
 34a4039 chore(audit): update AUDIT_PROOF.txt with ParentTotpAuthenticator and 6-test verification
 860907f chore(antigravity): sync Swatantra v7.1 build state and error.log
-12a6f53 chore(audit): update AUDIT_PROOF.txt with 5-test proof and tactical if-then directive
-5fcb8c8 chore(antigravity): sync Swatantra v7.1 build state and error.log
 
 On branch main
 Your branch is up to date with 'origin/main'.
@@ -22,7 +22,7 @@ app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines:
 app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
 app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
 app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 184 | Bytes: 7442 | SHA256: 1A895F4D71A5788F
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 394 | Bytes: 17453 | SHA256: 417B6E8CF65BCD24
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 491 | Bytes: 22164 | SHA256: 6B9989C239A530EB
 app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 79 | Bytes: 2958 | SHA256: E180843F053A47EA
 app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
 app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
@@ -32,13 +32,13 @@ app\src\main\AndroidManifest.xml | Lines: 133 | Bytes: 5950 | SHA256: 37FD6B48C7
 app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 545 | Bytes: 27294 | SHA256: F5BBFFF7A8CC4DF8
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 116064 bytes | LastWriteTime: 11/19/2026 19:40:35
+APK Size: 124256 bytes | LastWriteTime: 11/19/2026 20:03:43
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
 META-INF/version-control-info.textproto                      120              117
-classes.dex                                                90248            90248
+classes.dex                                                98816            98816
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -83,171 +83,122 @@ DEX_SYMBOL [PARENT_TOTP_RFC6238_V7_1] Present in classes.dex: True
 
 === 4. TEST EXECUTION (RAW XML TESTSUITE PROOF) ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-19T14:09:50.494Z" hostname="DESKTOP-JOU27LS" time="0.18">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-19T14:33:25.545Z" hostname="DESKTOP-JOU27LS" time="0.22">
   <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.071"/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.02"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.011"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.06"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.007"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.064"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.017"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.013"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
+  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.109"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.005"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 
 === 5. VERBATIM MODIFIED / HARDENED CODE ===
 
---- FourBucketClassifier.kt (enforceFocusPolicy) ---
-    fun enforceFocusPolicy(whitelistedStudyApps: Set<String>, utilityApps: Set<String>) {
-        if (dpm == null || !dpm.isDeviceOwnerApp(deContext.packageName)) return
-
-        val activeWebViewPkg = runCatching {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                WebView.getCurrentWebViewPackage()?.packageName
-            } else null
-        }.getOrNull()
-
-        val protectedCore = buildSet {
-            addAll(immutableSystemCore)
-            add(deContext.packageName)
-            if (activeWebViewPkg != null) add(activeWebViewPkg)
-        }
-
-        val lockTaskAllowed = (whitelistedStudyApps + utilityApps + setOf(
-            deContext.packageName,
-            "com.android.server.telecom",
-            "com.google.android.dialer",
-            "com.samsung.android.incallui",
-            "com.android.vending"
-        )).distinct().toTypedArray()
-        runCatching { dpm.setLockTaskPackages(admin, lockTaskAllowed) }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            runCatching {
-                val features = DevicePolicyManager.LOCK_TASK_FEATURE_SYSTEM_INFO or
-                    DevicePolicyManager.LOCK_TASK_FEATURE_NOTIFICATIONS or
-                    DevicePolicyManager.LOCK_TASK_FEATURE_BLOCK_ACTIVITY_START_IN_TASK
-                dpm.setLockTaskFeatures(admin, features)
+--- MainActivity.kt (Asynchronous Study Apps Selector & Lock Engagement) ---
+    private fun showStudyAppSelector(deContext: Context, engageLockAfterSave: Boolean) {
+        Toast.makeText(this, "Loading installed apps...", Toast.LENGTH_SHORT).show()
+        Thread {
+            val launcherIntent = Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_LAUNCHER)
             }
-        }
+            val resolved = runCatching {
+                packageManager.queryIntentActivities(launcherIntent, 0)
+            }.getOrDefault(emptyList())
 
-        val installed = runCatching {
-            deContext.packageManager.getInstalledPackages(0).map { it.packageName }
-        }.getOrDefault(emptyList())
+            val candidates = resolved
+                .mapNotNull { info ->
+                    val pkg = info.activityInfo?.packageName ?: return@mapNotNull null
+                    if (pkg == packageName) return@mapNotNull null
+                    val label = runCatching { info.loadLabel(packageManager).toString() }.getOrDefault(pkg)
+                    pkg to label
+                }
+                .distinctBy { it.first }
+                .sortedBy { it.second.lowercase() }
 
-        val toSuspend = installed.filter { pkg ->
-            pkg !in protectedCore &&
-            pkg !in whitelistedStudyApps &&
-            pkg !in utilityApps &&
-            (pkg in oemFloatingWindowEscapes || !isEssentialSystemPackage(pkg))
-        }
-        val toUnsuspend = (whitelistedStudyApps + utilityApps + protectedCore).toList()
+            val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+            val savedSet = studyPrefs.getStringSet(KEY_STUDY_PKGS, emptySet())?.toMutableSet() ?: mutableSetOf()
 
-        runCatching { dpm.setPackagesSuspended(admin, toUnsuspend.toTypedArray(), false) }
-        runCatching { dpm.setPackagesSuspended(admin, toSuspend.toTypedArray(), true) }
+            val labels = candidates.map { it.second }.toTypedArray()
+            val checked = BooleanArray(candidates.size) { idx -> candidates[idx].first in savedSet }
 
-        runCatching {
-            val webFilter = IntentFilter(Intent.ACTION_VIEW).apply {
-                addCategory(Intent.CATEGORY_DEFAULT)
-                addCategory(Intent.CATEGORY_BROWSABLE)
-                addDataScheme("http")
-                addDataScheme("https")
+            runOnUiThread {
+                if (candidates.isEmpty()) {
+                    Toast.makeText(this, "No launchable apps found.", Toast.LENGTH_SHORT).show()
+                    return@runOnUiThread
+                }
+                runCatching {
+                    AlertDialog.Builder(this)
+                        .setTitle("Select Your Allowed Study Apps")
+                        .setMultiChoiceItems(labels, checked) { _, which, isChecked ->
+                            checked[which] = isChecked
+                        }
+                        .setPositiveButton(if (engageLockAfterSave) "Save & Lock Now" else "Save Study Apps") { _, _ ->
+                            val chosen = candidates.indices
+                                .filter { checked[it] }
+                                .map { candidates[it].first }
+                                .toSet()
+                            studyPrefs.edit()
+                                .putStringSet(KEY_STUDY_PKGS, chosen)
+                                .putBoolean(KEY_STUDY_CONFIGURED, true)
+                                .commit()
+                            Toast.makeText(this, "Saved ${chosen.size} study app(s).", Toast.LENGTH_SHORT).show()
+                            if (engageLockAfterSave) {
+                                engageMissionLockAsync(deContext)
+                            }
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .show()
+                }
             }
-            dpm.addPersistentPreferredActivity(
-                admin,
-                webFilter,
-                ComponentName(deContext, SafeUrlInterceptorActivity::class.java)
-            )
-        }
-
-        runCatching {
-            val homeFilter = IntentFilter(Intent.ACTION_MAIN).apply {
-                addCategory(Intent.CATEGORY_HOME)
-                addCategory(Intent.CATEGORY_DEFAULT)
-            }
-            dpm.addPersistentPreferredActivity(
-                admin,
-                homeFilter,
-                ComponentName(deContext, MainActivity::class.java)
-            )
-        }
-
-        runCatching {
-            dpm.setAlwaysOnVpnPackage(admin, deContext.packageName, true)
-            deContext.startService(Intent(deContext, SafeStudyDnsVpnService::class.java))
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            runCatching { dpm.setUserControlDisabledPackages(admin, listOf(deContext.packageName)) }
-        }
-
-        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus
-        val focusRestrictions = listOf(
-            UserManager.DISALLOW_FACTORY_RESET,
-            UserManager.DISALLOW_NETWORK_RESET,
-            UserManager.DISALLOW_SAFE_BOOT,
-            UserManager.DISALLOW_ADD_USER,
-            UserManager.DISALLOW_CONFIG_DATE_TIME,
-            UserManager.DISALLOW_DEBUGGING_FEATURES,
-            UserManager.DISALLOW_PRINTING
-        )
-        for (restriction in focusRestrictions) {
-            runCatching { dpm.addUserRestriction(admin, restriction) }
-        }
+        }.start()
     }
 
---- MainActivity.kt (onCreate studyTile & DPM status block) ---
-        val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
-        val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
-        subHeader.text = if (isDeviceOwner) {
-            "DEVICE OWNER: ACTIVE \u2022 ZERO ATTENTION RESIDUE"
-        } else {
-            "DEVICE OWNER: INACTIVE \u2022 RUN ADB PROVISIONING"
-        }
+    private fun engageMissionLockAsync(deContext: Context) {
+        val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+        val chosenStudySet = studyPrefs.getStringSet(KEY_STUDY_PKGS, emptySet()) ?: emptySet()
+        subHeader.text = "ENGAGING MISSION LOCK..."
 
-        val studyTile = createTile("[ENGAGE MISSION LOCK] \u2022 Launch Deep Study Sortie", "#059669") {
-            val baseStudySet = setOf(
-                "xyz.penpencil.physicswallah",
-                "com.unacademyapp",
-                "com.google.android.youtube",
-                "org.telegram.messenger",
-                "com.adobe.reader",
-                "com.android.vending"
-            )
-            val dynamicPrefs = deContext.getSharedPreferences("dynamic_study_whitelist_de", Context.MODE_PRIVATE)
-            val dynamicStudySet = dynamicPrefs.getStringSet("study_pkgs", emptySet()) ?: emptySet()
-            val studySet = baseStudySet + dynamicStudySet
-
+        Thread {
+            val studySet = chosenStudySet + setOf("com.android.vending")
             runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
-            runCatching { startLockTask() }
+            studyPrefs.edit().putBoolean(KEY_MISSION_LOCK_ACTIVE, true).commit()
 
-            val nowLocked = dpm?.isDeviceOwnerApp(deContext.packageName) == true
-            subHeader.text = if (nowLocked) {
-                "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
-            } else {
-                "PINNED PREVIEW MODE \u2022 DEVICE OWNER REQUIRED FOR FULL LOCK"
-            }
-
-            val launchable = studySet.mapNotNull { pkg ->
+            val launchable = chosenStudySet.mapNotNull { pkg ->
                 val launchIntent = packageManager.getLaunchIntentForPackage(pkg) ?: return@mapNotNull null
                 val label = runCatching {
                     packageManager.getApplicationLabel(packageManager.getApplicationInfo(pkg, 0)).toString()
                 }.getOrDefault(pkg)
                 label to launchIntent
-            }
+            }.sortedBy { it.first.lowercase() }
 
-            if (launchable.isNotEmpty()) {
-                val labels = launchable.map { it.first }.toTypedArray()
-                runCatching {
-                    AlertDialog.Builder(this@MainActivity)
-                        .setTitle("Mission Lock Active — Open Study App")
-                        .setItems(labels) { _, which ->
-                            runCatching { startActivity(launchable[which].second) }
-                        }
-                        .setNegativeButton("Stay on Command Deck", null)
-                        .show()
+            val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+            val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
+
+            runOnUiThread {
+                if (isDeviceOwner) {
+                    runCatching { startLockTask() }
+                    subHeader.text = "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
+                } else {
+                    subHeader.text = "DEVICE OWNER INACTIVE \u2022 RUN ADB PROVISIONING"
                 }
-            } else {
-                Toast.makeText(this@MainActivity, "Mission Lock Engaged.", Toast.LENGTH_SHORT).show()
+
+                if (launchable.isNotEmpty()) {
+                    val labels = launchable.map { it.first }.toTypedArray()
+                    runCatching {
+                        AlertDialog.Builder(this@MainActivity)
+                            .setTitle("Mission Lock Active — Open Study App")
+                            .setItems(labels) { _, which ->
+                                runCatching { startActivity(launchable[which].second) }
+                            }
+                            .setNegativeButton("Stay on Command Deck", null)
+                            .show()
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Mission Lock Engaged. Tap [SELECT MY STUDY APPS] to add apps.", Toast.LENGTH_LONG).show()
+                }
             }
-        }
+        }.start()
+    }

@@ -17,6 +17,31 @@ if (Test-Path ".\gradlew.bat") {
         if (-not (Test-Path "dist")) { New-Item -ItemType Directory -Path "dist" -Force }
         & $zipalign -v -p -f 4 $unsignedApk "dist\swatantra-v7.1-release.apk"
         & $apksigner sign --ks "swatantra-release.jks" --ks-pass pass:Swatantra@710 --ks-key-alias "swatantra_key" --key-pass pass:Swatantra@710 --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true "dist\swatantra-v7.1-release.apk"
+
+        # Verify DEX symbols including TACTICAL_IF_THEN_DIRECTIVE_V7_1
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        $zip = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path "dist\swatantra-v7.1-release.apk"))
+        $dexEntry = $zip.Entries | Where-Object { $_.FullName -eq "classes.dex" }
+        if ($dexEntry) {
+            $ms = New-Object System.IO.MemoryStream
+            $dexEntry.Open().CopyTo($ms)
+            $ascii = [System.Text.Encoding]::ASCII.GetString($ms.ToArray())
+            $requiredSymbols = @(
+                "SwatantraApp", "SwatantraAdminReceiver", "AtomicDeprovisionManager",
+                "FourBucketClassifier", "StrictPlayStoreAppVerifier", "PackageInstallReceiver",
+                "FastOtaUpdater", "UniversalLectureInspector", "AntiGossipCallEngine",
+                "DirectBootCallScreener", "SwatantraInCallService", "MonotonicDualClockLedger",
+                "SwatantraWatchdogService", "MainActivity", "FamilySetupActivity",
+                "SafeUrlInterceptorActivity", "PRAGMA synchronous = FULL", "HmacSHA256",
+                "isStaticMetadataEducational", "DISALLOW_FACTORY_RESET", "DISALLOW_NETWORK_RESET",
+                "ON_A_MISSION_COMMAND_DECK_V7_1", "TACTICAL_IF_THEN_DIRECTIVE_V7_1"
+            )
+            foreach ($sym in $requiredSymbols) {
+                $present = $ascii.Contains($sym)
+                Write-Host "DEX_SYMBOL [$sym] Present in classes.dex: $present"
+            }
+        }
+        $zip.Dispose()
     }
 } else {
     "Gradle wrapper not initialized yet. Run 'gradle wrapper' in Antigravity terminal." | Out-File -FilePath "error.log" -Encoding utf8

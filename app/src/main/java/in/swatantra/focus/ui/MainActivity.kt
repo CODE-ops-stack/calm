@@ -26,6 +26,14 @@ class MainActivity : Activity() {
 
     companion object {
         const val MISSION_THEME_ID = "ON_A_MISSION_COMMAND_DECK_V7_1"
+        const val TACTICAL_IF_THEN_DIRECTIVE_V7_1 = "TACTICAL_IF_THEN_DIRECTIVE_V7_1"
+        const val PREFS_DIRECTIVES = "mission_directives_de"
+        const val KEY_ACTIVE_DIRECTIVE = "active_if_then_directive"
+        val UNIVERSAL_IF_THEN_DIRECTIVES = listOf(
+            "IF urge to browse hits -> THEN solve 2 practice questions now. Your big goal is waiting.",
+            "IF stuck on a problem > 5m -> THEN write 1 known formula & test a simple case. Every mark counts.",
+            "IF focus drops mid-lecture -> THEN pause & summarize the last 3 minutes on paper. Stay on mission."
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +93,45 @@ class MainActivity : Activity() {
             layoutParams = lp
         }
 
+        val directivePrefs = deContext.getSharedPreferences(PREFS_DIRECTIVES, Context.MODE_PRIVATE)
+        var activeDirective = directivePrefs.getString(KEY_ACTIVE_DIRECTIVE, UNIVERSAL_IF_THEN_DIRECTIVES[0])
+            ?: UNIVERSAL_IF_THEN_DIRECTIVES[0]
+
+        val directiveBanner = TextView(this).apply {
+            text = "ARMED IF-THEN DIRECTIVE:\n$activeDirective"
+            textSize = 12f
+            setTextColor(Color.parseColor("#E2E8F0"))
+            setBackgroundColor(Color.parseColor("#161F30"))
+            setPadding(24, 20, 24, 20)
+            gravity = Gravity.CENTER_HORIZONTAL
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 12) }
+            layoutParams = lp
+        }
+
+        val cycleDirectiveTile = Button(this).apply {
+            text = "[ARM IF-THEN DIRECTIVE] \u2022 Cycle Motivating Rule"
+            textSize = 13f
+            setBackgroundColor(Color.parseColor("#1E293B"))
+            setTextColor(Color.parseColor("#F59E0B"))
+            setPadding(24, 20, 24, 20)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 20) }
+            layoutParams = lp
+            setOnClickListener {
+                val currentIdx = UNIVERSAL_IF_THEN_DIRECTIVES.indexOf(activeDirective)
+                val nextIdx = (currentIdx + 1) % UNIVERSAL_IF_THEN_DIRECTIVES.size
+                activeDirective = UNIVERSAL_IF_THEN_DIRECTIVES[nextIdx]
+                directivePrefs.edit().putString(KEY_ACTIVE_DIRECTIVE, activeDirective).commit()
+                directiveBanner.text = "ARMED IF-THEN DIRECTIVE:\n$activeDirective"
+                Toast.makeText(this@MainActivity, "If-Then Directive Armed", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         fun createTile(label: String, bgHex: String, onClick: () -> Unit): Button {
             return Button(this).apply {
                 text = label
@@ -138,6 +185,8 @@ class MainActivity : Activity() {
         root.addView(header)
         root.addView(subHeader)
         root.addView(telemetryBanner)
+        root.addView(directiveBanner)
+        root.addView(cycleDirectiveTile)
         root.addView(studyTile)
         root.addView(parkingTile)
         root.addView(wifiSettingsTile)

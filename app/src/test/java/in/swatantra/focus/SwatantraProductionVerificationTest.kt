@@ -493,4 +493,21 @@ class SwatantraProductionVerificationTest {
             )
         }
     }
+
+    @Test
+    fun testUniversalIfThenDirectiveAndMotivatingProtocol() {
+        assertEquals(
+            "TACTICAL_IF_THEN_DIRECTIVE_V7_1",
+            MainActivity.TACTICAL_IF_THEN_DIRECTIVE_V7_1
+        )
+        assertTrue(
+            "Must provide 3 universal motivating directives",
+            MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES.size == 3
+        )
+        for (rule in MainActivity.UNIVERSAL_IF_THEN_DIRECTIVES) {
+            assertTrue("Rule must start with IF: $rule", rule.startsWith("IF "))
+            assertTrue("Rule must contain -> THEN : $rule", rule.contains("-> THEN "))
+            assertFalse("Rule must stay universal (no exam lock-in): $rule", rule.contains("GATE", ignoreCase = true))
+        }
+    }
 }

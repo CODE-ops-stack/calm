@@ -5,8 +5,8 @@ REPORT="qa_emulator_report.txt"
 PKG="in.swatantra.focus"
 ADMIN="$PKG/.dpc.SwatantraAdminReceiver"
 MAIN="$PKG/.ui.MainActivity"
-APK="app/build/outputs/apk/release/app-release-unsigned.apk"
-[ -f "dist/swatantra-v7.1-release.apk" ] && APK="dist/swatantra-v7.1-release.apk"
+APK="app/build/outputs/apk/release/app-release-ci-signed.apk"
+[ ! -f "$APK" ] && [ -f "dist/swatantra-v7.1-release.apk" ] && APK="dist/swatantra-v7.1-release.apk"
 
 FAILURES=0
 log() { echo "$1" | tee -a "$REPORT"; }

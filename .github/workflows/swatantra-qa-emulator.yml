@@ -29,11 +29,16 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Run Unit Tests & Assemble Release APK
+      - name: Run Unit Tests, Assemble & Ephemerally Sign Release APK for Cloud QA
         run: |
           chmod +x ./gradlew scripts/run_human_equivalent_qa.sh
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
           ./gradlew test assembleRelease --no-daemon
+          BUILD_TOOLS_DIR=$(ls -d "$ANDROID_HOME/build-tools/"* | sort -V | tail -n 1)
+          keytool -genkeypair -v -keystore /tmp/ci-ephemeral.jks -storepass ciqa1234 -keypass ciqa1234 -alias ciqa -keyalg RSA -keysize 2048 -validity 1 -dname "CN=SwatantraCI,O=Swatantra,C=IN"
+          "$BUILD_TOOLS_DIR/zipalign" -v -p -f 4 app/build/outputs/apk/release/app-release-unsigned.apk /tmp/app-release-aligned.apk
+          "$BUILD_TOOLS_DIR/apksigner" sign --ks /tmp/ci-ephemeral.jks --ks-pass pass:ciqa1234 --key-pass pass:ciqa1234 --ks-key-alias ciqa --v2-signing-enabled true --v3-signing-enabled true --out app/build/outputs/apk/release/app-release-ci-signed.apk /tmp/app-release-aligned.apk
+          "$BUILD_TOOLS_DIR/apksigner" verify --verbose app/build/outputs/apk/release/app-release-ci-signed.apk
 
       - name: Run Human-Equivalent QA on Cloud Android 14 Emulator
         id: qa_run

@@ -46,9 +46,10 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
-          target: google_apis
+          target: default
           arch: x86_64
           profile: pixel_6
+          force-avd-creation: true
           disable-animations: true
           emulator-boot-timeout: 300
           script: bash scripts/run_human_equivalent_qa.sh

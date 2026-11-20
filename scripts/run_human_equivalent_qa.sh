@@ -152,6 +152,23 @@ if tap_text "MISSION STAND-DOWN"; then
   else
     fail "Wrong PIN unexpectedly unlocked Device Owner"
   fi
+
+  tap_text "999999" || tap_text "6-digit Parent PIN"
+  adb shell input keyevent 67 67 67 67 67 67 || true
+  adb shell input text "123456"
+  tap_text "VERIFY PIN"
+  sleep 3
+  if ! adb shell dumpsys device_policy | grep -q "$PKG"; then
+    pass "Valid Parent PIN (123456) unlocked & deprovisioned Device Owner cleanly"
+  else
+    fail "Valid Parent PIN (123456) did NOT clear Device Owner"
+  fi
+  AFTER_UNLOCK=$(adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -n 2 || true)
+  if echo "$AFTER_UNLOCK" | grep -q "FamilySetupActivity"; then
+    pass "Clean stand-down routed back to FamilySetupActivity for fresh re-setup"
+  else
+    fail "Clean stand-down did NOT route back to FamilySetupActivity ($AFTER_UNLOCK)"
+  fi
 fi
 
 log ""

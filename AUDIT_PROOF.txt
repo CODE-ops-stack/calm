@@ -10,8 +10,8 @@ e873a1a34c4c7e543b6ec378fd2ed2cc20d43a75 refs/heads/main
 e873a1a34c4c7e543b6ec378fd2ed2cc20d43a75 refs/heads/master
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
-.github\workflows\swatantra-qa-emulator.yml | Lines: 68 | Bytes: 2321 | SHA256: C426566B31907AB31206105728C68FC6D7E1BC905B42CE7A7A1D171075E91C3A
-scripts\run_human_equivalent_qa.sh | Lines: 183 | Bytes: 5820 | SHA256: E061A905663D55C04538AE2FEC08152AA9D2C37921525AB04A88291CFEE643DE
+.github\workflows\swatantra-qa-emulator.yml | Lines: 74 | Bytes: 2634 | SHA256: BED002665616F387
+scripts\run_human_equivalent_qa.sh | Lines: 200 | Bytes: 6695 | SHA256: 55F078D26FE69E21
 scripts\sync_and_verify.ps1 | Lines: 77 | Bytes: 4132 | SHA256: 01D222C33EEB98246290B7F84EB7ED6352C9DCE382456ED8EEC51EAF5F8F641E
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
 app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 33 | Bytes: 1303 | SHA256: 7F7F082AE96E90FA

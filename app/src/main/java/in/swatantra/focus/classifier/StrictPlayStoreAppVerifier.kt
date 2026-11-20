@@ -200,8 +200,15 @@ class PackageInstallReceiver : BroadcastReceiver() {
         val action = intent.action ?: return
         if (action == Intent.ACTION_PACKAGE_ADDED || action == Intent.ACTION_PACKAGE_REPLACED) {
             val pkg = intent.data?.schemeSpecificPart ?: return
-            val verifier = StrictPlayStoreAppVerifier(context)
-            verifier.handlePackageEvent(pkg)
+            val pendingResult = goAsync()
+            Thread {
+                try {
+                    val verifier = StrictPlayStoreAppVerifier(context)
+                    verifier.handlePackageEvent(pkg)
+                } finally {
+                    pendingResult.finish()
+                }
+            }.start()
         }
     }
 }

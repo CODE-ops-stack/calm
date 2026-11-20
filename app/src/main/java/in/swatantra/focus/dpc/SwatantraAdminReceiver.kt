@@ -18,29 +18,33 @@ class SwatantraAdminReceiver : DeviceAdminReceiver() {
             deContext.startForegroundService(Intent(deContext, SwatantraWatchdogService::class.java))
         }
 
-        val dpm = deContext.getSystemService(DevicePolicyManager::class.java) ?: return
-        val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
+        val action = intent.action
+        val pendingResult = goAsync()
+        Thread {
+            try {
+                val dpm = deContext.getSystemService(DevicePolicyManager::class.java) ?: return@Thread
+                val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
 
-        // 4-Layer Zero-Harm Anti-Reset Shield: explicitly enforce anti-reset restrictions whenever active as Device Owner
-        if (dpm.isDeviceOwnerApp(deContext.packageName)) {
-            runCatching {
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
-                dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
-            }
-        }
+                if (dpm.isDeviceOwnerApp(deContext.packageName)) {
+                    runCatching {
+                        dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
+                        dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
+                        dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
+                        dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
+                        dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
+                    }
 
-        val action = intent.action ?: return
-        if (action == Intent.ACTION_MY_PACKAGE_REPLACED || action == "in.swatantra.focus.ACTION_OTA_STATUS") {
-            if (dpm.isDeviceOwnerApp(deContext.packageName)) {
-                runCatching { dpm.addUserRestriction(admin, UserManager.DISALLOW_INSTALL_APPS) }
-                val homeIntent = Intent(deContext, MainActivity::class.java).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    if (action == Intent.ACTION_MY_PACKAGE_REPLACED || action == "in.swatantra.focus.ACTION_OTA_STATUS") {
+                        runCatching { dpm.addUserRestriction(admin, UserManager.DISALLOW_INSTALL_APPS) }
+                        val homeIntent = Intent(deContext, MainActivity::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        }
+                        runCatching { deContext.startActivity(homeIntent) }
+                    }
                 }
-                deContext.startActivity(homeIntent)
+            } finally {
+                pendingResult.finish()
             }
-        }
+        }.start()
     }
 }

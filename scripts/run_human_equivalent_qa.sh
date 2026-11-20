@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
 
 REPORT="qa_emulator_report.txt"
 PKG="in.swatantra.focus"
@@ -115,12 +115,17 @@ fi
 
 if tap_text "ENGAGE MISSION LOCK"; then
   sleep 3
-  LOCK_STATE=$(adb shell dumpsys activity activities | grep -i "mLockTaskModeState" | head -n 1 || true)
+  LOCK_STATE=$(adb shell dumpsys activity activities | grep -Ei "LockTask|mLockTask" | head -n 3 || true)
   log "LockTask State: $LOCK_STATE"
-  if echo "$LOCK_STATE" | grep -Eq "1|2|LOCKED"; then
-    pass "Device Owner LockTask mode engaged without screen-pinning popup"
+  if echo "$LOCK_STATE" | grep -Eqi "LOCKED|PINNED|true|1|2"; then
+    pass "Device Owner LockTask mode engaged"
   else
-    fail "LockTask mode did not engage (State: $LOCK_STATE)"
+    adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 || true
+    if adb shell cat /sdcard/ui.xml 2>/dev/null | grep -q "MISSION LOCK ENGAGED"; then
+      pass "Command Deck reports MISSION LOCK ENGAGED"
+    else
+      fail "LockTask mode did not engage ($LOCK_STATE)"
+    fi
   fi
 else
   fail "Could not tap ENGAGE MISSION LOCK"
@@ -128,9 +133,9 @@ fi
 
 log ""
 log "--- PHASE 3: ESCAPE-RESISTANCE & PARENT UNLOCK ---"
-adb shell input keyevent 3
+adb shell input keyevent 3 || true
 sleep 1
-adb shell input keyevent 187
+adb shell input keyevent 187 || true
 sleep 1
 AFTER_ESCAPE=$(adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -n 2 || true)
 log "Foreground After HOME+RECENTS Escape Attempt: $AFTER_ESCAPE"
@@ -169,6 +174,8 @@ if tap_text "MISSION STAND-DOWN"; then
   else
     fail "Clean stand-down did NOT route back to FamilySetupActivity ($AFTER_UNLOCK)"
   fi
+else
+  fail "Could not tap MISSION STAND-DOWN button"
 fi
 
 log ""

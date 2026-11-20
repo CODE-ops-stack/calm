@@ -1,14 +1,18 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+e873a1a chore(antigravity): sync Swatantra v7.1 build state and error.log
+5a825d6 chore(audit): update AUDIT_PROOF.txt with queries tag and family re-setup proof
 69c7668 chore(antigravity): sync Swatantra v7.1 build state and error.log
 708253b chore(audit): update AUDIT_PROOF.txt with non-blocking ScrollView MainActivity proof
 f88a1e5 chore(antigravity): sync Swatantra v7.1 build state and error.log
-86b6408 chore(audit): update AUDIT_PROOF.txt with crash-proof FourBucketClassifier and study launcher
-0b47652 chore(antigravity): sync Swatantra v7.1 build state and error.log
 
-On branch main
-Your branch is up to date with 'origin/main'.
+Remote Branch SHAs:
+e873a1a34c4c7e543b6ec378fd2ed2cc20d43a75 refs/heads/main
+e873a1a34c4c7e543b6ec378fd2ed2cc20d43a75 refs/heads/master
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
+.github\workflows\swatantra-qa-emulator.yml | Lines: 68 | Bytes: 2321 | SHA256: C426566B31907AB31206105728C68FC6D7E1BC905B42CE7A7A1D171075E91C3A
+scripts\run_human_equivalent_qa.sh | Lines: 183 | Bytes: 5820 | SHA256: E061A905663D55C04538AE2FEC08152AA9D2C37921525AB04A88291CFEE643DE
+scripts\sync_and_verify.ps1 | Lines: 77 | Bytes: 4132 | SHA256: 01D222C33EEB98246290B7F84EB7ED6352C9DCE382456ED8EEC51EAF5F8F641E
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
 app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 33 | Bytes: 1303 | SHA256: 7F7F082AE96E90FA
 app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 31 | Bytes: 1321 | SHA256: 28A97EDBB30FF80A
@@ -32,7 +36,10 @@ app\src\main\AndroidManifest.xml | Lines: 140 | Bytes: 6160 | SHA256: 58D38D9D85
 app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 545 | Bytes: 27294 | SHA256: F5BBFFF7A8CC4DF8
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 128352 bytes | LastWriteTime: 11/19/2026 23:46:14
+APK Size: 128352 bytes | LastWriteTime: 11/20/2026 12:30:51
+zipalign 4 verification: Verification succesful
+apksigner v2 scheme: true (min-sdk 24)
+apksigner v3 scheme: true
 
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
@@ -95,187 +102,22 @@ DEX_SYMBOL [PARENT_TOTP_RFC6238_V7_1] Present in classes.dex: True
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 
-=== 5. VERBATIM MODIFIED / HARDENED CODE ===
+=== 5. VERBATIM MODIFIED SECTIONS & ZERO-HARM PROOF ===
 
---- AndroidManifest.xml (<queries> block) ---
+--- SwatantraApp.kt (Zero-Harm FRP Guarantee Lines 52-59) ---
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            runCatching {
+                val openFrp = FactoryResetProtectionPolicy.Builder()
+                    .setFactoryResetProtectionEnabled(false)
+                    .build()
+                dpm.setFactoryResetProtectionPolicy(admin, openFrp)
+            }
+        }
+
+--- AndroidManifest.xml (<queries> block Lines 15-20) ---
     <queries>
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
     </queries>
-
---- MainActivity.kt (Parent Auth & Family Re-Setup flow) ---
-    private fun showParentAuthDialog(deContext: Context, mode: String) {
-        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-        val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
-        val isResetOnly = (mode == "RESET_FAMILY")
-
-        val dialogLayout = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(56, 44, 56, 32)
-            setBackgroundColor(Color.parseColor("#0B0F17"))
-        }
-
-        val guardTitle = TextView(this).apply {
-            text = if (isResetOnly) "RESET FAMILY PIN & NUMBERS" else "PARENT DUAL-KEY UNLOCK"
-            textSize = 18f
-            setTextColor(Color.parseColor("#10B981"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 8)
-        }
-
-        val guardSubtitle = TextView(this).apply {
-            text = if (isResetOnly) {
-                "Verify current Parent PIN, Google Authenticator Code, or Recovery Key to set new family numbers and PIN."
-            } else {
-                "Verify Parent PIN, live 6-Digit Google Authenticator Code, or Offline Recovery Key to unlock and reset Swatantra."
-            }
-            textSize = 12f
-            setTextColor(Color.parseColor("#94A3B8"))
-            gravity = Gravity.CENTER_HORIZONTAL
-            setPadding(0, 0, 0, 20)
-        }
-
-        val codeInput = EditText(this).apply {
-            hint = "6-digit Parent PIN or Authenticator Code"
-            setHintTextColor(Color.parseColor("#64748B"))
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-            filters = arrayOf(InputFilter.LengthFilter(6))
-            setTextColor(Color.parseColor("#E2E8F0"))
-            setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(28, 20, 28, 20)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 12) }
-            layoutParams = lp
-        }
-
-        val verifySixDigitButton = Button(this).apply {
-            text = if (isResetOnly) "VERIFY & RE-SETUP FAMILY LOCK" else "VERIFY PIN / AUTHENTICATOR & UNLOCK"
-            textSize = 13f
-            setBackgroundColor(Color.parseColor("#059669"))
-            setTextColor(Color.WHITE)
-            setPadding(24, 24, 24, 24)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 20) }
-            layoutParams = lp
-        }
-
-        val recoveryLabel = TextView(this).apply {
-            text = "Lost PIN & Parent Phone? Enter Offline Recovery Key:"
-            textSize = 12f
-            setTextColor(Color.parseColor("#F59E0B"))
-            setPadding(0, 0, 0, 6)
-        }
-
-        val recoveryInput = EditText(this).apply {
-            hint = "SWT-XXXX-XXXX-XXXX"
-            setHintTextColor(Color.parseColor("#64748B"))
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS
-            setTextColor(Color.parseColor("#E2E8F0"))
-            setBackgroundColor(Color.parseColor("#161F30"))
-            setPadding(28, 18, 28, 18)
-            val lp = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { setMargins(0, 0, 0, 12) }
-            layoutParams = lp
-        }
-
-        val verifyRecoveryButton = Button(this).apply {
-            text = if (isResetOnly) "VERIFY RECOVERY KEY & RE-SETUP" else "VERIFY RECOVERY KEY & UNLOCK"
-            textSize = 13f
-            setBackgroundColor(Color.parseColor("#334155"))
-            setTextColor(Color.WHITE)
-            setPadding(24, 22, 24, 22)
-        }
-
-        dialogLayout.addView(guardTitle)
-        dialogLayout.addView(guardSubtitle)
-        dialogLayout.addView(codeInput)
-        dialogLayout.addView(verifySixDigitButton)
-        dialogLayout.addView(recoveryLabel)
-        dialogLayout.addView(recoveryInput)
-        dialogLayout.addView(verifyRecoveryButton)
-
-        val dialog = runCatching {
-            AlertDialog.Builder(this)
-                .setView(dialogLayout)
-                .setCancelable(true)
-                .create()
-        }.getOrNull()
-
-        fun clearFamilyCredentialsForReSetup() {
-            callPrefs.edit()
-                .remove("whitelisted_family_numbers")
-                .remove("family_pin_sha256")
-                .remove("parent_totp_secret")
-                .remove("parent_recovery_sha256")
-                .putBoolean("family_numbers_locked", false)
-                .commit()
-        }
-
-        fun onParentVerified() {
-            dialog?.dismiss()
-            if (isResetOnly) {
-                clearFamilyCredentialsForReSetup()
-                Toast.makeText(this, "Verified. Enter your new family numbers & PIN.", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, FamilySetupActivity::class.java))
-            } else {
-                studyPrefs.edit()
-                    .putBoolean(KEY_MISSION_LOCK_ACTIVE, false)
-                    .putBoolean(KEY_STUDY_CONFIGURED, false)
-                    .commit()
-                clearFamilyCredentialsForReSetup()
-                runCatching { stopLockTask() }
-                Thread {
-                    AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
-                    runOnUiThread {
-                        refreshStatusBanner(deContext)
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Phone unlocked & family lock reset. Reopen Swatantra anytime to set a new PIN & numbers.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        startActivity(Intent(this@MainActivity, FamilySetupActivity::class.java))
-                    }
-                }.start()
-            }
-        }
-
-        verifySixDigitButton.setOnClickListener {
-            val entered = codeInput.text?.toString()?.trim().orEmpty()
-            if (entered.length != 6 || !entered.all { it.isDigit() }) {
-                Toast.makeText(this, "Enter a valid 6-digit PIN or Authenticator code.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            val storedPinHash = callPrefs.getString("family_pin_sha256", null)
-            val pinMatches = storedPinHash != null && ParentTotpAuthenticator.sha256Hex(entered) == storedPinHash
-            val storedTotpSecret = callPrefs.getString("parent_totp_secret", "").orEmpty()
-            val totpMatches = ParentTotpAuthenticator.verifyTotpCode(storedTotpSecret, entered)
-
-            if (pinMatches || totpMatches) {
-                onParentVerified()
-            } else {
-                Toast.makeText(this, "Invalid Parent PIN or Authenticator code. Access denied.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        verifyRecoveryButton.setOnClickListener {
-            val enteredRecovery = ParentTotpAuthenticator.normalizeRecoveryKey(recoveryInput.text?.toString().orEmpty())
-            val storedRecoveryHash = callPrefs.getString("parent_recovery_sha256", null)
-            if (enteredRecovery.isNotEmpty() && storedRecoveryHash != null &&
-                ParentTotpAuthenticator.sha256Hex(enteredRecovery) == storedRecoveryHash
-            ) {
-                onParentVerified()
-            } else {
-                Toast.makeText(this, "Invalid Recovery Key. Access denied.", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        dialog?.show()
-    }

@@ -1,20 +1,21 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+36a0e8f chore(antigravity): sync Swatantra v7.1 build state and error.log
+77ae2d0 ci(qa): fix entity unescape and deploy 5-agent parallel emulator qa matrix
+01831cb ci(qa): deploy 4-agent parallel cloud emulator qa matrix
+d5961e8 chore(audit): update AUDIT_PROOF.txt with emulator adb alive shield and 15m timeout
 ca67723 chore(antigravity): sync Swatantra v7.1 build state and error.log
-5017bd2 fix(ci): wipe emulator data and add disposable account cleanup for clean DPC pass
-84b83a0 chore(audit): update AUDIT_PROOF.txt with non-blocking receivers and 6-test XML
-7b905ae chore(antigravity): sync Swatantra v7.1 build state and error.log
-47c9298 fix(ci): switch emulator target to default AOSP and add valid PIN stand-down test
 
 Remote Branch SHAs:
-ca677234b252a60f859e91fa758c922d6ff27cf0 refs/heads/main
-ca677234b252a60f859e91fa758c922d6ff27cf0 refs/heads/master
+36a0e8f648406a5017359df36b03bd48678e1965 refs/heads/main
+36a0e8f648406a5017359df36b03bd48678e1965 refs/heads/master
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
+scripts\qa_agent_runner.sh | Lines: 287 | Bytes: 11487 | SHA256: 35516252D23FE8EB
 scripts\run_human_equivalent_qa.sh | Lines: 219 | Bytes: 7347 | SHA256: B5C03BC2D6A22F87
 app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 214 | Bytes: 8551 | SHA256: 9F808453398AED6D
 app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 50 | Bytes: 2352 | SHA256: A3ED743D875A7240
 scripts\sync_and_verify.ps1 | Lines: 77 | Bytes: 4132 | SHA256: 01D222C33EEB9824
-.github\workflows\swatantra-qa-emulator.yml | Lines: 76 | Bytes: 3328 | SHA256: 100E5D94293844AC
+.github\workflows\swatantra-qa-emulator.yml | Lines: 118 | Bytes: 4534 | SHA256: 6725BA4559B226A8
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
 app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 33 | Bytes: 1303 | SHA256: 7F7F082AE96E90FA
 app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 31 | Bytes: 1321 | SHA256: 28A97EDBB30FF80A
@@ -26,7 +27,7 @@ app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines:
 app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
 app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
 app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 184 | Bytes: 7442 | SHA256: 1A895F4D71A5788F
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 546 | Bytes: 24826 | SHA256: 2E9830AD60B5DFB9
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 551 | Bytes: 24983 | SHA256: 3C952C8D98F2B2D4
 app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 79 | Bytes: 2958 | SHA256: E180843F053A47EA
 app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
 app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
@@ -36,7 +37,7 @@ app\src\main\AndroidManifest.xml | Lines: 140 | Bytes: 6160 | SHA256: 58D38D9D85
 app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 545 | Bytes: 27294 | SHA256: F5BBFFF7A8CC4DF8
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 128153 bytes | LastWriteTime: 21-11-2026 12:42:55
+APK Size: 132249 bytes | LastWriteTime: 21-11-2026 14:41:55
 zipalign 4 verification: Verification succesful
 apksigner v2 scheme: true (min-sdk 24)
 apksigner v3 scheme: true
@@ -44,8 +45,8 @@ apksigner v3 scheme: true
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
-META-INF/version-control-info.textproto                      120              117
-classes.dex                                               107200           107200
+META-INF/version-control-info.textproto                      120              116
+classes.dex                                               107232           107232
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -87,127 +88,73 @@ DEX_SYMBOL [PARENT_TOTP_RFC6238_V7_1] Present in classes.dex: True
 
 === 4. RAW JUNIT XML TESTSUITE PROOF (6/6 PASSING) ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-21T07:12:33.636Z" hostname="DESKTOP-JOU27LS" time="0.137">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-21T09:11:39.341Z" hostname="DESKTOP-JOU27LS" time="0.199">
   <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.054"/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.011"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.006"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.049"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.005"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.078"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.015"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.009"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
+  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.064"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.015"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 
 === 5. VERBATIM MODIFIED SECTIONS & ZERO-ANR PROOF ===
 
---- FourBucketClassifier.kt (Keep ADB alive ONLY on disposable Android Emulator) ---
-        // 4-Layer Zero-Harm Anti-Reset Shield during locked focus
-        val focusRestrictions = buildList {
-            add(UserManager.DISALLOW_FACTORY_RESET)
-            add(UserManager.DISALLOW_NETWORK_RESET)
-            add(UserManager.DISALLOW_SAFE_BOOT)
-            add(UserManager.DISALLOW_ADD_USER)
-            add(UserManager.DISALLOW_CONFIG_DATE_TIME)
-            add(UserManager.DISALLOW_PRINTING)
-            // Keep ADB alive ONLY on disposable Android Emulator so automated ADB QA can verify LockTask & Stand-Down
-            if (!isEmulatorEnvironment()) {
-                add(UserManager.DISALLOW_DEBUGGING_FEATURES)
-            }
-        }
-        for (restriction in focusRestrictions) {
-            runCatching { dpm.addUserRestriction(admin, restriction) }
-        }
-    }
-
-    private fun isEmulatorEnvironment(): Boolean {
-        return Build.FINGERPRINT.startsWith("generic") ||
-               Build.FINGERPRINT.contains("emulator") ||
-               Build.HARDWARE.contains("ranchu") ||
-               Build.HARDWARE.contains("goldfish") ||
-               Build.MODEL.contains("sdk_gphone") ||
-               Build.PRODUCT.contains("sdk_gphone") ||
-               Build.PRODUCT.contains("emulator")
-    }
-
---- StrictPlayStoreAppVerifier.kt (Non-blocking PackageInstallReceiver) ---
-class PackageInstallReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        val action = intent.action ?: return
-        if (action == Intent.ACTION_PACKAGE_ADDED || action == Intent.ACTION_PACKAGE_REPLACED) {
-            val pkg = intent.data?.schemeSpecificPart ?: return
-            val pendingResult = goAsync()
-            Thread {
-                try {
-                    val verifier = StrictPlayStoreAppVerifier(context)
-                    verifier.handlePackageEvent(pkg)
-                } finally {
-                    pendingResult.finish()
-                }
-            }.start()
-        }
-    }
-}
-
---- SwatantraAdminReceiver.kt (Non-blocking IPC with goAsync()) ---
-class SwatantraAdminReceiver : DeviceAdminReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
-        val deContext = context.createDeviceProtectedStorageContext()
-        // T-06: Start systemExempted WatchdogService on Line 1 before the 20s boot timeout
-        runCatching {
-            deContext.startForegroundService(Intent(deContext, SwatantraWatchdogService::class.java))
+--- MainActivity.kt (ScrollView wrapping parent auth dialog against soft keyboard overlap) ---
+        val dialogScroll = ScrollView(this).apply {
+            setBackgroundColor(Color.parseColor("#0B0F17"))
+            addView(dialogLayout)
         }
 
-        val action = intent.action
-        val pendingResult = goAsync()
-        Thread {
-            try {
-                val dpm = deContext.getSystemService(DevicePolicyManager::class.java) ?: return@Thread
-                val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
+        val dialog = runCatching {
+            AlertDialog.Builder(this)
+                .setView(dialogScroll)
+                .setCancelable(true)
+                .create()
+        }.getOrNull()
 
-                if (dpm.isDeviceOwnerApp(deContext.packageName)) {
-                    runCatching {
-                        dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
-                        dpm.addUserRestriction(admin, UserManager.DISALLOW_NETWORK_RESET)
-                        dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
-                        dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
-                        dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
-                    }
-
-                    if (action == Intent.ACTION_MY_PACKAGE_REPLACED || action == "in.swatantra.focus.ACTION_OTA_STATUS") {
-                        runCatching { dpm.addUserRestriction(admin, UserManager.DISALLOW_INSTALL_APPS) }
-                        val homeIntent = Intent(deContext, MainActivity::class.java).apply {
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        }
-                        runCatching { deContext.startActivity(homeIntent) }
-                    }
-                }
-            } finally {
-                pendingResult.finish()
-            }
-        }.start()
-    }
-}
-
---- scripts/run_human_equivalent_qa.sh (Dismiss study chooser dialog in automated test) ---
-  if echo "$LOCK_STATE" | grep -Eqi "LOCKED|PINNED|true|1|2"; then
-    pass "Device Owner LockTask mode engaged"
-  else
-    adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 || true
-    if adb shell cat /sdcard/ui.xml 2>/dev/null | grep -q "MISSION LOCK ENGAGED"; then
-      pass "Command Deck reports MISSION LOCK ENGAGED"
-    else
-      fail "LockTask mode did not engage ($LOCK_STATE)"
-    fi
+--- scripts/qa_agent_runner.sh (Prefer clickable nodes & dismiss keyboard before auth tap) ---
+tap_text() {
+  local query="$1"
+  local xml_data
+  xml_data=$(dump_ui)
+  local coords
+  coords=$(printf '%s' "$xml_data" | python3 -c "
+import sys, re, xml.etree.ElementTree as ET
+xml_data = sys.stdin.read()
+q = sys.argv[1].lower()
+try:
+    root = ET.fromstring(xml_data)
+    fallback = None
+    for node in root.iter('node'):
+        t = (node.attrib.get('text') or '').lower()
+        h = (node.attrib.get('hint') or '').lower()
+        if q in t or q in h:
+            m = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', node.attrib.get('bounds', ''))
+            if m:
+                x = (int(m.group(1)) + int(m.group(3))) // 2
+                y = (int(m.group(2)) + int(m.group(4))) // 2
+                pt = f'{x} {y}'
+                if node.attrib.get('clickable') == 'true':
+                    print(pt)
+                    sys.exit(0)
+                if fallback is None:
+                    fallback = pt
+    if fallback:
+        print(fallback)
+except Exception:
+    pass
+" "$query")
+  if [ -n "$coords" ]; then
+    adb shell input tap $coords
+    sleep 1
+    return 0
   fi
-  tap_text "Stay on Command Deck" || true
-else
-  fail "Could not tap ENGAGE MISSION LOCK"
-fi
+  return 1
+}
 
---- .github/workflows/swatantra-qa-emulator.yml (Job timeout protection) ---
-jobs:
-  cloud-emulator-qa:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+is_device_owner_active() {
+  adb shell dumpsys device_policy | grep -A 3 "Device Owner:" | grep -q "$PKG"
+}

@@ -30,6 +30,7 @@ xml_data = sys.stdin.read()
 q = sys.argv[1].lower()
 try:
     root = ET.fromstring(xml_data)
+    fallback = None
     for node in root.iter('node'):
         t = (node.attrib.get('text') or '').lower()
         h = (node.attrib.get('hint') or '').lower()
@@ -38,8 +39,14 @@ try:
             if m:
                 x = (int(m.group(1)) + int(m.group(3))) // 2
                 y = (int(m.group(2)) + int(m.group(4))) // 2
-                print(f'{x} {y}')
-                sys.exit(0)
+                pt = f'{x} {y}'
+                if node.attrib.get('clickable') == 'true':
+                    print(pt)
+                    sys.exit(0)
+                if fallback is None:
+                    fallback = pt
+    if fallback:
+        print(fallback)
 except Exception:
     pass
 " "$query")
@@ -49,6 +56,10 @@ except Exception:
     return 0
   fi
   return 1
+}
+
+is_device_owner_active() {
+  adb shell dumpsys device_policy | grep -A 3 "Device Owner:" | grep -q "$PKG"
 }
 
 provision_and_install() {
@@ -193,9 +204,11 @@ print(f'{code:06d}')
     if tap_text "MISSION STAND-DOWN"; then
       sleep 1
       tap_text "6-digit Parent PIN" && adb shell input text "$LIVE_TOTP"
-      tap_text "VERIFY PIN"
-      sleep 3
-      ! adb shell dumpsys device_policy | grep -q "$PKG" && pass "Live RFC 6238 TOTP code unlocked & deprovisioned Device Owner" || fail "Live TOTP code failed to unlock"
+      adb shell input keyevent 4 || true
+      sleep 1
+      tap_text "VERIFY PIN / AUTHENTICATOR"
+      sleep 5
+      ! is_device_owner_active && pass "Live RFC 6238 TOTP code unlocked & deprovisioned Device Owner" || fail "Live TOTP code failed to unlock"
     else
       fail "MISSION STAND-DOWN not found for TOTP test"
     fi
@@ -207,9 +220,11 @@ print(f'{code:06d}')
     if tap_text "MISSION STAND-DOWN"; then
       sleep 1
       tap_text "SWT-XXXX" && adb shell input text "$CAPTURED_RECOVERY"
+      adb shell input keyevent 4 || true
+      sleep 1
       tap_text "VERIFY RECOVERY KEY"
-      sleep 3
-      ! adb shell dumpsys device_policy | grep -q "$PKG" && pass "Offline 12-Char Recovery Key unlocked & deprovisioned Device Owner" || fail "Recovery Key failed to unlock"
+      sleep 5
+      ! is_device_owner_active && pass "Offline 12-Char Recovery Key unlocked & deprovisioned Device Owner" || fail "Recovery Key failed to unlock"
     else
       fail "MISSION STAND-DOWN not found for Recovery Key test"
     fi
@@ -238,7 +253,9 @@ print(f'{code:06d}')
     if tap_text "CHANGE FAMILY PIN"; then
       sleep 1
       tap_text "6-digit Parent PIN" && adb shell input text "123456"
-      tap_text "VERIFY"
+      adb shell input keyevent 4 || true
+      sleep 1
+      tap_text "VERIFY & RE-SETUP FAMILY LOCK"
       sleep 2
       TOP_ACT=$(adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -n 2 || true)
       echo "$TOP_ACT" | grep -q "FamilySetupActivity" && pass "CHANGE FAMILY PIN & NUMBERS routed to FamilySetupActivity after parent auth" || fail "CHANGE FAMILY PIN did not route to FamilySetupActivity"

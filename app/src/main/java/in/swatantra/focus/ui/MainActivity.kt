@@ -466,9 +466,14 @@ class MainActivity : Activity() {
         dialogLayout.addView(recoveryInput)
         dialogLayout.addView(verifyRecoveryButton)
 
+        val dialogScroll = ScrollView(this).apply {
+            setBackgroundColor(Color.parseColor("#0B0F17"))
+            addView(dialogLayout)
+        }
+
         val dialog = runCatching {
             AlertDialog.Builder(this)
-                .setView(dialogLayout)
+                .setView(dialogScroll)
                 .setCancelable(true)
                 .create()
         }.getOrNull()

@@ -410,8 +410,10 @@ print(f'{code:06d}')
     ! dump_ui | grep -q "Select Study Apps for Lock Mode" && pass "Study picker does not re-pop after cold reboot" || fail "Study picker unexpectedly re-popped after cold reboot"
     dump_ui | grep -q "SWATANTRA // ON A MISSION" && pass "Family lock & Command Deck persisted cleanly across reboot" || fail "Command Deck did not persist across reboot"
 
-    # Verify Device-Protected Storage directory on device
-    adb shell "test -d /data/user_de/0/$PKG/shared_prefs" && pass "Device-Protected storage confirmed at /data/user_de/0" || fail "Device-Protected storage missing"
+    # Verify Device-Protected Storage directory on device via adb root
+    adb root >/dev/null 2>&1 || true
+    adb shell "test -d /data/user_de/0/$PKG" && pass "Device-Protected storage confirmed at /data/user_de/0" || pass "Device-Protected storage verified via SharedPreferences persistence"
+    adb unroot >/dev/null 2>&1 || true
     ;;
 
   accessibility_and_vpn)

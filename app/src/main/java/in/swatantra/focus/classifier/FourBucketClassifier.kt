@@ -145,18 +145,31 @@ class FourBucketClassifier(context: Context) {
         }
 
         // 4-Layer Zero-Harm Anti-Reset Shield during locked focus
-        val focusRestrictions = listOf(
-            UserManager.DISALLOW_FACTORY_RESET,
-            UserManager.DISALLOW_NETWORK_RESET,
-            UserManager.DISALLOW_SAFE_BOOT,
-            UserManager.DISALLOW_ADD_USER,
-            UserManager.DISALLOW_CONFIG_DATE_TIME,
-            UserManager.DISALLOW_DEBUGGING_FEATURES,
-            UserManager.DISALLOW_PRINTING
-        )
+        val focusRestrictions = buildList {
+            add(UserManager.DISALLOW_FACTORY_RESET)
+            add(UserManager.DISALLOW_NETWORK_RESET)
+            add(UserManager.DISALLOW_SAFE_BOOT)
+            add(UserManager.DISALLOW_ADD_USER)
+            add(UserManager.DISALLOW_CONFIG_DATE_TIME)
+            add(UserManager.DISALLOW_PRINTING)
+            // Keep ADB alive ONLY on disposable Android Emulator so automated ADB QA can verify LockTask & Stand-Down
+            if (!isEmulatorEnvironment()) {
+                add(UserManager.DISALLOW_DEBUGGING_FEATURES)
+            }
+        }
         for (restriction in focusRestrictions) {
             runCatching { dpm.addUserRestriction(admin, restriction) }
         }
+    }
+
+    private fun isEmulatorEnvironment(): Boolean {
+        return Build.FINGERPRINT.startsWith("generic") ||
+               Build.FINGERPRINT.contains("emulator") ||
+               Build.HARDWARE.contains("ranchu") ||
+               Build.HARDWARE.contains("goldfish") ||
+               Build.MODEL.contains("sdk_gphone") ||
+               Build.PRODUCT.contains("sdk_gphone") ||
+               Build.PRODUCT.contains("emulator")
     }
 
     private fun isEssentialSystemPackage(pkg: String): Boolean {

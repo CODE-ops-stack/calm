@@ -138,6 +138,7 @@ if tap_text "ENGAGE MISSION LOCK"; then
       fail "LockTask mode did not engage ($LOCK_STATE)"
     fi
   fi
+  tap_text "Stay on Command Deck" || true
 else
   fail "Could not tap ENGAGE MISSION LOCK"
 fi

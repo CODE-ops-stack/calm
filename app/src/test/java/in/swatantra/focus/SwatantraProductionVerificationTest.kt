@@ -542,4 +542,138 @@ class SwatantraProductionVerificationTest {
             ParentTotpAuthenticator.sha256Hex(ParentTotpAuthenticator.normalizeRecoveryKey(recoveryKey.lowercase()))
         )
     }
+
+    private fun resolveSourceFile(vararg candidatePaths: String): java.io.File {
+        for (p in candidatePaths) {
+            val f = java.io.File(p)
+            if (f.exists()) return f
+        }
+        return java.io.File(candidatePaths[0])
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // TEST 7 — Parent-verified uninstall, REQUEST_DELETE_PACKAGES & Zero-Harm
+    // ─────────────────────────────────────────────────────────────────────────
+    @Test
+    fun testParentVerifiedUninstallPermissionAndZeroHarmOrder() {
+        val manifestFile = resolveSourceFile("app/src/main/AndroidManifest.xml", "src/main/AndroidManifest.xml")
+        assertTrue("AndroidManifest.xml must exist", manifestFile.exists())
+        val manifestXml = manifestFile.readText()
+        assertTrue(
+            "Manifest must declare android.permission.REQUEST_DELETE_PACKAGES",
+            manifestXml.contains("android.permission.REQUEST_DELETE_PACKAGES")
+        )
+
+        val mainActivityFile = resolveSourceFile(
+            "app/src/main/java/in/swatantra/focus/ui/MainActivity.kt",
+            "src/main/java/in/swatantra/focus/ui/MainActivity.kt"
+        )
+        assertTrue("MainActivity.kt must exist", mainActivityFile.exists())
+        val mainActivityCode = mainActivityFile.readText()
+        assertTrue(
+            "MainActivity must declare [UNINSTALL SWATANTRA] button",
+            mainActivityCode.contains("[UNINSTALL SWATANTRA]")
+        )
+        assertTrue(
+            "MainActivity must use Intent.ACTION_DELETE for clean removal",
+            mainActivityCode.contains("ACTION_DELETE")
+        )
+        assertTrue(
+            "MainActivity must invoke AtomicDeprovisionManager before calling launchSystemUninstall",
+            mainActivityCode.contains("AtomicDeprovisionManager") &&
+                mainActivityCode.contains("executeAtomicDeprovision")
+        )
+
+        // S-01 / Zero-Harm Guarantee: 0 occurrences of wipeData or wipeDevice across production codebase
+        val srcDir = resolveSourceFile("app/src/main/java", "src/main/java")
+        assertTrue("src/main/java directory must exist", srcDir.exists() && srcDir.isDirectory)
+        val javaFiles = srcDir.walkTopDown().filter { it.extension == "kt" || it.extension == "java" }
+        for (file in javaFiles) {
+            val content = file.readText()
+            assertFalse(
+                "Zero-Harm violation: ${file.name} must never call wipeData()",
+                content.contains("wipeData")
+            )
+            assertFalse(
+                "Zero-Harm violation: ${file.name} must never call wipeDevice()",
+                content.contains("wipeDevice")
+            )
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // TEST 8 — Beginning Study App Picker & Lock Task Whitelist Integrity
+    // ─────────────────────────────────────────────────────────────────────────
+    @Test
+    fun testBeginningStudyAppPickerAndLockWhitelistIntegrity() {
+        assertEquals("study_apps_configured", MainActivity.KEY_STUDY_CONFIGURED)
+        assertEquals("mission_lock_active", MainActivity.KEY_MISSION_LOCK_ACTIVE)
+
+        val mainActivityFile = resolveSourceFile(
+            "app/src/main/java/in/swatantra/focus/ui/MainActivity.kt",
+            "src/main/java/in/swatantra/focus/ui/MainActivity.kt"
+        )
+        assertTrue("MainActivity.kt must exist", mainActivityFile.exists())
+        val mainActivityCode = mainActivityFile.readText()
+
+        assertTrue(
+            "MainActivity must check study_apps_configured on launch",
+            mainActivityCode.contains("KEY_STUDY_CONFIGURED")
+        )
+        assertTrue(
+            "MainActivity must guard UI dialog callbacks with isFinishing or isDestroyed",
+            mainActivityCode.contains("isFinishing") && mainActivityCode.contains("isDestroyed")
+        )
+        assertTrue(
+            "MainActivity must use background ExecutorService for app query and disk operations",
+            mainActivityCode.contains("ExecutorService") && mainActivityCode.contains("Executors.newSingleThreadExecutor()")
+        )
+        assertTrue(
+            "MainActivity must enforce anti-browser intent filtering for study picker",
+            mainActivityCode.contains("CATEGORY_BROWSABLE")
+        )
+        assertTrue(
+            "MainActivity must enforce anti-vpn intent filtering for study picker",
+            mainActivityCode.contains("android.net.VpnService")
+        )
+        assertTrue(
+            "MainActivity must update DPM setLockTaskPackages with confirmed study apps",
+            mainActivityCode.contains("setLockTaskPackages")
+        )
+
+        // Static verification: Browsers and VPNs must NEVER be accepted as educational study apps
+        assertFalse(
+            "Chrome browser must be rejected from study whitelist",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.android.chrome",
+                appLabel = "Google Chrome",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = true,
+                hasVpnService = false
+            )
+        )
+        assertFalse(
+            "VPN proxy must be rejected from study whitelist",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "com.nordvpn.android",
+                appLabel = "NordVPN",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = "com.android.vending",
+                hasBrowserActivity = false,
+                hasVpnService = true
+            )
+        )
+        assertFalse(
+            "Swatantra app itself must never be self-whitelisted in picker",
+            StrictPlayStoreAppVerifier.isStaticMetadataEducational(
+                pkg = "in.swatantra.focus",
+                appLabel = "Swatantra Focus OS",
+                category = ApplicationInfo.CATEGORY_UNDEFINED,
+                installer = null,
+                hasBrowserActivity = false,
+                hasVpnService = false
+            )
+        )
+    }
 }

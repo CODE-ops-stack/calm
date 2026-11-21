@@ -3,8 +3,10 @@ package `in`.swatantra.focus.ui
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -12,6 +14,7 @@ import android.provider.Settings
 import android.text.InputFilter
 import android.text.InputType
 import android.view.Gravity
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -21,8 +24,11 @@ import android.widget.Toast
 import `in`.swatantra.focus.classifier.FourBucketClassifier
 import `in`.swatantra.focus.dpc.AtomicDeprovisionManager
 import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
+import `in`.swatantra.focus.dpc.SwatantraAdminReceiver
 import `in`.swatantra.focus.ledger.MonotonicDualClockLedger
 import `in`.swatantra.focus.watchdog.SwatantraWatchdogService
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class MainActivity : Activity() {
 
@@ -43,8 +49,13 @@ class MainActivity : Activity() {
         )
     }
 
+    private val bgExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+    private var activeDialog: AlertDialog? = null
+    private var hasAutoPromptedStudyPicker = false
+
     private lateinit var subHeader: TextView
     private lateinit var telemetryBanner: TextView
+    private lateinit var uninstallTile: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +110,7 @@ class MainActivity : Activity() {
             layoutParams = lp
         }
 
-        Thread {
+        bgExecutor.execute {
             val (studyMs, callMs) = runCatching {
                 MonotonicDualClockLedger(deContext)
                     .recordHeartbeatTick(isStudying = false, isOnNonWhitelistedCall = false, verifiedTlsOrGnssTimeMs = null)
@@ -107,9 +118,10 @@ class MainActivity : Activity() {
             val studyMins = studyMs / 60_000L
             val callMins = callMs / 60_000L
             runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
                 telemetryBanner.text = "TELEMETRY \u2022 SORTIE LOGGED: ${studyMins}m | COMMS SHIELD: ${callMins}m / 60m (112 IMMUNE)"
             }
-        }.start()
+        }
 
         val directivePrefs = deContext.getSharedPreferences(PREFS_DIRECTIVES, Context.MODE_PRIVATE)
         var activeDirective = directivePrefs.getString(KEY_ACTIVE_DIRECTIVE, UNIVERSAL_IF_THEN_DIRECTIVES[0])
@@ -207,6 +219,31 @@ class MainActivity : Activity() {
             showParentAuthDialog(deContext, mode = "UNLOCK_AND_DEPROVISION")
         }
 
+        uninstallTile = Button(this).apply {
+            text = "[UNINSTALL SWATANTRA]"
+            textSize = 14f
+            setBackgroundColor(Color.parseColor("#450A0A"))
+            setTextColor(Color.parseColor("#EF4444"))
+            setPadding(28, 28, 28, 28)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 16) }
+            layoutParams = lp
+            setOnClickListener {
+                val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+                val isDO = dpm?.isDeviceOwnerApp(packageName) == true
+                val pinConfigured = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+                    .getString("family_pin_sha256", null) != null
+
+                if (!isDO && !pinConfigured) {
+                    launchSystemUninstall()
+                } else {
+                    showParentAuthDialog(deContext, mode = "UNINSTALL")
+                }
+            }
+        }
+
         root.addView(header)
         root.addView(subHeader)
         root.addView(telemetryBanner)
@@ -219,26 +256,55 @@ class MainActivity : Activity() {
         root.addView(emergencyDialTile)
         root.addView(resetFamilyTile)
         root.addView(safeDeprovisionTile)
+        root.addView(uninstallTile)
         scroll.addView(root)
         setContentView(scroll)
+
+        refreshLockStateVisibility(deContext)
     }
 
     override fun onResume() {
         super.onResume()
         val deContext = createDeviceProtectedStorageContext()
         refreshStatusBanner(deContext)
-        if (!deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE).getBoolean("family_numbers_locked", false)) {
+        refreshLockStateVisibility(deContext)
+
+        val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
+        val familyLocked = callPrefs.getBoolean("family_numbers_locked", false)
+        if (!familyLocked) {
             startActivity(Intent(this, FamilySetupActivity::class.java))
             return
         }
+
         val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+        val isLocked = studyPrefs.getBoolean(KEY_MISSION_LOCK_ACTIVE, false)
+        val isConfigured = studyPrefs.getBoolean(KEY_STUDY_CONFIGURED, false)
+
         val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
         // CRITICAL: Only call startLockTask() when Device Owner is truly active!
-        if (dpm?.isDeviceOwnerApp(deContext.packageName) == true &&
-            studyPrefs.getBoolean(KEY_MISSION_LOCK_ACTIVE, false)
-        ) {
+        if (dpm?.isDeviceOwnerApp(deContext.packageName) == true && isLocked) {
             runCatching { startLockTask() }
         }
+
+        // Beginning Study App Picker: Prompt automatically once right after family setup if not yet configured and not locked
+        if (!isConfigured && !isLocked && !hasAutoPromptedStudyPicker) {
+            hasAutoPromptedStudyPicker = true
+            showStudyAppSelector(deContext, engageLockAfterSave = false)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        runCatching { activeDialog?.dismiss() }
+        activeDialog = null
+        bgExecutor.shutdown()
+    }
+
+    private fun showSafely(dialog: AlertDialog?) {
+        if (isFinishing || isDestroyed) return
+        runCatching { activeDialog?.dismiss() }
+        activeDialog = dialog
+        runCatching { dialog?.show() }
     }
 
     private fun refreshStatusBanner(deContext: Context) {
@@ -253,9 +319,41 @@ class MainActivity : Activity() {
         }
     }
 
+    private fun refreshLockStateVisibility(deContext: Context) {
+        val isLocked = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+            .getBoolean(KEY_MISSION_LOCK_ACTIVE, false)
+        uninstallTile.visibility = if (isLocked) View.GONE else View.VISIBLE
+    }
+
+    private fun isEligibleStudyCandidate(pkg: String, pm: PackageManager): Boolean {
+        if (pkg == packageName) return false
+
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com")).apply {
+            addCategory(Intent.CATEGORY_BROWSABLE)
+            `package` = pkg
+        }
+        val isBrowser = runCatching { pm.queryIntentActivities(browserIntent, 0).isNotEmpty() }.getOrDefault(false)
+        if (isBrowser) return false
+
+        val vpnIntent = Intent("android.net.VpnService").apply {
+            `package` = pkg
+        }
+        val isVpn = runCatching { pm.queryIntentServices(vpnIntent, 0).isNotEmpty() }.getOrDefault(false)
+        if (isVpn) return false
+
+        val pkgLower = pkg.lowercase()
+        if (pkgLower.contains("browser") || pkgLower.contains("vpn") || pkgLower.contains("proxy") ||
+            pkgLower.contains("chrome") || pkgLower.contains("firefox") || pkgLower.contains("opera") ||
+            pkgLower.contains("brave") || pkgLower.contains("ucbrowser")
+        ) {
+            return false
+        }
+        return true
+    }
+
     private fun showStudyAppSelector(deContext: Context, engageLockAfterSave: Boolean) {
         Toast.makeText(this, "Scanning installed apps...", Toast.LENGTH_SHORT).show()
-        Thread {
+        bgExecutor.execute {
             val launcherIntent = Intent(Intent.ACTION_MAIN).apply {
                 addCategory(Intent.CATEGORY_LAUNCHER)
             }
@@ -266,7 +364,7 @@ class MainActivity : Activity() {
             val candidates = resolved
                 .mapNotNull { info ->
                     val pkg = info.activityInfo?.packageName ?: return@mapNotNull null
-                    if (pkg == packageName) return@mapNotNull null
+                    if (!isEligibleStudyCandidate(pkg, packageManager)) return@mapNotNull null
                     val label = runCatching { info.loadLabel(packageManager).toString() }.getOrDefault(pkg)
                     pkg to label
                 }
@@ -280,43 +378,106 @@ class MainActivity : Activity() {
             val checked = BooleanArray(candidates.size) { idx -> candidates[idx].first in savedSet }
 
             runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+
+                val titleView = LinearLayout(this@MainActivity).apply {
+                    orientation = LinearLayout.VERTICAL
+                    setPadding(64, 48, 64, 16)
+                    addView(TextView(this@MainActivity).apply {
+                        text = "Select Study Apps for Lock Mode"
+                        textSize = 18f
+                        setTextColor(Color.parseColor("#10B981"))
+                    })
+                    addView(TextView(this@MainActivity).apply {
+                        text = "Check the study apps you want to keep available during Mission Lock."
+                        textSize = 12f
+                        setTextColor(Color.parseColor("#94A3B8"))
+                        setPadding(0, 8, 0, 0)
+                    })
+                }
+
                 if (candidates.isEmpty()) {
-                    Toast.makeText(this, "No launchable apps found.", Toast.LENGTH_SHORT).show()
+                    val emptyDialog = AlertDialog.Builder(this@MainActivity)
+                        .setCustomTitle(titleView)
+                        .setMessage("No additional study apps found.\nCheck the study apps you want to keep available during Mission Lock.")
+                        .setPositiveButton("CONFIRM STUDY APPS") { _, _ ->
+                            bgExecutor.execute {
+                                studyPrefs.edit()
+                                    .putStringSet(KEY_STUDY_PKGS, emptySet())
+                                    .putBoolean(KEY_STUDY_CONFIGURED, true)
+                                    .commit()
+                                if (engageLockAfterSave) {
+                                    runOnUiThread innerUi@{
+                                        if (isFinishing || isDestroyed) return@innerUi
+                                        engageMissionLockAsync(deContext)
+                                    }
+                                }
+                            }
+                        }
+                        .setNegativeButton("Cancel", null)
+                        .create()
+                    showSafely(emptyDialog)
                     return@runOnUiThread
                 }
-                runCatching {
-                    AlertDialog.Builder(this)
-                        .setTitle("Select Your Allowed Study Apps")
-                        .setMultiChoiceItems(labels, checked) { _, which, isChecked ->
-                            checked[which] = isChecked
-                        }
-                        .setPositiveButton(if (engageLockAfterSave) "Save & Lock Now" else "Save Study Apps") { _, _ ->
-                            val chosen = candidates.indices
-                                .filter { checked[it] }
-                                .map { candidates[it].first }
-                                .toSet()
+
+                val dialog = AlertDialog.Builder(this@MainActivity)
+                    .setCustomTitle(titleView)
+                    .setMultiChoiceItems(labels, checked) { _, which, isChecked ->
+                        checked[which] = isChecked
+                    }
+                    .setPositiveButton("CONFIRM STUDY APPS") { _, _ ->
+                        val chosen = candidates.indices
+                            .filter { checked[it] }
+                            .map { candidates[it].first }
+                            .toSet()
+                        bgExecutor.execute {
                             studyPrefs.edit()
                                 .putStringSet(KEY_STUDY_PKGS, chosen)
                                 .putBoolean(KEY_STUDY_CONFIGURED, true)
                                 .commit()
-                            Toast.makeText(this, "Saved ${chosen.size} study app(s).", Toast.LENGTH_SHORT).show()
-                            if (engageLockAfterSave) {
-                                engageMissionLockAsync(deContext)
+
+                            val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
+                            val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
+                            if (dpm?.isDeviceOwnerApp(packageName) == true) {
+                                val lockAllowed = (chosen + setOf(
+                                    packageName,
+                                    "com.android.server.telecom",
+                                    "com.google.android.dialer",
+                                    "com.samsung.android.incallui",
+                                    "com.android.vending"
+                                )).distinct().toTypedArray()
+                                runCatching { dpm.setLockTaskPackages(admin, lockAllowed) }
+                                runCatching { dpm.setPackagesSuspended(admin, (chosen + packageName).toTypedArray(), false) }
+                            }
+
+                            runOnUiThread innerUi@{
+                                if (isFinishing || isDestroyed) return@innerUi
+                                Toast.makeText(this@MainActivity, "Saved ${chosen.size} study app(s).", Toast.LENGTH_SHORT).show()
+                                if (engageLockAfterSave) {
+                                    engageMissionLockAsync(deContext)
+                                }
                             }
                         }
-                        .setNegativeButton("Cancel", null)
-                        .show()
-                }
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .create()
+                showSafely(dialog)
             }
-        }.start()
+        }
     }
 
     private fun engageMissionLockAsync(deContext: Context) {
         val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
+        val configured = studyPrefs.getBoolean(KEY_STUDY_CONFIGURED, false)
+        if (!configured) {
+            showStudyAppSelector(deContext, engageLockAfterSave = true)
+            return
+        }
+
         val chosenStudySet = studyPrefs.getStringSet(KEY_STUDY_PKGS, emptySet()) ?: emptySet()
         subHeader.text = "ENGAGING MISSION LOCK..."
 
-        Thread {
+        bgExecutor.execute {
             val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
             val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
 
@@ -337,6 +498,9 @@ class MainActivity : Activity() {
             }.sortedBy { it.first.lowercase() }
 
             runOnUiThread {
+                if (isFinishing || isDestroyed) return@runOnUiThread
+                refreshLockStateVisibility(deContext)
+
                 if (isDeviceOwner) {
                     runCatching { startLockTask() }
                     subHeader.text = "MISSION LOCK ENGAGED \u2022 DISTRACTIONS SUSPENDED"
@@ -351,29 +515,45 @@ class MainActivity : Activity() {
 
                 if (launchable.isNotEmpty()) {
                     val labels = launchable.map { it.first }.toTypedArray()
-                    runCatching {
-                        AlertDialog.Builder(this@MainActivity)
-                            .setTitle("Open Allowed Study App")
-                            .setItems(labels) { _, which ->
-                                runCatching { startActivity(launchable[which].second) }
-                                    .onFailure {
-                                        Toast.makeText(this@MainActivity, "Unable to launch app.", Toast.LENGTH_SHORT).show()
-                                    }
-                            }
-                            .setNegativeButton("Stay on Command Deck", null)
-                            .show()
-                    }
+                    val chooseDialog = AlertDialog.Builder(this@MainActivity)
+                        .setTitle("Open Allowed Study App")
+                        .setItems(labels) { _, which ->
+                            runCatching { startActivity(launchable[which].second) }
+                                .onFailure {
+                                    Toast.makeText(this@MainActivity, "Unable to launch app.", Toast.LENGTH_SHORT).show()
+                                }
+                        }
+                        .setNegativeButton("Stay on Command Deck", null)
+                        .create()
+                    showSafely(chooseDialog)
                 } else {
                     Toast.makeText(this@MainActivity, "Tap [SELECT MY STUDY APPS] to choose apps first.", Toast.LENGTH_LONG).show()
                 }
             }
-        }.start()
+        }
+    }
+
+    private fun launchSystemUninstall() {
+        runCatching {
+            val uninstallIntent = Intent(Intent.ACTION_DELETE).apply {
+                data = Uri.parse("package:$packageName")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(uninstallIntent)
+        }.onFailure {
+            Toast.makeText(
+                this,
+                "Device Owner cleared. Uninstall Swatantra from Settings > Apps.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun showParentAuthDialog(deContext: Context, mode: String) {
         val callPrefs = deContext.getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
         val studyPrefs = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
         val isResetOnly = (mode == "RESET_FAMILY")
+        val isUninstall = (mode == "UNINSTALL")
 
         val dialogLayout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
@@ -382,18 +562,22 @@ class MainActivity : Activity() {
         }
 
         val guardTitle = TextView(this).apply {
-            text = if (isResetOnly) "RESET FAMILY PIN & NUMBERS" else "PARENT DUAL-KEY UNLOCK"
+            text = when {
+                isResetOnly -> "RESET FAMILY PIN & NUMBERS"
+                isUninstall -> "UNINSTALL SWATANTRA"
+                else -> "PARENT DUAL-KEY UNLOCK"
+            }
             textSize = 18f
-            setTextColor(Color.parseColor("#10B981"))
+            setTextColor(Color.parseColor(if (isUninstall) "#EF4444" else "#10B981"))
             gravity = Gravity.CENTER_HORIZONTAL
             setPadding(0, 0, 0, 8)
         }
 
         val guardSubtitle = TextView(this).apply {
-            text = if (isResetOnly) {
-                "Verify current Parent PIN, Google Authenticator Code, or Recovery Key to set new family numbers and PIN."
-            } else {
-                "Verify Parent PIN, live 6-Digit Google Authenticator Code, or Offline Recovery Key to unlock and reset Swatantra."
+            text = when {
+                isResetOnly -> "Verify current Parent PIN, Google Authenticator Code, or Recovery Key to set new family numbers and PIN."
+                isUninstall -> "Verify Parent PIN, live 6-Digit Google Authenticator Code, or Offline Recovery Key to deprovision and uninstall Swatantra."
+                else -> "Verify Parent PIN, live 6-Digit Google Authenticator Code, or Offline Recovery Key to unlock and reset Swatantra."
             }
             textSize = 12f
             setTextColor(Color.parseColor("#94A3B8"))
@@ -417,9 +601,13 @@ class MainActivity : Activity() {
         }
 
         val verifySixDigitButton = Button(this).apply {
-            text = if (isResetOnly) "VERIFY & RE-SETUP FAMILY LOCK" else "VERIFY PIN / AUTHENTICATOR & UNLOCK"
+            text = when {
+                isResetOnly -> "VERIFY & RE-SETUP FAMILY LOCK"
+                isUninstall -> "VERIFY & UNINSTALL SWATANTRA"
+                else -> "VERIFY PIN / AUTHENTICATOR & UNLOCK"
+            }
             textSize = 13f
-            setBackgroundColor(Color.parseColor("#059669"))
+            setBackgroundColor(Color.parseColor(if (isUninstall) "#7F1D1D" else "#059669"))
             setTextColor(Color.WHITE)
             setPadding(24, 24, 24, 24)
             val lp = LinearLayout.LayoutParams(
@@ -451,7 +639,11 @@ class MainActivity : Activity() {
         }
 
         val verifyRecoveryButton = Button(this).apply {
-            text = if (isResetOnly) "VERIFY RECOVERY KEY & RE-SETUP" else "VERIFY RECOVERY KEY & UNLOCK"
+            text = when {
+                isResetOnly -> "VERIFY RECOVERY KEY & RE-SETUP"
+                isUninstall -> "VERIFY RECOVERY KEY & UNINSTALL"
+                else -> "VERIFY RECOVERY KEY & UNLOCK"
+            }
             textSize = 13f
             setBackgroundColor(Color.parseColor("#334155"))
             setTextColor(Color.WHITE)
@@ -489,11 +681,29 @@ class MainActivity : Activity() {
         }
 
         fun onParentVerified() {
-            dialog?.dismiss()
+            runCatching { activeDialog?.dismiss() }
+            activeDialog = null
+
             if (isResetOnly) {
                 clearFamilyCredentialsForReSetup()
                 Toast.makeText(this, "Verified. Enter your new family numbers & PIN.", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(this, FamilySetupActivity::class.java))
+            } else if (isUninstall) {
+                studyPrefs.edit()
+                    .putBoolean(KEY_MISSION_LOCK_ACTIVE, false)
+                    .putBoolean(KEY_STUDY_CONFIGURED, false)
+                    .commit()
+                clearFamilyCredentialsForReSetup()
+                runCatching { stopLockTask() }
+                bgExecutor.execute {
+                    AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
+                    runOnUiThread {
+                        if (isFinishing || isDestroyed) return@runOnUiThread
+                        refreshStatusBanner(deContext)
+                        refreshLockStateVisibility(deContext)
+                        launchSystemUninstall()
+                    }
+                }
             } else {
                 studyPrefs.edit()
                     .putBoolean(KEY_MISSION_LOCK_ACTIVE, false)
@@ -501,10 +711,12 @@ class MainActivity : Activity() {
                     .commit()
                 clearFamilyCredentialsForReSetup()
                 runCatching { stopLockTask() }
-                Thread {
+                bgExecutor.execute {
                     AtomicDeprovisionManager(deContext).executeAtomicDeprovision()
                     runOnUiThread {
+                        if (isFinishing || isDestroyed) return@runOnUiThread
                         refreshStatusBanner(deContext)
+                        refreshLockStateVisibility(deContext)
                         Toast.makeText(
                             this@MainActivity,
                             "Phone unlocked & family lock reset. Reopen Swatantra anytime to set a new PIN & numbers.",
@@ -512,7 +724,7 @@ class MainActivity : Activity() {
                         ).show()
                         startActivity(Intent(this@MainActivity, FamilySetupActivity::class.java))
                     }
-                }.start()
+                }
             }
         }
 
@@ -546,6 +758,6 @@ class MainActivity : Activity() {
             }
         }
 
-        dialog?.show()
+        showSafely(dialog)
     }
 }

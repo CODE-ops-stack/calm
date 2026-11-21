@@ -112,6 +112,17 @@ print(m.group(1) if m else '')
   tap_text "LOCK FAMILY NUMBERS" && sleep 2 && pass "FamilySetupActivity locked (PIN set)" || fail "FamilySetupActivity lock tap failed"
 }
 
+dismiss_study_picker_if_present() {
+  sleep 2
+  local ui
+  ui=$(dump_ui)
+  if echo "$ui" | grep -q "CONFIRM STUDY APPS"; then
+    tap_text "Calculator" || tap_text "Files" || tap_text "Clock" || true
+    tap_text "CONFIRM STUDY APPS" || true
+    sleep 2
+  fi
+}
+
 check_crashes_and_anr() {
   local crashes anrs mem
   crashes=$(adb logcat -d AndroidRuntime:E *:S | grep -E "FATAL EXCEPTION|$PKG" || true)
@@ -130,6 +141,22 @@ complete_family_setup "123456"
 
 case "$ROLE" in
   lock_and_apps)
+    # 1. Beginning Study App Picker: confirm it appears automatically after Family Setup
+    sleep 2
+    if dump_ui | grep -q "Select Study Apps for Lock Mode"; then
+      pass "Beginning Study App Picker automatically appeared after Family Setup"
+      tap_text "Calculator" || tap_text "Files" || tap_text "Clock" || true
+      if tap_text "CONFIRM STUDY APPS"; then
+        sleep 2
+        ! dump_ui | grep -q "Select Study Apps for Lock Mode" && pass "Study App Picker dismissed cleanly without lag" || fail "Study App Picker failed to dismiss"
+      else
+        fail "CONFIRM STUDY APPS button not found"
+      fi
+    else
+      fail "Beginning Study App Picker did not appear automatically"
+    fi
+
+    # 2. Cycle If-Then Directive
     if tap_text "ARM IF-THEN DIRECTIVE"; then
       sleep 1
       dump_ui | grep -q "stuck on a problem" && pass "If-Then Directive cycled to Rule 2" || fail "If-Then Directive did not cycle"
@@ -137,6 +164,7 @@ case "$ROLE" in
       fail "ARM IF-THEN DIRECTIVE button not found"
     fi
 
+    # 3. Test SafeUrlInterceptorActivity via Tactical Intercept button
     if tap_text "TACTICAL INTERCEPT"; then
       sleep 2
       dump_ui | grep -q "YOUR ARMED PROTOCOL" && pass "SafeUrlInterceptorActivity displayed armed motivating protocol" || fail "SafeUrlInterceptorActivity missing protocol"
@@ -146,19 +174,9 @@ case "$ROLE" in
       fail "TACTICAL INTERCEPT button not found"
     fi
 
-    # Ensure Command Deck is foreground and scrolled to top before tapping Study Apps
+    # 4. Ensure Command Deck is foreground and engage Mission Lock
     adb shell am start -n "$MAIN" >/dev/null 2>&1
     sleep 2
-    if tap_text "SELECT MY STUDY APPS"; then
-      sleep 2
-      tap_text "Calculator" || tap_text "Files" || tap_text "Clock" || true
-      tap_text "Save Study Apps" || adb shell input keyevent 4
-      sleep 1
-      pass "Selected allowed app in Study App Picker"
-    else
-      fail "SELECT MY STUDY APPS button not found"
-    fi
-
     if tap_text "ENGAGE MISSION LOCK"; then
       sleep 3
       LOCK_STATE=$(adb shell dumpsys activity activities | grep -Ei "LockTask|mLockTask" | head -n 3 || true)
@@ -168,6 +186,7 @@ case "$ROLE" in
       fail "ENGAGE MISSION LOCK button not found"
     fi
 
+    # 5. Escape resistance: HOME + RECENTS + URL intercept
     adb shell input keyevent 3 || true
     sleep 1
     adb shell input keyevent 187 || true
@@ -181,11 +200,32 @@ case "$ROLE" in
     ;;
 
   parent_auth_matrix)
+    dismiss_study_picker_if_present
+
     log "Captured TOTP Key Present: $([ -n "$CAPTURED_TOTP" ] && echo YES || echo NO)"
     log "Captured Recovery Key Present: $([ -n "$CAPTURED_RECOVERY" ] && echo YES || echo NO)"
     [ -n "$CAPTURED_TOTP" ] && pass "FamilySetupActivity generated 16-char Base32 TOTP key" || fail "TOTP key not visible on FamilySetupActivity"
     [ -n "$CAPTURED_RECOVERY" ] && pass "FamilySetupActivity generated SWT-XXXX-XXXX-XXXX Recovery Key" || fail "Recovery key not visible on FamilySetupActivity"
 
+    # 1. Verify [UNINSTALL SWATANTRA] is visible when NOT locked and rejects wrong PIN
+    adb shell input swipe 500 1600 500 400 300 || true
+    sleep 1
+    if tap_text "UNINSTALL SWATANTRA"; then
+      pass "[UNINSTALL SWATANTRA] button visible and opened Parent Auth dialog"
+      sleep 1
+      tap_text "6-digit Parent PIN" && adb shell input text "000000"
+      adb shell input keyevent 4 || true
+      sleep 1
+      tap_text "VERIFY & UNINSTALL SWATANTRA"
+      sleep 2
+      is_device_owner_active && pass "Wrong PIN (000000) correctly rejected; Device Owner still active" || fail "Wrong PIN unexpectedly cleared Device Owner"
+      adb shell input keyevent 4 || true
+      sleep 1
+    else
+      fail "[UNINSTALL SWATANTRA] button not found on Command Deck"
+    fi
+
+    # 2. Test Live Google Authenticator TOTP Code on MISSION STAND-DOWN
     LIVE_TOTP=$(python3 -c "
 import base64, hashlib, hmac, struct, sys, time
 secret = sys.argv[1]
@@ -213,8 +253,10 @@ print(f'{code:06d}')
       fail "MISSION STAND-DOWN not found for TOTP test"
     fi
 
+    # 3. Re-provision, complete fresh setup, and test 12-Char Offline Recovery Key
     adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1 || true
     complete_family_setup "654321"
+    dismiss_study_picker_if_present
     adb shell input swipe 500 1600 500 400 300 || true
     sleep 1
     if tap_text "MISSION STAND-DOWN"; then
@@ -228,10 +270,28 @@ print(f'{code:06d}')
     else
       fail "MISSION STAND-DOWN not found for Recovery Key test"
     fi
+
+    # 4. Re-provision, complete fresh setup, and verify Parent-Verified [UNINSTALL SWATANTRA] deprovision
+    adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1 || true
+    complete_family_setup "123456"
+    dismiss_study_picker_if_present
+    adb shell input swipe 500 1600 500 400 300 || true
+    sleep 1
+    if tap_text "UNINSTALL SWATANTRA"; then
+      sleep 1
+      tap_text "6-digit Parent PIN" && adb shell input text "123456"
+      adb shell input keyevent 4 || true
+      sleep 1
+      tap_text "VERIFY & UNINSTALL SWATANTRA"
+      sleep 5
+      ! is_device_owner_active && pass "Parent-verified [UNINSTALL SWATANTRA] deprovisioned Device Owner cleanly" || fail "[UNINSTALL SWATANTRA] failed to deprovision Device Owner"
+    else
+      fail "[UNINSTALL SWATANTRA] not found for final uninstall test"
+    fi
     ;;
 
   reboot_and_services)
-    tap_text "SELECT MY STUDY APPS" && sleep 1 && tap_text "Save Study Apps" || true
+    dismiss_study_picker_if_present
     tap_text "ENGAGE MISSION LOCK" && sleep 3
     tap_text "Stay on Command Deck" || true
     adb reboot >/dev/null 2>&1 || true
@@ -243,10 +303,12 @@ print(f'{code:06d}')
     adb shell dumpsys activity services "$PKG" | grep -q "SwatantraWatchdogService" && pass "SwatantraWatchdogService running after reboot" || fail "WatchdogService not running after reboot"
     adb shell am start -n "$MAIN" >/dev/null 2>&1
     sleep 2
+    ! dump_ui | grep -q "Select Study Apps for Lock Mode" && pass "Study picker does not re-pop after cold reboot" || fail "Study picker unexpectedly re-popped after cold reboot"
     dump_ui | grep -q "SWATANTRA // ON A MISSION" && pass "Family lock & Command Deck persisted cleanly across reboot" || fail "Command Deck did not persist across reboot"
     ;;
 
   accessibility_and_vpn)
+    dismiss_study_picker_if_present
     # 1. Verify [CHANGE FAMILY PIN & NUMBERS] parent-authenticated re-setup
     adb shell input swipe 500 1600 500 400 300 || true
     sleep 1
@@ -260,12 +322,14 @@ print(f'{code:06d}')
       TOP_ACT=$(adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -n 2 || true)
       echo "$TOP_ACT" | grep -q "FamilySetupActivity" && pass "CHANGE FAMILY PIN & NUMBERS routed to FamilySetupActivity after parent auth" || fail "CHANGE FAMILY PIN did not route to FamilySetupActivity"
       complete_family_setup "246810"
+      dismiss_study_picker_if_present
     else
       fail "CHANGE FAMILY PIN & NUMBERS button not found"
     fi
 
     # 2. Engage lock and inspect Always-On VPN & Accessibility Service registration
-    tap_text "SELECT MY STUDY APPS" && sleep 1 && tap_text "Save Study Apps" || true
+    adb shell am start -n "$MAIN" >/dev/null 2>&1
+    sleep 2
     tap_text "ENGAGE MISSION LOCK" && sleep 3
     tap_text "Stay on Command Deck" || true
     adb shell dumpsys device_policy | grep -q "$PKG" && pass "Device Policy active with Always-On VPN & restrictions configured" || fail "Device Policy not active"
@@ -273,7 +337,7 @@ print(f'{code:06d}')
     ;;
 
   multi_api_chaos)
-    tap_text "SELECT MY STUDY APPS" && sleep 1 && tap_text "Save Study Apps" || true
+    dismiss_study_picker_if_present
     tap_text "ENGAGE MISSION LOCK" && sleep 3
     tap_text "Stay on Command Deck" || true
     adb shell monkey -p "$PKG" --throttle 75 -v 300 >/dev/null 2>&1 || true

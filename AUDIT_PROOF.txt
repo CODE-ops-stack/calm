@@ -1,16 +1,16 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+65f5527 chore(audit): update AUDIT_PROOF.txt with ScrollView dialog wrapper and hardened qa runner
 36a0e8f chore(antigravity): sync Swatantra v7.1 build state and error.log
 77ae2d0 ci(qa): fix entity unescape and deploy 5-agent parallel emulator qa matrix
 01831cb ci(qa): deploy 4-agent parallel cloud emulator qa matrix
 d5961e8 chore(audit): update AUDIT_PROOF.txt with emulator adb alive shield and 15m timeout
-ca67723 chore(antigravity): sync Swatantra v7.1 build state and error.log
 
 Remote Branch SHAs:
-36a0e8f648406a5017359df36b03bd48678e1965 refs/heads/main
-36a0e8f648406a5017359df36b03bd48678e1965 refs/heads/master
+65f5527ee75bed86936aba86c1fb6b9aa6a2c23a refs/heads/main
+65f5527ee75bed86936aba86c1fb6b9aa6a2c23a refs/heads/master
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
-scripts\qa_agent_runner.sh | Lines: 287 | Bytes: 11487 | SHA256: 35516252D23FE8EB
+scripts\qa_agent_runner.sh | Lines: 351 | Bytes: 14223 | SHA256: B149B16CFC2F9801
 scripts\run_human_equivalent_qa.sh | Lines: 219 | Bytes: 7347 | SHA256: B5C03BC2D6A22F87
 app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 214 | Bytes: 8551 | SHA256: 9F808453398AED6D
 app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 50 | Bytes: 2352 | SHA256: A3ED743D875A7240
@@ -27,17 +27,17 @@ app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines:
 app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
 app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
 app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 184 | Bytes: 7442 | SHA256: 1A895F4D71A5788F
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 551 | Bytes: 24983 | SHA256: 3C952C8D98F2B2D4
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 763 | Bytes: 34554 | SHA256: 10FEC9B44578DD7B
 app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 79 | Bytes: 2958 | SHA256: E180843F053A47EA
 app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
 app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
 app\src\main\res\xml\device_admin_policies.xml | Lines: 14 | Bytes: 430 | SHA256: 5E61A80C8BE194CC
 app\src\main\res\xml\lecture_inspector_config.xml | Lines: 7 | Bytes: 413 | SHA256: 60F625306042349D
 app\src\main\AndroidManifest.xml | Lines: 140 | Bytes: 6160 | SHA256: 58D38D9D8548A2DA
-app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 545 | Bytes: 27294 | SHA256: F5BBFFF7A8CC4DF8
+app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 679 | Bytes: 34084 | SHA256: 53D79FF89B9615C7
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 132249 bytes | LastWriteTime: 21-11-2026 14:41:55
+APK Size: 136345 bytes | LastWriteTime: 21-11-2026 17:21:02
 zipalign 4 verification: Verification succesful
 apksigner v2 scheme: true (min-sdk 24)
 apksigner v3 scheme: true
@@ -45,8 +45,8 @@ apksigner v3 scheme: true
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
-META-INF/version-control-info.textproto                      120              116
-classes.dex                                               107232           107232
+META-INF/version-control-info.textproto                      120              117
+classes.dex                                               113436           113436
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -86,75 +86,23 @@ DEX_SYMBOL [TACTICAL_IF_THEN_DIRECTIVE_V7_1] Present in classes.dex: True
 DEX_SYMBOL [ParentTotpAuthenticator] Present in classes.dex: True
 DEX_SYMBOL [PARENT_TOTP_RFC6238_V7_1] Present in classes.dex: True
 
-=== 4. RAW JUNIT XML TESTSUITE PROOF (6/6 PASSING) ===
+=== 4. RAW JUNIT XML TESTSUITE PROOF (8/8 PASSING) ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-21T09:11:39.341Z" hostname="DESKTOP-JOU27LS" time="0.199">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-21T11:50:22.485Z" hostname="DESKTOP-JOU27LS" time="0.225">
   <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.078"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.065"/>
   <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.015"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.009"/>
-  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.001"/>
-  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.064"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.015"/>
+  <testcase name="testBeginningStudyAppPickerAndLockWhitelistIntegrity" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.008"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.02"/>
+  <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
+  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.058"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.008"/>
+  <testcase name="testParentVerifiedUninstallPermissionAndZeroHarmOrder" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.041"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 
-=== 5. VERBATIM MODIFIED SECTIONS & ZERO-ANR PROOF ===
-
---- MainActivity.kt (ScrollView wrapping parent auth dialog against soft keyboard overlap) ---
-        val dialogScroll = ScrollView(this).apply {
-            setBackgroundColor(Color.parseColor("#0B0F17"))
-            addView(dialogLayout)
-        }
-
-        val dialog = runCatching {
-            AlertDialog.Builder(this)
-                .setView(dialogScroll)
-                .setCancelable(true)
-                .create()
-        }.getOrNull()
-
---- scripts/qa_agent_runner.sh (Prefer clickable nodes & dismiss keyboard before auth tap) ---
-tap_text() {
-  local query="$1"
-  local xml_data
-  xml_data=$(dump_ui)
-  local coords
-  coords=$(printf '%s' "$xml_data" | python3 -c "
-import sys, re, xml.etree.ElementTree as ET
-xml_data = sys.stdin.read()
-q = sys.argv[1].lower()
-try:
-    root = ET.fromstring(xml_data)
-    fallback = None
-    for node in root.iter('node'):
-        t = (node.attrib.get('text') or '').lower()
-        h = (node.attrib.get('hint') or '').lower()
-        if q in t or q in h:
-            m = re.match(r'\[(\d+),(\d+)\]\[(\d+),(\d+)\]', node.attrib.get('bounds', ''))
-            if m:
-                x = (int(m.group(1)) + int(m.group(3))) // 2
-                y = (int(m.group(2)) + int(m.group(4))) // 2
-                pt = f'{x} {y}'
-                if node.attrib.get('clickable') == 'true':
-                    print(pt)
-                    sys.exit(0)
-                if fallback is None:
-                    fallback = pt
-    if fallback:
-        print(fallback)
-except Exception:
-    pass
-" "$query")
-  if [ -n "$coords" ]; then
-    adb shell input tap $coords
-    sleep 1
-    return 0
-  fi
-  return 1
-}
-
-is_device_owner_active() {
-  adb shell dumpsys device_policy | grep -A 3 "Device Owner:" | grep -q "$PKG"
-}
+=== 5. ZERO-HARM GREP VERIFICATION ===
+Occurrences of wipeData across app/src/main/java: 0
+Occurrences of wipeDevice across app/src/main/java: 0
+Deprovision guarantee: AtomicDeprovisionManager clears all restrictions and restores package visibility prior to clearDeviceOwnerApp

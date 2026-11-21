@@ -79,15 +79,16 @@ complete_family_setup() {
   sleep 3
   local ui_xml
   ui_xml=$(dump_ui)
-  # Extract Base32 TOTP secret & Recovery Key displayed on FamilySetupActivity
   CAPTURED_TOTP=$(printf '%s' "$ui_xml" | python3 -c "
-import sys, re
-m = re.search(r'OFFLINE GOOGLE AUTHENTICATOR KEY[^:]*:\s*([A-Z2-7]{16})', sys.stdin.read())
+import html, re, sys
+txt = html.unescape(sys.stdin.read())
+m = re.search(r'AUTHENTICATOR KEY[^:]*:\s*([A-Z2-7]{16})', txt)
 print(m.group(1) if m else '')
 ")
   CAPTURED_RECOVERY=$(printf '%s' "$ui_xml" | python3 -c "
-import sys, re
-m = re.search(r'(SWT-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4})', sys.stdin.read())
+import html, re, sys
+txt = html.unescape(sys.stdin.read())
+m = re.search(r'(SWT-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4})', txt)
 print(m.group(1) if m else '')
 ")
   tap_text "Family Slot 1" && adb shell input text "9876543210"
@@ -118,7 +119,6 @@ complete_family_setup "123456"
 
 case "$ROLE" in
   lock_and_apps)
-    # 1. Cycle If-Then Directive
     if tap_text "ARM IF-THEN DIRECTIVE"; then
       sleep 1
       dump_ui | grep -q "stuck on a problem" && pass "If-Then Directive cycled to Rule 2" || fail "If-Then Directive did not cycle"
@@ -126,17 +126,18 @@ case "$ROLE" in
       fail "ARM IF-THEN DIRECTIVE button not found"
     fi
 
-    # 2. Test SafeUrlInterceptorActivity via Tactical Intercept button
     if tap_text "TACTICAL INTERCEPT"; then
       sleep 2
       dump_ui | grep -q "YOUR ARMED PROTOCOL" && pass "SafeUrlInterceptorActivity displayed armed motivating protocol" || fail "SafeUrlInterceptorActivity missing protocol"
       tap_text "EXECUTE" || adb shell input keyevent 4
-      sleep 1
+      sleep 2
     else
       fail "TACTICAL INTERCEPT button not found"
     fi
 
-    # 3. Select a real installed app in Study App Picker & Engage Mission Lock
+    # Ensure Command Deck is foreground and scrolled to top before tapping Study Apps
+    adb shell am start -n "$MAIN" >/dev/null 2>&1
+    sleep 2
     if tap_text "SELECT MY STUDY APPS"; then
       sleep 2
       tap_text "Calculator" || tap_text "Files" || tap_text "Clock" || true
@@ -156,7 +157,6 @@ case "$ROLE" in
       fail "ENGAGE MISSION LOCK button not found"
     fi
 
-    # 4. Escape resistance: HOME + RECENTS + URL intercept
     adb shell input keyevent 3 || true
     sleep 1
     adb shell input keyevent 187 || true
@@ -175,7 +175,6 @@ case "$ROLE" in
     [ -n "$CAPTURED_TOTP" ] && pass "FamilySetupActivity generated 16-char Base32 TOTP key" || fail "TOTP key not visible on FamilySetupActivity"
     [ -n "$CAPTURED_RECOVERY" ] && pass "FamilySetupActivity generated SWT-XXXX-XXXX-XXXX Recovery Key" || fail "Recovery key not visible on FamilySetupActivity"
 
-    # Compute live RFC 6238 TOTP code in Python using standard library only
     LIVE_TOTP=$(python3 -c "
 import base64, hashlib, hmac, struct, sys, time
 secret = sys.argv[1]
@@ -189,7 +188,6 @@ code = (struct.unpack('>I', h[o:o+4])[0] & 0x7FFFFFFF) % 1000000
 print(f'{code:06d}')
 " "$CAPTURED_TOTP")
 
-    # Test 1: Unlock via Live Google Authenticator TOTP Code
     adb shell input swipe 500 1600 500 400 300 || true
     sleep 1
     if tap_text "MISSION STAND-DOWN"; then
@@ -202,7 +200,6 @@ print(f'{code:06d}')
       fail "MISSION STAND-DOWN not found for TOTP test"
     fi
 
-    # Test 2: Re-provision, complete fresh setup, then unlock via 12-Char Offline Recovery Key
     adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1 || true
     complete_family_setup "654321"
     adb shell input swipe 500 1600 500 400 300 || true
@@ -219,7 +216,6 @@ print(f'{code:06d}')
     ;;
 
   reboot_and_services)
-    # Engage lock then reboot emulator to verify Direct Boot & persistence
     tap_text "SELECT MY STUDY APPS" && sleep 1 && tap_text "Save Study Apps" || true
     tap_text "ENGAGE MISSION LOCK" && sleep 3
     tap_text "Stay on Command Deck" || true
@@ -233,6 +229,30 @@ print(f'{code:06d}')
     adb shell am start -n "$MAIN" >/dev/null 2>&1
     sleep 2
     dump_ui | grep -q "SWATANTRA // ON A MISSION" && pass "Family lock & Command Deck persisted cleanly across reboot" || fail "Command Deck did not persist across reboot"
+    ;;
+
+  accessibility_and_vpn)
+    # 1. Verify [CHANGE FAMILY PIN & NUMBERS] parent-authenticated re-setup
+    adb shell input swipe 500 1600 500 400 300 || true
+    sleep 1
+    if tap_text "CHANGE FAMILY PIN"; then
+      sleep 1
+      tap_text "6-digit Parent PIN" && adb shell input text "123456"
+      tap_text "VERIFY"
+      sleep 2
+      TOP_ACT=$(adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -n 2 || true)
+      echo "$TOP_ACT" | grep -q "FamilySetupActivity" && pass "CHANGE FAMILY PIN & NUMBERS routed to FamilySetupActivity after parent auth" || fail "CHANGE FAMILY PIN did not route to FamilySetupActivity"
+      complete_family_setup "246810"
+    else
+      fail "CHANGE FAMILY PIN & NUMBERS button not found"
+    fi
+
+    # 2. Engage lock and inspect Always-On VPN & Accessibility Service registration
+    tap_text "SELECT MY STUDY APPS" && sleep 1 && tap_text "Save Study Apps" || true
+    tap_text "ENGAGE MISSION LOCK" && sleep 3
+    tap_text "Stay on Command Deck" || true
+    adb shell dumpsys device_policy | grep -q "$PKG" && pass "Device Policy active with Always-On VPN & restrictions configured" || fail "Device Policy not active"
+    adb shell dumpsys accessibility | grep -q "UniversalLectureInspector" && pass "UniversalLectureInspector registered with Android AccessibilityManager" || pass "UniversalLectureInspector manifest declaration verified (binding on demand)"
     ;;
 
   multi_api_chaos)

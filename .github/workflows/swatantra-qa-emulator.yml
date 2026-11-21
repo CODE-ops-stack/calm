@@ -1,4 +1,4 @@
-name: Swatantra v7.1 4-Agent Parallel Cloud Emulator QA
+name: Swatantra v7.1 5-Agent Parallel Cloud Emulator QA
 
 on:
   push:
@@ -23,6 +23,8 @@ jobs:
           - role: parent_auth_matrix
             api: 34
           - role: reboot_and_services
+            api: 34
+          - role: accessibility_and_vpn
             api: 34
           - role: multi_api_chaos
             api: 33
@@ -86,14 +88,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download All 4 Agent Reports
+      - name: Download All 5 Agent Reports
         uses: actions/download-artifact@v4
         with:
           path: qa_reports
 
-      - name: Merge 4-Agent Matrix Report
+      - name: Merge 5-Agent Matrix Report
         run: |
-          echo "=== SWATANTRA v7.1 4-AGENT PARALLEL EMULATOR QA MATRIX ===" > combined_qa_report.txt
+          echo "=== SWATANTRA v7.1 5-AGENT PARALLEL EMULATOR QA MATRIX ===" > combined_qa_report.txt
           echo "Commit: ${{ github.sha }}" >> combined_qa_report.txt
           echo "Matrix Result: ${{ needs.qa-agent-matrix.result }}" >> combined_qa_report.txt
           for f in qa_reports/*/*.txt; do
@@ -101,7 +103,7 @@ jobs:
             cat "$f" >> combined_qa_report.txt
           done
 
-      - name: Email Consolidated [Swatantra QA] 4-Agent Report
+      - name: Email Consolidated [Swatantra QA] 5-Agent Report
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -109,7 +111,7 @@ jobs:
           secure: true
           username: ${{ secrets.GMAIL_ADDRESS }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: "[Swatantra QA] 4-Agent Matrix ${{ needs.qa-agent-matrix.result }} — Commit ${{ github.sha }}"
+          subject: "[Swatantra QA] 5-Agent Matrix ${{ needs.qa-agent-matrix.result }} — Commit ${{ github.sha }}"
           to: ${{ secrets.GMAIL_ADDRESS }}
           from: "Swatantra Cloud QA <${{ secrets.GMAIL_ADDRESS }}>"
           body: file://combined_qa_report.txt

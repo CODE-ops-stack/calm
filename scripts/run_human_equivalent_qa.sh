@@ -58,10 +58,21 @@ else
   fail "APK installation failed"
 fi
 
-if adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1; then
-  pass "Device Owner activated ($ADMIN)"
+if ! adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1; then
+  adb root >/dev/null 2>&1 || true
+  sleep 2
+  adb shell "rm -f /data/system_ce/0/accounts_ce.db* /data/system_de/0/accounts_de.db* /data/system/users/0/accounts.db*" >/dev/null 2>&1 || true
+  adb unroot >/dev/null 2>&1 || true
+  adb reboot >/dev/null 2>&1 || true
+  adb wait-for-device
+  sleep 15
+  if adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1; then
+    pass "Device Owner activated ($ADMIN)"
+  else
+    fail "Device Owner activation failed"
+  fi
 else
-  fail "Device Owner activation failed"
+  pass "Device Owner activated ($ADMIN)"
 fi
 
 adb shell am start -n "$MAIN" >/dev/null 2>&1

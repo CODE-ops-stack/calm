@@ -10,11 +10,11 @@ Remote Branch SHAs:
 7b905ae43c3df88c611df0552c258b4b85c2eae9 refs/heads/master
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
-scripts\run_human_equivalent_qa.sh | Lines: 207 | Bytes: 6879 | SHA256: 67F0FA652C520EA02A891D84B5F24DEC7F1F830F22C7C42559BBB394302D6DD1
-app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 214 | Bytes: 8551 | SHA256: 9F808453398AED6DB323249F1E8BCDBD7FEE5A2FB93C1995DFC1C2EF7DC59417
-app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 50 | Bytes: 2352 | SHA256: A3ED743D875A7240725DE95604C2C20F4B8571F1CC3239C41B48E52FCC0A8F02
-scripts\sync_and_verify.ps1 | Lines: 77 | Bytes: 4132 | SHA256: 01D222C33EEB98246290B7F84EB7ED6352C9DCE382456ED8EEC51EAF5F8F641E
-.github\workflows\swatantra-qa-emulator.yml | Lines: 74 | Bytes: 3192 | SHA256: BED002665616F3877993F0F66E2BE740DDEB7385A353017F8443DD72F495F6F0
+scripts\run_human_equivalent_qa.sh | Lines: 218 | Bytes: 7291 | SHA256: D3B4AE5F2A0F17FB
+app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 214 | Bytes: 8551 | SHA256: 9F808453398AED6D
+app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 50 | Bytes: 2352 | SHA256: A3ED743D875A7240
+scripts\sync_and_verify.ps1 | Lines: 77 | Bytes: 4132 | SHA256: 01D222C33EEB9824
+.github\workflows\swatantra-qa-emulator.yml | Lines: 75 | Bytes: 3307 | SHA256: 109864F0856B4EE0
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 117 | Bytes: 5069 | SHA256: 6E8B02AAB3FC4C5D
 app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 33 | Bytes: 1303 | SHA256: 7F7F082AE96E90FA
 app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 31 | Bytes: 1321 | SHA256: 28A97EDBB30FF80A

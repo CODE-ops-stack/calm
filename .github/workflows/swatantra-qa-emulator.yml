@@ -52,6 +52,7 @@ jobs:
           force-avd-creation: true
           disable-animations: true
           emulator-boot-timeout: 300
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -wipe-data -noaudio -no-boot-anim
           script: bash scripts/run_human_equivalent_qa.sh
 
       - name: Email [Swatantra QA] Cloud Emulator Report

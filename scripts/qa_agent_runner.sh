@@ -235,7 +235,17 @@ case "$ROLE" in
       fail "SELECT MY STUDY APPS tile not found"
     fi
 
-    # 5. Ensure Command Deck is foreground and engage Mission Lock
+    # 5. Verify [PRIORITY CHANNEL] Dialer Intent launches safely
+    if tap_text "PRIORITY CHANNEL"; then
+      sleep 2
+      pass "Priority Channel Dialer intent launched safely"
+      adb shell input keyevent 4 || true
+      sleep 1
+    else
+      fail "PRIORITY CHANNEL tile not found"
+    fi
+
+    # 6. Ensure Command Deck is foreground and engage Mission Lock
     adb shell am start -n "$MAIN" >/dev/null 2>&1
     sleep 2
     if tap_text "ENGAGE MISSION LOCK"; then
@@ -247,7 +257,10 @@ case "$ROLE" in
       fail "ENGAGE MISSION LOCK button not found"
     fi
 
-    # 6. Escape resistance: HOME + RECENTS + URL intercept
+    # 7. Verify [UNINSTALL SWATANTRA] button is strictly GONE when locked
+    ! dump_ui | grep -q "UNINSTALL SWATANTRA" && pass "UNINSTALL SWATANTRA tile properly hidden during active Mission Lock" || fail "UNINSTALL tile leaked during lock"
+
+    # 8. Escape resistance: HOME + RECENTS + URL intercept
     adb shell input keyevent 3 || true
     sleep 1
     adb shell input keyevent 187 || true
@@ -325,9 +338,27 @@ print(f'{code:06d}')
       fail "MISSION STAND-DOWN not found for TOTP test"
     fi
 
-    # 3. Re-provision, complete fresh setup, and test Lowercase Normalized 12-Char Offline Recovery Key
+    # 3. Re-provision, complete fresh setup, and test 6-Digit Parent PIN direct stand-down
     adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1 || true
     complete_family_setup "654321"
+    dismiss_study_picker_if_present
+    adb shell input swipe 500 1600 500 400 300 || true
+    sleep 1
+    if tap_text "MISSION STAND-DOWN"; then
+      sleep 1
+      tap_text "6-digit Parent PIN" && clear_and_type "654321"
+      adb shell input keyevent 4 || true
+      sleep 1
+      tap_text "VERIFY PIN / AUTHENTICATOR"
+      sleep 5
+      ! is_device_owner_active && pass "6-Digit Parent PIN directly unlocked & deprovisioned Device Owner" || fail "Parent PIN failed to unlock"
+    else
+      fail "MISSION STAND-DOWN not found for Parent PIN test"
+    fi
+
+    # 4. Re-provision, complete fresh setup, and test Lowercase Normalized 12-Char Offline Recovery Key
+    adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1 || true
+    complete_family_setup "135790"
     dismiss_study_picker_if_present
     adb shell input swipe 500 1600 500 400 300 || true
     sleep 1
@@ -344,7 +375,7 @@ print(f'{code:06d}')
       fail "MISSION STAND-DOWN not found for Recovery Key test"
     fi
 
-    # 4. Re-provision, complete fresh setup, and verify Parent-Verified [UNINSTALL SWATANTRA] deprovision
+    # 5. Re-provision, complete fresh setup, and verify Parent-Verified [UNINSTALL SWATANTRA] deprovision
     adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1 || true
     complete_family_setup "123456"
     dismiss_study_picker_if_present
@@ -378,6 +409,9 @@ print(f'{code:06d}')
     sleep 2
     ! dump_ui | grep -q "Select Study Apps for Lock Mode" && pass "Study picker does not re-pop after cold reboot" || fail "Study picker unexpectedly re-popped after cold reboot"
     dump_ui | grep -q "SWATANTRA // ON A MISSION" && pass "Family lock & Command Deck persisted cleanly across reboot" || fail "Command Deck did not persist across reboot"
+
+    # Verify Device-Protected Storage directory on device
+    adb shell "test -d /data/user_de/0/$PKG/shared_prefs" && pass "Device-Protected storage confirmed at /data/user_de/0" || fail "Device-Protected storage missing"
     ;;
 
   accessibility_and_vpn)
@@ -436,10 +470,10 @@ print(f'{code:06d}')
     sleep 1
     pass "Survived RUNNING_CRITICAL memory pressure event"
 
-    # 3. 500-event Monkey chaos fuzzing
-    adb shell monkey -p "$PKG" --throttle 50 -v 500 >/dev/null 2>&1 || true
+    # 3. 1000-event Monkey chaos deep fuzzing
+    adb shell monkey -p "$PKG" --throttle 25 -v 1000 >/dev/null 2>&1 || true
     sleep 2
-    pass "Completed 500-event Monkey chaos stress run"
+    pass "Completed 1000-event deep Monkey chaos stress run"
     ;;
 esac
 

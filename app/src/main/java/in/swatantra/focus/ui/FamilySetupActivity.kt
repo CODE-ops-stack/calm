@@ -131,10 +131,13 @@ class FamilySetupActivity : Activity() {
             val confirmPin = confirmPinField.text?.toString()?.trim().orEmpty()
             if (pin.length != 6 || !pin.all { it.isDigit() }) {
                 Toast.makeText(this, "Parent PIN must be exactly 6 digits.", Toast.LENGTH_SHORT).show()
+                pinField.text?.clear()
+                confirmPinField.text?.clear()
                 return@setOnClickListener
             }
             if (pin != confirmPin) {
                 Toast.makeText(this, "PINs do not match.", Toast.LENGTH_SHORT).show()
+                confirmPinField.text?.clear()
                 return@setOnClickListener
             }
 

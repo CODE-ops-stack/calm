@@ -1,4 +1,4 @@
-﻿Starting a Gradle Daemon, 1 incompatible and 3 stopped Daemons could not be reused, use --status for details
+﻿Starting a Gradle Daemon, 1 incompatible and 4 stopped Daemons could not be reused, use --status for details
 .\gradlew.bat : Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of 
 version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were 
 released at different times.
@@ -52,8 +52,8 @@ At C:\Users\harsh\Documents\focus\scripts\sync_and_verify.ps1:10 char:5
 > Task :app:compileReleaseKotlin
 > Task :app:compileReleaseJavaWithJavac NO-SOURCE
 > Task :app:processReleaseJavaRes UP-TO-DATE
-> Task :app:bundleReleaseClassesToRuntimeJar
 > Task :app:bundleReleaseClassesToCompileJar
+> Task :app:bundleReleaseClassesToRuntimeJar
 > Task :app:generateReleaseLintVitalReportModel
 > Task :app:expandReleaseArtProfileWildcards
 > Task :app:mergeReleaseGeneratedProguardFiles UP-TO-DATE

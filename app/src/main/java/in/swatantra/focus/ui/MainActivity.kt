@@ -732,6 +732,7 @@ class MainActivity : Activity() {
             val entered = codeInput.text?.toString()?.trim().orEmpty()
             if (entered.length != 6 || !entered.all { it.isDigit() }) {
                 Toast.makeText(this, "Enter a valid 6-digit PIN or Authenticator code.", Toast.LENGTH_SHORT).show()
+                codeInput.text?.clear()
                 return@setOnClickListener
             }
             val storedPinHash = callPrefs.getString("family_pin_sha256", null)

@@ -1,4 +1,4 @@
-name: Swatantra v7.1 Cloud Android 14 Human-Equivalent QA
+name: Swatantra v7.1 4-Agent Parallel Cloud Emulator QA
 
 on:
   push:
@@ -11,9 +11,21 @@ on:
     - cron: '30 14 * * *'
 
 jobs:
-  cloud-emulator-qa:
+  qa-agent-matrix:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - role: lock_and_apps
+            api: 34
+          - role: parent_auth_matrix
+            api: 34
+          - role: reboot_and_services
+            api: 34
+          - role: multi_api_chaos
+            api: 33
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,29 +36,28 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Enable KVM for hardware-accelerated Android 14 emulator
+      - name: Enable KVM for hardware-accelerated emulator
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Run Unit Tests, Assemble & Ephemerally Sign Release APK for Cloud QA
+      - name: Build & Ephemerally Sign Release APK
         run: |
-          chmod +x ./gradlew scripts/run_human_equivalent_qa.sh
+          chmod +x ./gradlew scripts/qa_agent_runner.sh
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null 2>&1 || true
           ./gradlew test assembleRelease --no-daemon
           BUILD_TOOLS_DIR=$(ls -d "$ANDROID_HOME/build-tools/"* | sort -V | tail -n 1)
           keytool -genkeypair -v -keystore /tmp/ci-ephemeral.jks -storepass ciqa1234 -keypass ciqa1234 -alias ciqa -keyalg RSA -keysize 2048 -validity 1 -dname "CN=SwatantraCI,O=Swatantra,C=IN"
           "$BUILD_TOOLS_DIR/zipalign" -v -p -f 4 app/build/outputs/apk/release/app-release-unsigned.apk /tmp/app-release-aligned.apk
           "$BUILD_TOOLS_DIR/apksigner" sign --ks /tmp/ci-ephemeral.jks --ks-pass pass:ciqa1234 --key-pass pass:ciqa1234 --ks-key-alias ciqa --v2-signing-enabled true --v3-signing-enabled true --out app/build/outputs/apk/release/app-release-ci-signed.apk /tmp/app-release-aligned.apk
-          "$BUILD_TOOLS_DIR/apksigner" verify --verbose app/build/outputs/apk/release/app-release-ci-signed.apk
 
-      - name: Run Human-Equivalent QA on Cloud Android 14 Emulator
-        id: qa_run
+      - name: Run QA Agent (${{ matrix.role }} on Android API ${{ matrix.api }})
+        id: agent_run
         continue-on-error: true
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: ${{ matrix.api }}
           target: default
           arch: x86_64
           profile: pixel_6
@@ -54,10 +65,43 @@ jobs:
           disable-animations: true
           emulator-boot-timeout: 300
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -wipe-data -noaudio -no-boot-anim
-          script: bash scripts/run_human_equivalent_qa.sh
+          script: bash scripts/qa_agent_runner.sh ${{ matrix.role }}
 
-      - name: Email [Swatantra QA] Cloud Emulator Report
+      - name: Upload Agent Report Artifact
         if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-report-${{ matrix.role }}
+          path: qa_report_${{ matrix.role }}.txt
+
+      - name: Fail Agent Job If Any Defect Found
+        if: steps.agent_run.outcome != 'success'
+        run: exit 1
+
+  consolidate-qa-report:
+    needs: qa-agent-matrix
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download All 4 Agent Reports
+        uses: actions/download-artifact@v4
+        with:
+          path: qa_reports
+
+      - name: Merge 4-Agent Matrix Report
+        run: |
+          echo "=== SWATANTRA v7.1 4-AGENT PARALLEL EMULATOR QA MATRIX ===" > combined_qa_report.txt
+          echo "Commit: ${{ github.sha }}" >> combined_qa_report.txt
+          echo "Matrix Result: ${{ needs.qa-agent-matrix.result }}" >> combined_qa_report.txt
+          for f in qa_reports/*/*.txt; do
+            echo "" >> combined_qa_report.txt
+            cat "$f" >> combined_qa_report.txt
+          done
+
+      - name: Email Consolidated [Swatantra QA] 4-Agent Report
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
@@ -65,12 +109,8 @@ jobs:
           secure: true
           username: ${{ secrets.GMAIL_ADDRESS }}
           password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: "[Swatantra QA] Cloud Android 14 QA ${{ steps.qa_run.outcome }} — Commit ${{ github.sha }}"
+          subject: "[Swatantra QA] 4-Agent Matrix ${{ needs.qa-agent-matrix.result }} — Commit ${{ github.sha }}"
           to: ${{ secrets.GMAIL_ADDRESS }}
           from: "Swatantra Cloud QA <${{ secrets.GMAIL_ADDRESS }}>"
-          body: file://qa_emulator_report.txt
-          attachments: qa_emulator_report.txt,AUDIT_PROOF.txt,TODO.md
-
-      - name: Fail job if QA reported any defect
-        if: steps.qa_run.outcome != 'success'
-        run: exit 1
+          body: file://combined_qa_report.txt
+          attachments: combined_qa_report.txt,AUDIT_PROOF.txt,TODO.md

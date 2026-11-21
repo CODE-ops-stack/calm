@@ -743,6 +743,7 @@ class MainActivity : Activity() {
                 onParentVerified()
             } else {
                 Toast.makeText(this, "Invalid Parent PIN or Authenticator code. Access denied.", Toast.LENGTH_SHORT).show()
+                codeInput.text?.clear()
             }
         }
 
@@ -755,6 +756,7 @@ class MainActivity : Activity() {
                 onParentVerified()
             } else {
                 Toast.makeText(this, "Invalid Recovery Key. Access denied.", Toast.LENGTH_SHORT).show()
+                recoveryInput.text?.clear()
             }
         }
 

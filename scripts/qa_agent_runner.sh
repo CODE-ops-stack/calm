@@ -76,6 +76,14 @@ except Exception:
   return 1
 }
 
+clear_and_type() {
+  local text="$1"
+  for _ in {1..20}; do
+    adb shell input keyevent 67 || true
+  done
+  adb shell input text "$text"
+}
+
 is_device_owner_active() {
   adb shell dumpsys device_policy | grep -A 3 "Device Owner:" | grep -q "$PKG"
 }
@@ -141,9 +149,9 @@ txt = html.unescape(sys.stdin.read())
 m = re.search(r'(SWT-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4})', txt)
 print(m.group(1) if m else '')
 ")
-  tap_text "Family Slot 1" && adb shell input text "9876543210"
-  tap_text "Set 6-Digit Parent Unlock PIN" && adb shell input text "$pin"
-  tap_text "Confirm 6-Digit Parent Unlock PIN" && adb shell input text "$pin"
+  tap_text "Family Slot 1" && clear_and_type "9876543210"
+  tap_text "Set 6-Digit Parent Unlock PIN" && clear_and_type "$pin"
+  tap_text "Confirm 6-Digit Parent Unlock PIN" && clear_and_type "$pin"
   adb shell input keyevent 4 || true
   sleep 1
   adb shell input swipe 500 1600 500 500 300 || true
@@ -268,7 +276,7 @@ case "$ROLE" in
     if tap_text "UNINSTALL SWATANTRA"; then
       pass "[UNINSTALL SWATANTRA] button visible and opened Parent Auth dialog"
       sleep 1
-      tap_text "6-digit Parent PIN" && adb shell input text "000000"
+      tap_text "6-digit Parent PIN" && clear_and_type "000000"
       adb shell input keyevent 4 || true
       sleep 1
       tap_text "VERIFY & UNINSTALL SWATANTRA"
@@ -299,7 +307,7 @@ print(f'{code:06d}')
     if tap_text "MISSION STAND-DOWN"; then
       sleep 1
       # Negative test: wrong TOTP / wrong PIN
-      tap_text "6-digit Parent PIN" && adb shell input text "000000"
+      tap_text "6-digit Parent PIN" && clear_and_type "000000"
       adb shell input keyevent 4 || true
       sleep 1
       tap_text "VERIFY PIN / AUTHENTICATOR"
@@ -307,7 +315,7 @@ print(f'{code:06d}')
       is_device_owner_active && pass "Wrong PIN/TOTP correctly rejected on MISSION STAND-DOWN" || fail "Wrong PIN cleared DO"
 
       # Positive test: live TOTP
-      tap_text "6-digit Parent PIN" && adb shell input text "$LIVE_TOTP"
+      tap_text "6-digit Parent PIN" && clear_and_type "$LIVE_TOTP"
       adb shell input keyevent 4 || true
       sleep 1
       tap_text "VERIFY PIN / AUTHENTICATOR"
@@ -326,7 +334,7 @@ print(f'{code:06d}')
     if tap_text "MISSION STAND-DOWN"; then
       sleep 1
       LOWER_RECOVERY=$(echo "$CAPTURED_RECOVERY" | tr '[:upper:]' '[:lower:]')
-      tap_text "SWT-XXXX" && adb shell input text "$LOWER_RECOVERY"
+      tap_text "SWT-XXXX" && clear_and_type "$LOWER_RECOVERY"
       adb shell input keyevent 4 || true
       sleep 1
       tap_text "VERIFY RECOVERY KEY"
@@ -344,7 +352,7 @@ print(f'{code:06d}')
     sleep 1
     if tap_text "UNINSTALL SWATANTRA"; then
       sleep 1
-      tap_text "6-digit Parent PIN" && adb shell input text "123456"
+      tap_text "6-digit Parent PIN" && clear_and_type "123456"
       adb shell input keyevent 4 || true
       sleep 1
       tap_text "VERIFY & UNINSTALL SWATANTRA"
@@ -380,7 +388,7 @@ print(f'{code:06d}')
     if tap_text "CHANGE FAMILY PIN"; then
       sleep 1
       # Negative test: wrong PIN
-      tap_text "6-digit Parent PIN" && adb shell input text "999999"
+      tap_text "6-digit Parent PIN" && clear_and_type "999999"
       adb shell input keyevent 4 || true
       sleep 1
       tap_text "VERIFY & RE-SETUP FAMILY LOCK"
@@ -388,7 +396,7 @@ print(f'{code:06d}')
       is_device_owner_active && pass "Wrong PIN on CHANGE FAMILY PIN rejected cleanly" || fail "Wrong PIN accepted"
 
       # Positive test: correct PIN
-      tap_text "6-digit Parent PIN" && adb shell input text "123456"
+      tap_text "6-digit Parent PIN" && clear_and_type "123456"
       adb shell input keyevent 4 || true
       sleep 1
       tap_text "VERIFY & RE-SETUP FAMILY LOCK"

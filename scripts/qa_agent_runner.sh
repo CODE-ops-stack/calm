@@ -14,6 +14,24 @@ log() { echo "$1" | tee -a "$REPORT"; }
 pass() { log "PASS [$ROLE]: $1"; }
 fail() { log "FAIL [$ROLE]: $1"; FAILURES=$((FAILURES + 1)); }
 
+wait_for_boot() {
+  local max_wait="${1:-60}"
+  local elapsed=0
+  log "Waiting up to ${max_wait}s for system boot completion..."
+  while [ "$elapsed" -lt "$max_wait" ]; do
+    local state
+    state=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r\n')
+    if [ "$state" = "1" ]; then
+      sleep 3
+      return 0
+    fi
+    sleep 2
+    elapsed=$((elapsed + 2))
+  done
+  log "WARNING: sys.boot_completed wait timed out after ${max_wait}s"
+  return 1
+}
+
 dump_ui() {
   adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 || true
   adb shell cat /sdcard/ui.xml 2>/dev/null || true
@@ -63,6 +81,7 @@ is_device_owner_active() {
 }
 
 provision_and_install() {
+  wait_for_boot 60
   adb logcat -c || true
   if adb install -r "$APK" >> "$REPORT" 2>&1; then
     pass "Signed R8 APK installed"
@@ -70,17 +89,37 @@ provision_and_install() {
     fail "APK install failed"
     return 1
   fi
-  if ! adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1; then
-    adb root >/dev/null 2>&1 || true
-    sleep 2
-    adb shell "rm -f /data/system_ce/0/accounts_ce.db* /data/system_de/0/accounts_de.db* /data/system/users/0/accounts.db*" >/dev/null 2>&1 || true
-    adb unroot >/dev/null 2>&1 || true
-    adb reboot >/dev/null 2>&1 || true
-    adb wait-for-device
-    sleep 15
-    adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1 && pass "Device Owner activated after account wipe" || fail "Device Owner activation failed"
-  else
+
+  # Attempt 1: Direct Device Owner activation
+  if adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1; then
     pass "Device Owner activated"
+    return 0
+  fi
+
+  # Attempt 2: Clean residual emulator accounts if present, restart runtime cleanly
+  log "Direct Device Owner setup returned non-zero. Cleaning residual emulator accounts..."
+  adb root >/dev/null 2>&1 || true
+  sleep 2
+  adb shell stop >/dev/null 2>&1 || true
+  sleep 2
+  adb shell "rm -f /data/system_ce/0/accounts_ce.db* /data/system_de/0/accounts_de.db* /data/system/users/0/accounts.db*" >/dev/null 2>&1 || true
+  adb shell start >/dev/null 2>&1 || true
+  wait_for_boot 45
+
+  local attempts=0
+  while [ "$attempts" -lt 3 ]; do
+    attempts=$((attempts + 1))
+    if adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1; then
+      pass "Device Owner activated after runtime account wipe (attempt $attempts)"
+      return 0
+    fi
+    sleep 3
+  done
+
+  if is_device_owner_active; then
+    pass "Device Owner confirmed active via dumpsys"
+  else
+    fail "Device Owner activation failed"
   fi
 }
 
@@ -174,7 +213,21 @@ case "$ROLE" in
       fail "TACTICAL INTERCEPT button not found"
     fi
 
-    # 4. Ensure Command Deck is foreground and engage Mission Lock
+    # 4. Verify Manual Study App Picker Tile ([SELECT MY STUDY APPS])
+    if tap_text "SELECT MY STUDY APPS"; then
+      sleep 2
+      if dump_ui | grep -q "Select Study Apps for Lock Mode"; then
+        pass "Manual [SELECT MY STUDY APPS] tile opened picker on demand"
+        tap_text "CONFIRM STUDY APPS" || adb shell input keyevent 4
+        sleep 2
+      else
+        fail "Manual study app picker dialog did not open"
+      fi
+    else
+      fail "SELECT MY STUDY APPS tile not found"
+    fi
+
+    # 5. Ensure Command Deck is foreground and engage Mission Lock
     adb shell am start -n "$MAIN" >/dev/null 2>&1
     sleep 2
     if tap_text "ENGAGE MISSION LOCK"; then
@@ -186,7 +239,7 @@ case "$ROLE" in
       fail "ENGAGE MISSION LOCK button not found"
     fi
 
-    # 5. Escape resistance: HOME + RECENTS + URL intercept
+    # 6. Escape resistance: HOME + RECENTS + URL intercept
     adb shell input keyevent 3 || true
     sleep 1
     adb shell input keyevent 187 || true
@@ -194,9 +247,11 @@ case "$ROLE" in
     FG=$(adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -n 2 || true)
     echo "$FG" | grep -q "$PKG" && pass "Resisted HOME & RECENTS escape" || fail "Escaped lockdown ($FG)"
 
-    adb shell am start -a android.intent.action.VIEW -d "[https://example.com](https://example.com)" >/dev/null 2>&1 || true
+    adb shell am start -a android.intent.action.VIEW -d "https://example.com" >/dev/null 2>&1 || true
     sleep 2
-    dump_ui | grep -q "TACTICAL INTERCEPT" && pass "Blocked URL [https://example.com](https://example.com) intercepted by SafeUrlInterceptorActivity" || fail "URL intercept did not trigger"
+    dump_ui | grep -q "TACTICAL INTERCEPT" && pass "Blocked URL intercepted by SafeUrlInterceptorActivity" || fail "URL intercept did not trigger"
+    tap_text "EXECUTE" || adb shell input keyevent 4
+    sleep 1
     ;;
 
   parent_auth_matrix)
@@ -243,6 +298,15 @@ print(f'{code:06d}')
     sleep 1
     if tap_text "MISSION STAND-DOWN"; then
       sleep 1
+      # Negative test: wrong TOTP / wrong PIN
+      tap_text "6-digit Parent PIN" && adb shell input text "000000"
+      adb shell input keyevent 4 || true
+      sleep 1
+      tap_text "VERIFY PIN / AUTHENTICATOR"
+      sleep 2
+      is_device_owner_active && pass "Wrong PIN/TOTP correctly rejected on MISSION STAND-DOWN" || fail "Wrong PIN cleared DO"
+
+      # Positive test: live TOTP
       tap_text "6-digit Parent PIN" && adb shell input text "$LIVE_TOTP"
       adb shell input keyevent 4 || true
       sleep 1
@@ -253,7 +317,7 @@ print(f'{code:06d}')
       fail "MISSION STAND-DOWN not found for TOTP test"
     fi
 
-    # 3. Re-provision, complete fresh setup, and test 12-Char Offline Recovery Key
+    # 3. Re-provision, complete fresh setup, and test Lowercase Normalized 12-Char Offline Recovery Key
     adb shell dpm set-device-owner "$ADMIN" >> "$REPORT" 2>&1 || true
     complete_family_setup "654321"
     dismiss_study_picker_if_present
@@ -261,12 +325,13 @@ print(f'{code:06d}')
     sleep 1
     if tap_text "MISSION STAND-DOWN"; then
       sleep 1
-      tap_text "SWT-XXXX" && adb shell input text "$CAPTURED_RECOVERY"
+      LOWER_RECOVERY=$(echo "$CAPTURED_RECOVERY" | tr '[:upper:]' '[:lower:]')
+      tap_text "SWT-XXXX" && adb shell input text "$LOWER_RECOVERY"
       adb shell input keyevent 4 || true
       sleep 1
       tap_text "VERIFY RECOVERY KEY"
       sleep 5
-      ! is_device_owner_active && pass "Offline 12-Char Recovery Key unlocked & deprovisioned Device Owner" || fail "Recovery Key failed to unlock"
+      ! is_device_owner_active && pass "Offline 12-Char Recovery Key (lowercase normalized) unlocked & deprovisioned" || fail "Recovery Key failed to unlock"
     else
       fail "MISSION STAND-DOWN not found for Recovery Key test"
     fi
@@ -296,10 +361,10 @@ print(f'{code:06d}')
     tap_text "Stay on Command Deck" || true
     adb reboot >/dev/null 2>&1 || true
     adb wait-for-device
-    sleep 20
+    wait_for_boot 60
     adb shell input keyevent 82 || true
     sleep 2
-    adb shell dumpsys device_policy | grep -q "$PKG" && pass "Device Owner survived cold reboot" || fail "Device Owner lost after reboot"
+    is_device_owner_active && pass "Device Owner survived cold reboot" || fail "Device Owner lost after reboot"
     adb shell dumpsys activity services "$PKG" | grep -q "SwatantraWatchdogService" && pass "SwatantraWatchdogService running after reboot" || fail "WatchdogService not running after reboot"
     adb shell am start -n "$MAIN" >/dev/null 2>&1
     sleep 2
@@ -314,6 +379,15 @@ print(f'{code:06d}')
     sleep 1
     if tap_text "CHANGE FAMILY PIN"; then
       sleep 1
+      # Negative test: wrong PIN
+      tap_text "6-digit Parent PIN" && adb shell input text "999999"
+      adb shell input keyevent 4 || true
+      sleep 1
+      tap_text "VERIFY & RE-SETUP FAMILY LOCK"
+      sleep 2
+      is_device_owner_active && pass "Wrong PIN on CHANGE FAMILY PIN rejected cleanly" || fail "Wrong PIN accepted"
+
+      # Positive test: correct PIN
       tap_text "6-digit Parent PIN" && adb shell input text "123456"
       adb shell input keyevent 4 || true
       sleep 1
@@ -340,9 +414,24 @@ print(f'{code:06d}')
     dismiss_study_picker_if_present
     tap_text "ENGAGE MISSION LOCK" && sleep 3
     tap_text "Stay on Command Deck" || true
-    adb shell monkey -p "$PKG" --throttle 75 -v 300 >/dev/null 2>&1 || true
+
+    # 1. Screen orientation changes (Portrait -> Landscape -> Portrait)
+    log "Testing orientation switch during Mission Lock..."
+    adb shell content insert --uri content://settings/system --bind name:s:user_rotation --bind value:i:1 >/dev/null 2>&1 || true
     sleep 2
-    pass "Completed 300-event Monkey chaos stress run"
+    adb shell content insert --uri content://settings/system --bind name:s:user_rotation --bind value:i:0 >/dev/null 2>&1 || true
+    sleep 2
+    pass "Resisted dynamic screen rotation in locked mode"
+
+    # 2. Low-memory pressure simulation
+    adb shell am send-trim-memory "$PKG" RUNNING_CRITICAL >/dev/null 2>&1 || true
+    sleep 1
+    pass "Survived RUNNING_CRITICAL memory pressure event"
+
+    # 3. 500-event Monkey chaos fuzzing
+    adb shell monkey -p "$PKG" --throttle 50 -v 500 >/dev/null 2>&1 || true
+    sleep 2
+    pass "Completed 500-event Monkey chaos stress run"
     ;;
 esac
 

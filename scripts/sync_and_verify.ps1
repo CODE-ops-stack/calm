@@ -7,8 +7,13 @@ Write-Host "=== Swatantra v7.1 Antigravity Build, Log Capture & GitHub Sync ==="
 # 1. Run Gradle build if gradlew.bat exists and capture output to error.log
 if (Test-Path ".\gradlew.bat") {
     Write-Host "[BUILD] Running .\gradlew.bat testReleaseUnitTest assembleRelease..."
+    Remove-Item "app\build\outputs\apk\release\app-release-unsigned.apk" -ErrorAction SilentlyContinue
     .\gradlew.bat testReleaseUnitTest assembleRelease -x extractReleaseVersionControlInfo --stacktrace *>&1 | Tee-Object -Variable buildOut
     $buildOut | Out-File -FilePath "error.log" -Encoding utf8
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Gradle build failed with exit code $LASTEXITCODE. Halting sync."
+        exit $LASTEXITCODE
+    }
 
     $unsignedApk = "app\build\outputs\apk\release\app-release-unsigned.apk"
     if (Test-Path $unsignedApk) {

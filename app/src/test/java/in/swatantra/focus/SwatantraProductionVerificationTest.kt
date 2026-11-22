@@ -704,9 +704,12 @@ class SwatantraProductionVerificationTest {
         )
 
         // 5. Source-level grep: shield applies DNS + releases it
-        val classifierSrc = File(
-            "app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt"
-        ).readText()
+        val classifierFile = resolveSourceFile(
+            "app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt",
+            "src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt"
+        )
+        assertTrue("FourBucketClassifier.kt must exist", classifierFile.exists())
+        val classifierSrc = classifierFile.readText()
         assertTrue(
             "FourBucketClassifier must contain setGlobalPrivateDnsModeSpecifiedHost",
             classifierSrc.contains("setGlobalPrivateDnsModeSpecifiedHost")
@@ -725,9 +728,12 @@ class SwatantraProductionVerificationTest {
         )
 
         // 6. AtomicDeprovisionManager: release fn called BEFORE clearDeviceOwnerApp
-        val deprovSrc = File(
-            "app/src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt"
-        ).readText()
+        val deprovFile = resolveSourceFile(
+            "app/src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt",
+            "src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt"
+        )
+        assertTrue("AtomicDeprovisionManager.kt must exist", deprovFile.exists())
+        val deprovSrc = deprovFile.readText()
         val releaseIdx = deprovSrc.indexOf("releaseMissionLockAdultAndAntiBypassShield")
         val clearIdx = deprovSrc.indexOf("clearDeviceOwnerApp")
         assertTrue("releaseMissionLockAdultAndAntiBypassShield must be present in AtomicDeprovisionManager", releaseIdx >= 0)
@@ -738,7 +744,9 @@ class SwatantraProductionVerificationTest {
         )
 
         // 7. Zero-harm grep: wipeData / wipeDevice must be ABSENT from all Kotlin sources
-        val allSrc = File("app/src/main/java").walkTopDown()
+        val srcDir = resolveSourceFile("app/src/main/java", "src/main/java")
+        assertTrue("src/main/java must exist", srcDir.exists() && srcDir.isDirectory)
+        val allSrc = srcDir.walkTopDown()
             .filter { it.extension == "kt" }
             .joinToString("") { it.readText() }
         assertFalse("wipeData must NOT appear anywhere in production source", allSrc.contains("wipeData"))

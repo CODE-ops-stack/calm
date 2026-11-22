@@ -1,6 +1,8 @@
 package `in`.swatantra.focus
 
 import android.content.pm.ApplicationInfo
+import `in`.swatantra.focus.classifier.FAMILY_PRIVATE_DNS_HOST
+import `in`.swatantra.focus.classifier.clampEntertainmentLimitMinutes
 import `in`.swatantra.focus.classifier.StrictPlayStoreAppVerifier
 import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
 import `in`.swatantra.focus.ui.MainActivity
@@ -9,6 +11,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.File
 import java.security.MessageDigest
 
 /**
@@ -675,5 +678,70 @@ class SwatantraProductionVerificationTest {
                 hasVpnService = false
             )
         )
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // TEST 9 — Mission-Lock-only: Adult DNS ban + Strict <1-Hour Entertainment Cap
+    // ─────────────────────────────────────────────────────────────────────────
+    @Test
+    fun testMissionLockAdultDnsAndSubOneHourEntertainmentCap() {
+        // 1. clampEntertainmentLimitMinutes: 60+ must clamp to 59
+        assertEquals("60 min must clamp to 59", 59, clampEntertainmentLimitMinutes(60))
+        assertEquals("120 min must clamp to 59", 59, clampEntertainmentLimitMinutes(120))
+        // 2. clampEntertainmentLimitMinutes: negative must clamp to 0
+        assertEquals("-5 must clamp to 0", 0, clampEntertainmentLimitMinutes(-5))
+        // 3. Valid values pass through unchanged
+        assertEquals("30 min must stay 30", 30, clampEntertainmentLimitMinutes(30))
+        assertEquals("0 must stay 0", 0, clampEntertainmentLimitMinutes(0))
+        assertEquals("45 min must stay 45", 45, clampEntertainmentLimitMinutes(45))
+        assertEquals("59 min must stay 59", 59, clampEntertainmentLimitMinutes(59))
+
+        // 4. Family Private DNS host constant
+        assertEquals(
+            "FAMILY_PRIVATE_DNS_HOST must equal family.adguard-dns.com",
+            "family.adguard-dns.com",
+            FAMILY_PRIVATE_DNS_HOST
+        )
+
+        // 5. Source-level grep: shield applies DNS + releases it
+        val classifierSrc = File(
+            "app/src/main/java/in/swatantra/focus/classifier/FourBucketClassifier.kt"
+        ).readText()
+        assertTrue(
+            "FourBucketClassifier must contain setGlobalPrivateDnsModeSpecifiedHost",
+            classifierSrc.contains("setGlobalPrivateDnsModeSpecifiedHost")
+        )
+        assertTrue(
+            "FourBucketClassifier must contain setGlobalPrivateDnsModeOpportunistic",
+            classifierSrc.contains("setGlobalPrivateDnsModeOpportunistic")
+        )
+        assertTrue(
+            "FourBucketClassifier must contain applyMissionLockAdultAndAntiBypassShield",
+            classifierSrc.contains("applyMissionLockAdultAndAntiBypassShield")
+        )
+        assertTrue(
+            "FourBucketClassifier must contain releaseMissionLockAdultAndAntiBypassShield",
+            classifierSrc.contains("releaseMissionLockAdultAndAntiBypassShield")
+        )
+
+        // 6. AtomicDeprovisionManager: release fn called BEFORE clearDeviceOwnerApp
+        val deprovSrc = File(
+            "app/src/main/java/in/swatantra/focus/dpc/AtomicDeprovisionManager.kt"
+        ).readText()
+        val releaseIdx = deprovSrc.indexOf("releaseMissionLockAdultAndAntiBypassShield")
+        val clearIdx = deprovSrc.indexOf("clearDeviceOwnerApp")
+        assertTrue("releaseMissionLockAdultAndAntiBypassShield must be present in AtomicDeprovisionManager", releaseIdx >= 0)
+        assertTrue("clearDeviceOwnerApp must be present in AtomicDeprovisionManager", clearIdx >= 0)
+        assertTrue(
+            "releaseMissionLockAdultAndAntiBypassShield must appear BEFORE clearDeviceOwnerApp",
+            releaseIdx < clearIdx
+        )
+
+        // 7. Zero-harm grep: wipeData / wipeDevice must be ABSENT from all Kotlin sources
+        val allSrc = File("app/src/main/java").walkTopDown()
+            .filter { it.extension == "kt" }
+            .joinToString("") { it.readText() }
+        assertFalse("wipeData must NOT appear anywhere in production source", allSrc.contains("wipeData"))
+        assertFalse("wipeDevice must NOT appear anywhere in production source", allSrc.contains("wipeDevice"))
     }
 }

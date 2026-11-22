@@ -13,6 +13,77 @@ import `in`.swatantra.focus.network.SafeStudyDnsVpnService
 import `in`.swatantra.focus.ui.MainActivity
 import `in`.swatantra.focus.ui.SafeUrlInterceptorActivity
 
+// ── Mission-Lock-only Adult Content Ban + Strict <1-Hour Entertainment Cap ──
+
+/** Strictly less than 1 hour (60 min is forbidden). */
+const val MAX_ENTERTAINMENT_LIMIT_MINUTES = 59
+
+/** Family Private DNS host used to ban adult content when Mission Lock is ON. */
+const val FAMILY_PRIVATE_DNS_HOST = "family.adguard-dns.com"
+
+/**
+ * Clamps an entertainment limit to the valid range 0..59 minutes (never >= 60).
+ * Mission-Lock-only: only called when Mission Lock is being engaged.
+ */
+fun clampEntertainmentLimitMinutes(requestedMinutes: Int): Int =
+    requestedMinutes.coerceIn(0, MAX_ENTERTAINMENT_LIMIT_MINUTES)
+
+/**
+ * Applies OS-level adult-content ban + anti-bypass shield.
+ * MUST only be called when Mission Lock is ON.
+ * All DPM calls are wrapped in isolated runCatching — zero crash risk.
+ */
+fun applyMissionLockAdultAndAntiBypassShield(context: Context) {
+    val dpm = context.getSystemService(android.app.admin.DevicePolicyManager::class.java) ?: return
+    val admin = android.content.ComponentName(
+        context, `in`.swatantra.focus.dpc.SwatantraAdminReceiver::class.java
+    )
+    if (!dpm.isDeviceOwnerApp(context.packageName)) return
+
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        runCatching { dpm.setGlobalPrivateDnsModeSpecifiedHost(admin, FAMILY_PRIVATE_DNS_HOST) }
+    }
+    val lockRestrictions = listOf(
+        android.os.UserManager.DISALLOW_CONFIG_PRIVATE_DNS,
+        android.os.UserManager.DISALLOW_CONFIG_VPN,
+        android.os.UserManager.DISALLOW_SAFE_BOOT,
+        android.os.UserManager.DISALLOW_ADD_USER,
+        android.os.UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES,
+        android.os.UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES_GLOBALLY
+    )
+    for (restriction in lockRestrictions) {
+        runCatching { dpm.addUserRestriction(admin, restriction) }
+    }
+}
+
+/**
+ * Releases the adult-content ban + anti-bypass shield.
+ * MUST be called on Mission Lock OFF / deprovision — BEFORE clearDeviceOwnerApp().
+ * All DPM calls are wrapped in isolated runCatching — zero crash risk.
+ */
+fun releaseMissionLockAdultAndAntiBypassShield(context: Context) {
+    val dpm = context.getSystemService(android.app.admin.DevicePolicyManager::class.java) ?: return
+    val admin = android.content.ComponentName(
+        context, `in`.swatantra.focus.dpc.SwatantraAdminReceiver::class.java
+    )
+    if (!dpm.isDeviceOwnerApp(context.packageName)) return
+
+    val lockRestrictions = listOf(
+        android.os.UserManager.DISALLOW_CONFIG_PRIVATE_DNS,
+        android.os.UserManager.DISALLOW_CONFIG_VPN,
+        android.os.UserManager.DISALLOW_SAFE_BOOT,
+        android.os.UserManager.DISALLOW_ADD_USER,
+        android.os.UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES,
+        android.os.UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES_GLOBALLY
+    )
+    for (restriction in lockRestrictions) {
+        runCatching { dpm.clearUserRestriction(admin, restriction) }
+    }
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+        runCatching { dpm.setGlobalPrivateDnsModeOpportunistic(admin) }
+    }
+}
+
 class FourBucketClassifier(context: Context) {
     private val deContext = context.createDeviceProtectedStorageContext()
     private val dpm = deContext.getSystemService(DevicePolicyManager::class.java)

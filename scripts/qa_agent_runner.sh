@@ -253,6 +253,12 @@ case "$ROLE" in
       LOCK_STATE=$(adb shell dumpsys activity activities | grep -Ei "LockTask|mLockTask" | head -n 3 || true)
       echo "$LOCK_STATE" | grep -Eqi "LOCKED|PINNED" && pass "LockTask engaged ($LOCK_STATE)" || fail "LockTask did not engage"
       tap_text "Stay on Command Deck" || true
+
+      # Mission-Lock-only: Family Private DNS must now be enforced
+      DNS_SPEC=$(adb shell settings get global private_dns_specifier 2>/dev/null | tr -d '\r\n')
+      echo "$DNS_SPEC" | grep -q "family.adguard-dns.com" \
+        && pass "Mission-Lock Family Private DNS enforced (family.adguard-dns.com)" \
+        || fail "Family Private DNS NOT enforced after Mission Lock (got: $DNS_SPEC)"
     else
       fail "ENGAGE MISSION LOCK button not found"
     fi
@@ -334,6 +340,12 @@ print(f'{code:06d}')
       tap_text "VERIFY PIN / AUTHENTICATOR"
       sleep 5
       ! is_device_owner_active && pass "Live RFC 6238 TOTP code unlocked & deprovisioned Device Owner" || fail "Live TOTP code failed to unlock"
+
+      # Mission-Lock-only: After deprovision, Private DNS must NOT be in hostname mode
+      DNS_MODE=$(adb shell settings get global private_dns_mode 2>/dev/null | tr -d '\r\n')
+      [ "$DNS_MODE" != "hostname" ] \
+        && pass "Family Private DNS cleanly released when Mission Lock is OFF (mode: $DNS_MODE)" \
+        || fail "Family Private DNS still in hostname mode after Mission Lock OFF (got: $DNS_MODE)"
     else
       fail "MISSION STAND-DOWN not found for TOTP test"
     fi

@@ -22,6 +22,8 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import `in`.swatantra.focus.classifier.FourBucketClassifier
+import `in`.swatantra.focus.classifier.applyMissionLockAdultAndAntiBypassShield
+import `in`.swatantra.focus.classifier.clampEntertainmentLimitMinutes
 import `in`.swatantra.focus.dpc.AtomicDeprovisionManager
 import `in`.swatantra.focus.dpc.ParentTotpAuthenticator
 import `in`.swatantra.focus.dpc.SwatantraAdminReceiver
@@ -41,6 +43,7 @@ class MainActivity : Activity() {
         const val KEY_STUDY_PKGS = "study_pkgs"
         const val KEY_STUDY_CONFIGURED = "study_apps_configured"
         const val KEY_MISSION_LOCK_ACTIVE = "mission_lock_active"
+        const val KEY_ENTERTAINMENT_CAP = "entertainment_cap_minutes"
 
         val UNIVERSAL_IF_THEN_DIRECTIVES = listOf(
             "IF urge to browse hits -> THEN solve 2 practice questions now. Your big goal is waiting.",
@@ -56,6 +59,7 @@ class MainActivity : Activity() {
     private lateinit var subHeader: TextView
     private lateinit var telemetryBanner: TextView
     private lateinit var uninstallTile: Button
+    private lateinit var entertainmentCapTile: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -193,6 +197,34 @@ class MainActivity : Activity() {
             }
         }
 
+        // ── Entertainment Cap Tile (hidden during Mission Lock) ──
+        val capOptions = listOf(0, 15, 30, 45)
+        val savedCap = clampEntertainmentLimitMinutes(
+            studyPrefs.getInt(KEY_ENTERTAINMENT_CAP, 0)
+        )
+        var currentCapIdx = capOptions.indexOfFirst { it >= savedCap }.takeIf { it >= 0 } ?: 0
+        entertainmentCapTile = Button(this).apply {
+            val cap = capOptions[currentCapIdx]
+            text = if (cap == 0) "[ENTERTAINMENT CAP: 0 MIN (Fully Blocked)]"
+                   else "[ENTERTAINMENT CAP: $cap MIN / day]"
+            textSize = 14f
+            setBackgroundColor(Color.parseColor("#1E3A5F"))
+            setTextColor(Color.WHITE)
+            setPadding(28, 28, 28, 28)
+            val lp = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { setMargins(0, 0, 0, 16) }
+            layoutParams = lp
+            setOnClickListener {
+                currentCapIdx = (currentCapIdx + 1) % capOptions.size
+                val chosen = capOptions[currentCapIdx]
+                studyPrefs.edit().putInt(KEY_ENTERTAINMENT_CAP, chosen).commit()
+                text = if (chosen == 0) "[ENTERTAINMENT CAP: 0 MIN (Fully Blocked)]"
+                       else "[ENTERTAINMENT CAP: $chosen MIN / day]"
+            }
+        }
+
         val parkingTile = createTile("[TACTICAL INTERCEPT] \u2022 Park Urge / Doubt (10-Min Rule)", "#D97706") {
             startActivity(Intent(this, SafeUrlInterceptorActivity::class.java))
         }
@@ -250,6 +282,7 @@ class MainActivity : Activity() {
         root.addView(directiveBanner)
         root.addView(cycleDirectiveTile)
         root.addView(selectStudyAppsTile)
+        root.addView(entertainmentCapTile)
         root.addView(studyTile)
         root.addView(parkingTile)
         root.addView(wifiSettingsTile)
@@ -322,7 +355,9 @@ class MainActivity : Activity() {
     private fun refreshLockStateVisibility(deContext: Context) {
         val isLocked = deContext.getSharedPreferences(PREFS_STUDY, Context.MODE_PRIVATE)
             .getBoolean(KEY_MISSION_LOCK_ACTIVE, false)
+        // Hide tiles that must not be accessible during active Mission Lock
         uninstallTile.visibility = if (isLocked) View.GONE else View.VISIBLE
+        entertainmentCapTile.visibility = if (isLocked) View.GONE else View.VISIBLE
     }
 
     private fun isEligibleStudyCandidate(pkg: String, pm: PackageManager): Boolean {
@@ -485,6 +520,38 @@ class MainActivity : Activity() {
                 val studySet = chosenStudySet + setOf("com.android.vending")
                 runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
                 studyPrefs.edit().putBoolean(KEY_MISSION_LOCK_ACTIVE, true).commit()
+
+                // ── Mission-Lock-only adult-content ban + anti-bypass shield ──
+                applyMissionLockAdultAndAntiBypassShield(deContext)
+
+                // ── Lock entertainment cap into the ledger ──
+                val capMinutes = clampEntertainmentLimitMinutes(
+                    studyPrefs.getInt(KEY_ENTERTAINMENT_CAP, 0)
+                )
+                val ledger = MonotonicDualClockLedger(deContext)
+                ledger.setEntertainmentDailyLimitMinutes(capMinutes)
+
+                // ── Immediately suspend entertainment pkgs if budget exhausted ──
+                if (ledger.isEntertainmentExhausted()) {
+                    val admin = ComponentName(deContext, SwatantraAdminReceiver::class.java)
+                    val entertainmentPkgs = deContext.packageManager
+                        .getInstalledPackages(0)
+                        .map { it.packageName }
+                        .filter { pkg ->
+                            pkg !in chosenStudySet &&
+                            pkg != packageName &&
+                            !pkg.startsWith("com.android.") &&
+                            !pkg.startsWith("android") &&
+                            !pkg.startsWith("com.google.android.gms") &&
+                            !pkg.startsWith("com.google.android.gsf")
+                        }
+                    // Store for watchdog to re-apply each heartbeat
+                    deContext.getSharedPreferences("entertainment_prefs_de", Context.MODE_PRIVATE)
+                        .edit().putStringSet("entertainment_pkgs_to_suspend", entertainmentPkgs.toSet()).commit()
+                    runCatching {
+                        dpm?.setPackagesSuspended(admin, entertainmentPkgs.toTypedArray(), true)
+                    }
+                }
             }
 
             val launchable = chosenStudySet.mapNotNull { pkg ->

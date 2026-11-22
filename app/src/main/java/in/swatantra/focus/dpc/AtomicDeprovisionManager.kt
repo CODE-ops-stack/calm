@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.UserManager
+import `in`.swatantra.focus.classifier.releaseMissionLockAdultAndAntiBypassShield
+import `in`.swatantra.focus.ledger.MonotonicDualClockLedger
 
 class AtomicDeprovisionManager(context: Context) {
     private val deContext = context.createDeviceProtectedStorageContext()
@@ -82,7 +84,10 @@ class AtomicDeprovisionManager(context: Context) {
             UserManager.DISALLOW_CONFIG_TETHERING,
             UserManager.DISALLOW_CONFIG_DATE_TIME,
             UserManager.DISALLOW_PRINTING,
-            UserManager.DISALLOW_APPS_CONTROL
+            UserManager.DISALLOW_APPS_CONTROL,
+            // Mission-Lock-only: also clear Private DNS & VPN config locks (belt-and-suspenders)
+            UserManager.DISALLOW_CONFIG_PRIVATE_DNS,
+            UserManager.DISALLOW_CONFIG_VPN
         )
         for (r in restrictions) {
             runCatching { dpm.clearUserRestriction(admin, r) }
@@ -94,6 +99,12 @@ class AtomicDeprovisionManager(context: Context) {
         check(stillHidden.isEmpty()) {
             "Deprovision verification failed: packages still hidden ($stillHidden)"
         }
+
+        // ── Mission-Lock-only: release adult-content ban + anti-bypass shield BEFORE clearDeviceOwnerApp ──
+        releaseMissionLockAdultAndAntiBypassShield(deContext)
+
+        // Reset entertainment tracking state
+        runCatching { MonotonicDualClockLedger(deContext).resetEntertainmentState() }
 
         @Suppress("DEPRECATION")
         dpm.clearDeviceOwnerApp(deContext.packageName)

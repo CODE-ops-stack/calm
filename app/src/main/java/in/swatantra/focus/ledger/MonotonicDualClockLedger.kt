@@ -104,6 +104,56 @@ class MonotonicDualClockLedger(context: Context) {
         return Pair(nextStudyMs, nextCallMs)
     }
 
+    // ── Entertainment Budget — Mission-Lock-only, Device-Encrypted ──
+
+    private fun entertainmentPrefs() =
+        deContext.getSharedPreferences("entertainment_prefs_de", Context.MODE_PRIVATE)
+
+    /** Persists the user-chosen daily entertainment limit (clamped 0..59). */
+    fun setEntertainmentDailyLimitMinutes(minutes: Int) {
+        val clamped = `in`.swatantra.focus.classifier.clampEntertainmentLimitMinutes(minutes)
+        entertainmentPrefs().edit().putInt("entertainment_limit_minutes", clamped).commit()
+    }
+
+    /** Returns the persisted daily entertainment limit in minutes (default 0 = fully blocked). */
+    fun getEntertainmentLimitMinutes(): Int =
+        entertainmentPrefs().getInt("entertainment_limit_minutes", 0)
+
+    /** Returns how many milliseconds of entertainment have been used so far today. */
+    fun getEntertainmentUsedElapsedMs(): Long =
+        entertainmentPrefs().getLong("entertainment_used_elapsed_ms", 0L)
+
+    /**
+     * Accumulates entertainment usage delta (monotonic elapsed ms).
+     * Only adds positive deltas to prevent clock-tampering resets.
+     */
+    @Synchronized
+    fun recordEntertainmentUsageDelta(deltaMs: Long) {
+        if (deltaMs <= 0L) return
+        val prefs = entertainmentPrefs()
+        val current = prefs.getLong("entertainment_used_elapsed_ms", 0L)
+        prefs.edit().putLong("entertainment_used_elapsed_ms", current + deltaMs).commit()
+    }
+
+    /**
+     * Returns true if the entertainment budget is exhausted.
+     * Exhausted when: limit is 0 (fully blocked), OR used >= limit*60_000ms.
+     */
+    fun isEntertainmentExhausted(): Boolean {
+        val limitMinutes = getEntertainmentLimitMinutes()
+        if (limitMinutes <= 0) return true
+        val usedMs = getEntertainmentUsedElapsedMs()
+        return usedMs >= limitMinutes * 60_000L
+    }
+
+    /** Resets entertainment tracking state (called on deprovision). */
+    fun resetEntertainmentState() {
+        entertainmentPrefs().edit()
+            .remove("entertainment_used_elapsed_ms")
+            .remove("entertainment_budget_locked")
+            .commit()
+    }
+
     private data class LedgerRow(
         val seqNo: Long, val bootCount: Int, val bootId: String,
         val lastElapsedMs: Long, val highWaterWallMs: Long,

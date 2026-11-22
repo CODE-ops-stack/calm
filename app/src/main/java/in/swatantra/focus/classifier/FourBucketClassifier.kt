@@ -42,6 +42,18 @@ fun applyMissionLockAdultAndAntiBypassShield(context: Context) {
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
         runCatching { dpm.setGlobalPrivateDnsModeSpecifiedHost(admin, FAMILY_PRIVATE_DNS_HOST) }
+        runCatching {
+            android.provider.Settings.Global.putString(
+                context.contentResolver,
+                "private_dns_specifier",
+                FAMILY_PRIVATE_DNS_HOST
+            )
+            android.provider.Settings.Global.putString(
+                context.contentResolver,
+                "private_dns_mode",
+                "hostname"
+            )
+        }
     }
     val lockRestrictions = listOf(
         android.os.UserManager.DISALLOW_CONFIG_PRIVATE_DNS,
@@ -81,6 +93,18 @@ fun releaseMissionLockAdultAndAntiBypassShield(context: Context) {
     }
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
         runCatching { dpm.setGlobalPrivateDnsModeOpportunistic(admin) }
+        runCatching {
+            android.provider.Settings.Global.putString(
+                context.contentResolver,
+                "private_dns_mode",
+                "opportunistic"
+            )
+            android.provider.Settings.Global.putString(
+                context.contentResolver,
+                "private_dns_specifier",
+                ""
+            )
+        }
     }
 }
 

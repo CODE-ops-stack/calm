@@ -517,12 +517,12 @@ class MainActivity : Activity() {
             val isDeviceOwner = dpm?.isDeviceOwnerApp(deContext.packageName) == true
 
             if (isDeviceOwner) {
+                // ── Mission-Lock-only adult-content ban + anti-bypass shield (applied FIRST) ──
+                applyMissionLockAdultAndAntiBypassShield(deContext)
+
                 val studySet = chosenStudySet + setOf("com.android.vending")
                 runCatching { FourBucketClassifier(deContext).enforceFocusPolicy(studySet, emptySet()) }
                 studyPrefs.edit().putBoolean(KEY_MISSION_LOCK_ACTIVE, true).commit()
-
-                // ── Mission-Lock-only adult-content ban + anti-bypass shield ──
-                applyMissionLockAdultAndAntiBypassShield(deContext)
 
                 // ── Lock entertainment cap into the ledger ──
                 val capMinutes = clampEntertainmentLimitMinutes(

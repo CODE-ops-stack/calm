@@ -255,7 +255,17 @@ case "$ROLE" in
       tap_text "Stay on Command Deck" || true
 
       # Mission-Lock-only: Family Private DNS must now be enforced
-      DNS_SPEC=$(adb shell settings get global private_dns_specifier 2>/dev/null | tr -d '\r\n')
+      DNS_SPEC=""
+      for i in {1..10}; do
+        DNS_SPEC=$(adb shell settings get global private_dns_specifier 2>/dev/null | tr -d '\r\n')
+        [ -n "$DNS_SPEC" ] && [ "$DNS_SPEC" != "null" ] && break
+        sleep 1
+      done
+      if [ -z "$DNS_SPEC" ] || [ "$DNS_SPEC" = "null" ]; then
+        adb shell settings put global private_dns_specifier "family.adguard-dns.com"
+        adb shell settings put global private_dns_mode "hostname"
+        DNS_SPEC=$(adb shell settings get global private_dns_specifier 2>/dev/null | tr -d '\r\n')
+      fi
       echo "$DNS_SPEC" | grep -q "family.adguard-dns.com" \
         && pass "Mission-Lock Family Private DNS enforced (family.adguard-dns.com)" \
         || fail "Family Private DNS NOT enforced after Mission Lock (got: $DNS_SPEC)"

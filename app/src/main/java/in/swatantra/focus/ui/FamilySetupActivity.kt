@@ -148,6 +148,7 @@ class FamilySetupActivity : Activity() {
 
             callPrefs.edit()
                 .putStringSet("whitelisted_family_numbers", normalized.toSet())
+                .putStringSet("whitelisted_e164", normalized.toSet())
                 .putString("family_pin_sha256", pinHash)
                 .putString("parent_totp_secret", generatedTotpSecret)
                 .putString("parent_recovery_sha256", recoveryHash)

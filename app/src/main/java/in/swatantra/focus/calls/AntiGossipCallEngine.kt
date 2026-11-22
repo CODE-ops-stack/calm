@@ -71,10 +71,11 @@ class AntiGossipCallEngine(context: Context) {
     }
 
     fun shouldMeterOrDisconnectCall(call: Call, whitelistedE164Set: Set<String>, quotaExhausted: Boolean): Boolean {
-        val handleNum = call.details?.handle?.schemeSpecificPart
+        val details = call.details ?: return false
+        val handleNum = details.handle?.schemeSpecificPart
         if (isEmergencyOrCallbackImmune(handleNum)) return false
 
-        val isConference = (call.details.callProperties and Call.Details.PROPERTY_CONFERENCE) != 0
+        val isConference = (details.callProperties and Call.Details.PROPERTY_CONFERENCE) != 0
         if (isConference) {
             val children = call.children
             val anyNonWhitelistedLeg = children.isEmpty() || children.any { leg ->
@@ -102,7 +103,7 @@ class AntiGossipCallEngine(context: Context) {
     }
 
     fun enforceVoipMicrophonePolicy(voipApps: Set<String>, quotaExhausted: Boolean) {
-        if (!dpm.isDeviceOwnerApp(deContext.packageName)) return
+        if (dpm == null || !dpm.isDeviceOwnerApp(deContext.packageName)) return
         val grantState = if (quotaExhausted) {
             DevicePolicyManager.PERMISSION_GRANT_STATE_DENIED
         } else {

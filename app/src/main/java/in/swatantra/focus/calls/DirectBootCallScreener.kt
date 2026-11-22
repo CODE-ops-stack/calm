@@ -16,7 +16,8 @@ class DirectBootCallScreener : CallScreeningService() {
 
         val dePrefs = createDeviceProtectedStorageContext()
             .getSharedPreferences("call_engine_de", Context.MODE_PRIVATE)
-        val whitelist = dePrefs.getStringSet("whitelisted_e164", emptySet()) ?: emptySet()
+        val whitelist = dePrefs.getStringSet("whitelisted_family_numbers", null)
+            ?: dePrefs.getStringSet("whitelisted_e164", emptySet()) ?: emptySet()
         val quotaExhausted = dePrefs.getBoolean("daily_call_quota_exhausted", false)
 
         if (quotaExhausted && !engine.isNumberWhitelisted(rawNum, whitelist)) {

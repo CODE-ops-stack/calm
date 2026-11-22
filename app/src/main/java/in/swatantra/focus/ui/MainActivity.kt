@@ -673,6 +673,7 @@ class MainActivity : Activity() {
         fun clearFamilyCredentialsForReSetup() {
             callPrefs.edit()
                 .remove("whitelisted_family_numbers")
+                .remove("whitelisted_e164")
                 .remove("family_pin_sha256")
                 .remove("parent_totp_secret")
                 .remove("parent_recovery_sha256")

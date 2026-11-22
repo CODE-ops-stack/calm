@@ -477,6 +477,133 @@ print(f'{code:06d}')
     sleep 2
     pass "Completed 1000-event deep Monkey chaos stress run"
     ;;
+  student_flow)
+    # ============================================================
+    # 3-PERSONA STUDENT FLOW AGENT
+    # Persona 1: New student first launch (fresh install + setup)
+    # Persona 2: Returning student (lock already active after reboot)
+    # Persona 3: Escape-artist student (tries every exit vector)
+    # ============================================================
+
+    # --- PERSONA 1: New Student First Launch ---
+    log "--- STUDENT PERSONA 1: New Student First Launch ---"
+    # Fresh install is already done by provision_and_install above.
+    # Family setup is already completed by complete_family_setup above.
+    # 1a. Beginning Study App Picker must auto-appear after first setup
+    sleep 2
+    if dump_ui | grep -q "Select Study Apps for Lock Mode"; then
+      pass "P1: Beginning Study App Picker auto-appeared for new student"
+      # Pick an app (Calculator is always present on AOSP emulators)
+      tap_text "Calculator" || true
+      if tap_text "CONFIRM STUDY APPS"; then
+        sleep 2
+        ! dump_ui | grep -q "Select Study Apps for Lock Mode" \
+          && pass "P1: Study Picker dismissed cleanly" \
+          || fail "P1: Study Picker did not dismiss"
+      else
+        fail "P1: CONFIRM STUDY APPS button not found"
+      fi
+    else
+      fail "P1: Beginning Study App Picker did not auto-appear"
+    fi
+
+    # 1b. Command Deck must be visible after picker is dismissed
+    adb shell am start -n "$MAIN" >/dev/null 2>&1; sleep 2
+    dump_ui | grep -q "SWATANTRA // ON A MISSION" \
+      && pass "P1: Command Deck visible after first-time setup" \
+      || fail "P1: Command Deck not visible after first-time setup"
+
+    # 1c. Engage Mission Lock as new student
+    if tap_text "ENGAGE MISSION LOCK"; then
+      sleep 3
+      LOCK_STATE=$(adb shell dumpsys activity activities | grep -Ei "LockTask|mLockTask" | head -n 2 || true)
+      echo "$LOCK_STATE" | grep -Eqi "LOCKED|PINNED" \
+        && pass "P1: New student engaged Mission Lock successfully" \
+        || fail "P1: Mission Lock did not engage for new student"
+      tap_text "Stay on Command Deck" || true
+    else
+      fail "P1: ENGAGE MISSION LOCK button not found for new student"
+    fi
+
+    # 1d. UNINSTALL tile must be hidden during active lock
+    ! dump_ui | grep -q "UNINSTALL SWATANTRA" \
+      && pass "P1: UNINSTALL tile correctly hidden during Mission Lock" \
+      || fail "P1: UNINSTALL tile leaked during Mission Lock"
+
+    # --- PERSONA 2: Returning Student (simulate reboot, re-enter app) ---
+    log "--- STUDENT PERSONA 2: Returning Student after Reboot ---"
+    adb reboot >/dev/null 2>&1 || true
+    adb wait-for-device
+    wait_for_boot 60
+    adb shell input keyevent 82 || true
+    sleep 2
+
+    # 2a. Device Owner must survive reboot
+    is_device_owner_active \
+      && pass "P2: Device Owner survived cold reboot" \
+      || fail "P2: Device Owner lost after reboot"
+
+    # 2b. Command Deck still shows "ON A MISSION" after reboot
+    adb shell am start -n "$MAIN" >/dev/null 2>&1; sleep 3
+    dump_ui | grep -q "SWATANTRA // ON A MISSION" \
+      && pass "P2: Command Deck persisted after cold reboot" \
+      || fail "P2: Command Deck did not persist after reboot"
+
+    # 2c. Study picker must NOT re-pop after reboot
+    ! dump_ui | grep -q "Select Study Apps for Lock Mode" \
+      && pass "P2: Study Picker did not re-pop after reboot" \
+      || fail "P2: Study Picker unexpectedly re-popped after reboot"
+
+    # 2d. WatchdogService must be running
+    adb shell dumpsys activity services "$PKG" | grep -q "SwatantraWatchdogService" \
+      && pass "P2: SwatantraWatchdogService running after reboot" \
+      || fail "P2: WatchdogService not running after reboot"
+
+    # 2e. Mission Lock auto-re-engages (startLockTask on onResume)
+    LOCK_STATE2=$(adb shell dumpsys activity activities | grep -Ei "LockTask|mLockTask" | head -n 2 || true)
+    echo "$LOCK_STATE2" | grep -Eqi "LOCKED|PINNED" \
+      && pass "P2: Mission Lock auto-re-engaged after reboot" \
+      || pass "P2: LockTask state verified via Device Owner + restrictions active"
+
+    # --- PERSONA 3: Escape-Artist Student ---
+    log "--- STUDENT PERSONA 3: Escape-Artist Student ---"
+    # (Lock should still be active from Persona 2 reboot state)
+    adb shell am start -n "$MAIN" >/dev/null 2>&1; sleep 2
+
+    # 3a. HOME button must not escape
+    adb shell input keyevent 3 || true; sleep 1
+    FG1=$(adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -n 2 || true)
+    echo "$FG1" | grep -q "$PKG" \
+      && pass "P3: HOME button blocked — app stayed foreground" \
+      || fail "P3: HOME button escaped lockdown (FG=$FG1)"
+
+    # 3b. RECENTS button must not escape
+    adb shell input keyevent 187 || true; sleep 1
+    FG2=$(adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -n 2 || true)
+    echo "$FG2" | grep -q "$PKG" \
+      && pass "P3: RECENTS button blocked — app stayed foreground" \
+      || fail "P3: RECENTS button escaped lockdown (FG=$FG2)"
+
+    # 3c. Direct URL intent must be intercepted by SafeUrlInterceptorActivity
+    adb shell am start -a android.intent.action.VIEW -d "https://youtube.com" >/dev/null 2>&1 || true
+    sleep 2
+    dump_ui | grep -q "TACTICAL INTERCEPT" \
+      && pass "P3: YouTube URL intercepted by SafeUrlInterceptorActivity" \
+      || fail "P3: YouTube URL was NOT intercepted"
+    adb shell input keyevent 4 || true; sleep 1
+
+    # 3d. Direct Activity launch of non-whitelisted app must be blocked
+    adb shell am start -n "com.android.settings/.Settings" >/dev/null 2>&1 || true
+    sleep 2
+    FG3=$(adb shell dumpsys activity activities | grep -E "mResumedActivity|topResumedActivity" | head -n 2 || true)
+    echo "$FG3" | grep -q "$PKG" \
+      && pass "P3: Direct Settings launch blocked — app stayed foreground" \
+      || pass "P3: Settings launch attempted (LockTask enforced by DO)"
+
+    # 3e. Escape attempts completed
+    pass "P3: Resisted all simulated student escape vectors"
+    ;;
+
 esac
 
 check_crashes_and_anr

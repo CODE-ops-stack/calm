@@ -29,6 +29,19 @@ fun clampEntertainmentLimitMinutes(requestedMinutes: Int): Int =
     requestedMinutes.coerceIn(0, MAX_ENTERTAINMENT_LIMIT_MINUTES)
 
 /**
+ * Helper to determine whether running inside an Android Virtual Device / Emulator.
+ */
+fun isEmulatorEnvironment(): Boolean {
+    return android.os.Build.FINGERPRINT.startsWith("generic") ||
+           android.os.Build.FINGERPRINT.contains("emulator") ||
+           android.os.Build.HARDWARE.contains("ranchu") ||
+           android.os.Build.HARDWARE.contains("goldfish") ||
+           android.os.Build.MODEL.contains("sdk_gphone") ||
+           android.os.Build.PRODUCT.contains("sdk_gphone") ||
+           android.os.Build.PRODUCT.contains("emulator")
+}
+
+/**
  * Applies OS-level adult-content ban + anti-bypass shield.
  * MUST only be called when Mission Lock is ON.
  * All DPM calls are wrapped in isolated runCatching — zero crash risk.
@@ -41,18 +54,35 @@ fun applyMissionLockAdultAndAntiBypassShield(context: Context) {
     if (!dpm.isDeviceOwnerApp(context.packageName)) return
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-        runCatching { dpm.setGlobalPrivateDnsModeSpecifiedHost(admin, FAMILY_PRIVATE_DNS_HOST) }
-        runCatching {
-            android.provider.Settings.Global.putString(
-                context.contentResolver,
-                "private_dns_specifier",
-                FAMILY_PRIVATE_DNS_HOST
-            )
-            android.provider.Settings.Global.putString(
-                context.contentResolver,
-                "private_dns_mode",
-                "hostname"
-            )
+        var dnsRes = runCatching {
+            dpm.setGlobalPrivateDnsModeSpecifiedHost(admin, FAMILY_PRIVATE_DNS_HOST)
+        }.getOrDefault(-1)
+
+        if (dnsRes != android.app.admin.DevicePolicyManager.PRIVATE_DNS_SET_NO_ERROR) {
+            runCatching {
+                Thread.sleep(500)
+                dnsRes = dpm.setGlobalPrivateDnsModeSpecifiedHost(admin, FAMILY_PRIVATE_DNS_HOST)
+            }
+        }
+
+        if (isEmulatorEnvironment()) {
+            val currentSpec = runCatching {
+                android.provider.Settings.Global.getString(context.contentResolver, "private_dns_specifier")
+            }.getOrNull()
+            if (currentSpec.isNullOrEmpty() || currentSpec == "null") {
+                runCatching {
+                    android.provider.Settings.Global.putString(
+                        context.contentResolver,
+                        "private_dns_mode",
+                        "hostname"
+                    )
+                    android.provider.Settings.Global.putString(
+                        context.contentResolver,
+                        "private_dns_specifier",
+                        FAMILY_PRIVATE_DNS_HOST
+                    )
+                }
+            }
         }
     }
     val lockRestrictions = listOf(
@@ -255,16 +285,6 @@ class FourBucketClassifier(context: Context) {
         for (restriction in focusRestrictions) {
             runCatching { dpm.addUserRestriction(admin, restriction) }
         }
-    }
-
-    private fun isEmulatorEnvironment(): Boolean {
-        return Build.FINGERPRINT.startsWith("generic") ||
-               Build.FINGERPRINT.contains("emulator") ||
-               Build.HARDWARE.contains("ranchu") ||
-               Build.HARDWARE.contains("goldfish") ||
-               Build.MODEL.contains("sdk_gphone") ||
-               Build.PRODUCT.contains("sdk_gphone") ||
-               Build.PRODUCT.contains("emulator")
     }
 
     private fun isEssentialSystemPackage(pkg: String): Boolean {

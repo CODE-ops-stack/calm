@@ -256,15 +256,19 @@ case "$ROLE" in
 
       # Mission-Lock-only: Family Private DNS must now be enforced
       DNS_SPEC=""
-      for i in {1..10}; do
+      for i in {1..5}; do
         DNS_SPEC=$(adb shell settings get global private_dns_specifier 2>/dev/null | tr -d '\r\n')
-        [ -n "$DNS_SPEC" ] && [ "$DNS_SPEC" != "null" ] && break
+        echo "$DNS_SPEC" | grep -q "family.adguard-dns.com" && break
         sleep 1
       done
-      if [ -z "$DNS_SPEC" ] || [ "$DNS_SPEC" = "null" ]; then
-        adb shell settings put global private_dns_specifier "family.adguard-dns.com"
-        adb shell settings put global private_dns_mode "hostname"
-        DNS_SPEC=$(adb shell settings get global private_dns_specifier 2>/dev/null | tr -d '\r\n')
+      if ! echo "$DNS_SPEC" | grep -q "family.adguard-dns.com"; then
+        USER_RESTRICTIONS=$(adb shell dumpsys user 2>/dev/null | grep -i "no_config_private_dns" || true)
+        DPM_RESTRICTIONS=$(adb shell dumpsys device_policy 2>/dev/null | grep -i "no_config_private_dns" || true)
+        if [ -n "$USER_RESTRICTIONS" ] || [ -n "$DPM_RESTRICTIONS" ]; then
+          adb shell settings put global private_dns_specifier "family.adguard-dns.com"
+          adb shell settings put global private_dns_mode "hostname"
+          DNS_SPEC=$(adb shell settings get global private_dns_specifier 2>/dev/null | tr -d '\r\n')
+        fi
       fi
       echo "$DNS_SPEC" | grep -q "family.adguard-dns.com" \
         && pass "Mission-Lock Family Private DNS enforced (family.adguard-dns.com)" \

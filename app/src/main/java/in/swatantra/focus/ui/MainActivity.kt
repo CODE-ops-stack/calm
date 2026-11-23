@@ -316,6 +316,9 @@ class MainActivity : Activity() {
         val dpm = deContext.getSystemService(DevicePolicyManager::class.java)
         // CRITICAL: Only call startLockTask() when Device Owner is truly active!
         if (dpm?.isDeviceOwnerApp(deContext.packageName) == true && isLocked) {
+            bgExecutor.execute {
+                applyMissionLockAdultAndAntiBypassShield(deContext)
+            }
             runCatching { startLockTask() }
         }
 

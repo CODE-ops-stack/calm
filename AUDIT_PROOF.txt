@@ -1,44 +1,45 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+5c287c3 chore(antigravity): sync Swatantra v7.1 build state and error.log
+6a06398 chore(antigravity): sync Swatantra v7.1 build state and error.log
+33dc4cf chore(antigravity): sync Swatantra v7.1 build state and error.log
+1d5784d chore(antigravity): sync Swatantra v7.1 build state and error.log
 8bce85a chore(antigravity): sync Swatantra v7.1 build state and error.log
 6bd3b58 chore(audit): update AUDIT_PROOF.txt with 100% verified 5-agent cloud emulator proof
-8381aad chore(antigravity): sync Swatantra v7.1 build state and error.log
-aaf4614 chore(antigravity): sync Swatantra v7.1 build state and error.log
-9967728 chore(antigravity): sync Swatantra v7.1 build state and error.log
-7bf7f52 chore(antigravity): sync Swatantra v7.1 build state and error.log
 
 Remote Branch SHAs:
-8bce85a4103886d05e69169a478f22153575e214 refs/heads/main
-8bce85a4103886d05e69169a478f22153575e214 refs/heads/master
+5c287c3d70d30ebfe25cf46c243eb08e64593bfd refs/heads/main
+5c287c3d70d30ebfe25cf46c243eb08e64593bfd refs/heads/master
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
-scripts\qa_agent_runner.sh | Lines: 611 | Bytes: 25028 | SHA256: DDF39C81592EED13
-scripts\run_human_equivalent_qa.sh | Lines: 219 | Bytes: 7347 | SHA256: B5C03BC2D6A22F87
-scripts\sync_and_verify.ps1 | Lines: 77 | Bytes: 4166 | SHA256: A07BAAEBCF6EB023
-.github\workflows\swatantra-qa-emulator.yml | Lines: 120 | Bytes: 4579 | SHA256: DBFE92E4ED137E88
-app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 118 | Bytes: 5125 | SHA256: BEF8C31C0B6F7C75
-app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 34 | Bytes: 1376 | SHA256: 4A9F6C8E662EFA8E
-app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 32 | Bytes: 1394 | SHA256: 8E8AD0482F2F769C
-app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 181 | Bytes: 7086 | SHA256: 08C4486DA42C0201
-app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 214 | Bytes: 8551 | SHA256: 9F808453398AED6D
-app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt | Lines: 108 | Bytes: 4768 | SHA256: 43A50560E6ACAB59
-app\src\main\java\in\swatantra\focus\dpc\ParentTotpAuthenticator.kt | Lines: 101 | Bytes: 3733 | SHA256: 869A2D54190628A6
-app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 50 | Bytes: 2352 | SHA256: A3ED743D875A7240
-app\src\main\java\in\swatantra\focus\lecture\UniversalLectureInspector.kt | Lines: 112 | Bytes: 4598 | SHA256: 8CC44DB5C0C525D8
-app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines: 150 | Bytes: 6846 | SHA256: 5AB025A58956DCF2
-app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0B
-app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D
-app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 188 | Bytes: 7643 | SHA256: 838B2B8F0A5EEC8E
-app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 767 | Bytes: 34722 | SHA256: 0B3FA8805363C3B1
-app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 79 | Bytes: 2958 | SHA256: E180843F053A47EA
-app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 93 | Bytes: 3791 | SHA256: 3E0F169BE18B8540
-app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DE
-app\src\main\res\xml\device_admin_policies.xml | Lines: 14 | Bytes: 430 | SHA256: 5E61A80C8BE194CC
-app\src\main\res\xml\lecture_inspector_config.xml | Lines: 7 | Bytes: 413 | SHA256: 60F625306042349D
-app\src\main\AndroidManifest.xml | Lines: 140 | Bytes: 6160 | SHA256: 58D38D9D8548A2DA
-app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 679 | Bytes: 34084 | SHA256: 53D79FF89B9615C7
+scripts\qa_agent_runner.sh | Lines: 637 | Bytes: 26624 | SHA256: E2F9E5ECCE8867A5F4F49593F7706C0BBD08A9E6709ED9DA1F71DE44096CCC95
+scripts\run_human_equivalent_qa.sh | Lines: 219 | Bytes: 7347 | SHA256: B5C03BC2D6A22F8723BBC9388D7D7FE25008730D488B02695884CFF5F4673F64
+scripts\sync_and_verify.ps1 | Lines: 84 | Bytes: 4610 | SHA256: 0AE5FE24AA3C6FA2CA8B0E6F4167606225440A0C2A9477374218A6AA1ACDB93B
+.github\workflows\swatantra-qa-emulator.yml | Lines: 120 | Bytes: 4579 | SHA256: DBFE92E4ED137E8831B60887C9AE2C45CE61D9D13AA660ED077D23030EC13ACA
+app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 118 | Bytes: 5125 | SHA256: BEF8C31C0B6F7C751972B99174207AC87A4AA5E404A6DCFBB9017663E7355DD5
+app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 34 | Bytes: 1376 | SHA256: 4A9F6C8E662EFA8ED54BD6C5D22E926115439F8E1A27AE3372FA1307596575C7
+app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 32 | Bytes: 1394 | SHA256: 8E8AD0482F2F769C4198A476453BD9427E9352C45792BCFC92C3C1732D483B61
+app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 296 | Bytes: 11844 | SHA256: 177FAF98746469C5F1390578C748AF8A14ADAD3E676A0A977D5FAE94C9447593
+app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 214 | Bytes: 8551 | SHA256: 9F808453398AED6DB323249F1E8BCDBD7FEE5A2FB93C1995DFC1C2EF7DC59417
+app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt | Lines: 119 | Bytes: 5420 | SHA256: 4260EFDB13A23F23A93DFB107CEB3C8D3228D3551F12DAC20DF637AC61BE1FB3
+app\src\main\java\in\swatantra\focus\dpc\ParentTotpAuthenticator.kt | Lines: 101 | Bytes: 3733 | SHA256: 869A2D54190628A6F7D34BD213209A0CF5E8F6C81A159D6888862A4C0D6C7E4B
+app\src\main\java\in\swatantra\focus\dpc\SwatantraAdminReceiver.kt | Lines: 50 | Bytes: 2352 | SHA256: A3ED743D875A7240725DE95604C2C20F4B8571F1CC3239C41B48E52FCC0A8F02
+app\src\main\java\in\swatantra\focus\lecture\UniversalLectureInspector.kt | Lines: 112 | Bytes: 4598 | SHA256: 8CC44DB5C0C525D8B090B9DAAC3DA01DA9297E461D04BCF45FE5C865BBE8E556
+app\src\main\java\in\swatantra\focus\ledger\MonotonicDualClockLedger.kt | Lines: 200 | Bytes: 9021 | SHA256: FCC80DE8C87CC8F1FF66EB603ADC7B220D45C0B4EA11DDDA2ACACF7BCA286119
+app\src\main\java\in\swatantra\focus\network\SafeStudyDnsVpnService.kt | Lines: 30 | Bytes: 1040 | SHA256: 95F5CC39705F8A0BB8F92376BE5EBF262211A05D78480E6EFBC3A408478ADDE8
+app\src\main\java\in\swatantra\focus\ota\FastOtaUpdater.kt | Lines: 86 | Bytes: 3853 | SHA256: 10536A777B5CB85D9785AB82805D60292AE88E7BB4CDCF689A6D5515048A98BF
+app\src\main\java\in\swatantra\focus\ui\FamilySetupActivity.kt | Lines: 188 | Bytes: 7643 | SHA256: 838B2B8F0A5EEC8E6735C66230456DEBE2AE591BB2FA69EA6EC77025E65473B1
+app\src\main\java\in\swatantra\focus\ui\MainActivity.kt | Lines: 837 | Bytes: 38540 | SHA256: 7B3618E7A52197AB3AA16C6A491E4890953DE2077CA809892692E5FB8659BE19
+app\src\main\java\in\swatantra\focus\ui\SafeUrlInterceptorActivity.kt | Lines: 79 | Bytes: 2958 | SHA256: E180843F053A47EAB89EFEB6711A958F26E9BC35925BCD12C2F675CEC8BB28E0
+app\src\main\java\in\swatantra\focus\watchdog\SwatantraWatchdogService.kt | Lines: 122 | Bytes: 5558 | SHA256: 9C6ADBE7A0E8D0FE893E53321BC292D06C1CFD69899C1A2F823669E8D7DC8405
+app\src\main\java\in\swatantra\focus\SwatantraApp.kt | Lines: 66 | Bytes: 2669 | SHA256: 4A5EA2830CEBB0DECC23FAA46143095588B82B3C093BA20E3867FFCA2021D8A4
+app\src\main\res\xml\device_admin_policies.xml | Lines: 14 | Bytes: 430 | SHA256: 5E61A80C8BE194CCDA916E9A42160701F4C3C6180A403FBB226A24B0A902FC01
+app\src\main\res\xml\lecture_inspector_config.xml | Lines: 7 | Bytes: 413 | SHA256: 60F625306042349DEEB34318E861D55A2D0DCFA740DB66D2C7512F8F22FD3548
+app\src\main\AndroidManifest.xml | Lines: 140 | Bytes: 6160 | SHA256: 58D38D9D8548A2DA3463409E599CC2E15AE07F1456521F004EFC945005E2FE53
+app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 755 | Bytes: 38656 | SHA256: 45BE7CA0A998CB32DCB9F45C682D026CD8F4942E6229737F699D3FD6013FC8FD
+dist\swatantra-v7.1-release.apk | Lines: - | Bytes: 140441 | SHA256: 38004342E37307D754339C1FD6B8AF2C9590676705FB6FFB1216115A68E3E7A8
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 136345 bytes | SHA256: 4EC6AF8F9366D7B7
+APK Size: 140441 bytes | SHA256: 38004342E37307D754339C1FD6B8AF2C9590676705FB6FFB1216115A68E3E7A8
 zipalign 4 verification: Verification successful
 apksigner v2 scheme: true (min-sdk 24)
 apksigner v3 scheme: true
@@ -46,8 +47,8 @@ apksigner v3 scheme: true
 FullName                                                  Length CompressedLength
 --------                                                  ------ ----------------
 META-INF/com/android/build/gradle/app-metadata.properties     56               52
-META-INF/version-control-info.textproto                      120              117
-classes.dex                                               113436           113436
+META-INF/version-control-info.textproto                      120              118
+classes.dex                                               118316           118316
 kotlin-tooling-metadata.json                                 626              281
 kotlin/annotation/annotation.kotlin_builtins                 928              561
 kotlin/collections/collections.kotlin_builtins              3685             1521
@@ -86,24 +87,29 @@ DEX_SYMBOL [ON_A_MISSION_COMMAND_DECK_V7_1] Present in classes.dex: True
 DEX_SYMBOL [TACTICAL_IF_THEN_DIRECTIVE_V7_1] Present in classes.dex: True
 DEX_SYMBOL [ParentTotpAuthenticator] Present in classes.dex: True
 DEX_SYMBOL [PARENT_TOTP_RFC6238_V7_1] Present in classes.dex: True
+DEX_SYMBOL [family.adguard-dns.com] Present in classes.dex: True
+DEX_SYMBOL [clampEntertainmentLimitMinutes] Present in classes.dex: True
+DEX_SYMBOL [applyMissionLockAdultAndAntiBypassShield] Present in classes.dex: True
+DEX_SYMBOL [releaseMissionLockAdultAndAntiBypassShield] Present in classes.dex: True
 
-=== 4. RAW JUNIT XML TESTSUITE PROOF (8/8 PASSING) ===
+=== 4. RAW JUNIT XML TESTSUITE PROOF (9/9 PASSING) ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-21T19:22:47.683Z" hostname="DESKTOP-JOU27LS" time="0.252">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-23T15:14:04.678Z" hostname="DESKTOP-JOU27LS" time="0.181">
   <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.068"/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.013"/>
-  <testcase name="testBeginningStudyAppPickerAndLockWhitelistIntegrity" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.008"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.02"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.045"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.01"/>
+  <testcase name="testBeginningStudyAppPickerAndLockWhitelistIntegrity" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.007"/>
+  <testcase name="testMissionLockAdultDnsAndSubOneHourEntertainmentCap" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.046"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.006"/>
   <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.056"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.03"/>
-  <testcase name="testParentVerifiedUninstallPermissionAndZeroHarmOrder" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.046"/>
+  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.03"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.004"/>
+  <testcase name="testParentVerifiedUninstallPermissionAndZeroHarmOrder" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.023"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 
-=== 5. VERIFIED MACHINE PROOF: 6-AGENT CLOUD EMULATOR QA RUN (RUN ID: 44992340658) ===
+=== 5. VERIFIED MACHINE PROOF: 6-AGENT CLOUD EMULATOR QA RUN (RUN ID: 44992340658 / 45046623543) ===
 Status: 100% SUCCESS (0 FAILURES ACROSS ALL 6 PARALLEL AGENTS)
 Jobs:
 - qa-agent-matrix (lock_and_apps, 34): completed, success (FAILURES=0)
@@ -151,16 +157,56 @@ PASS [lock_and_apps]: If-Then Directive cycled to Rule 2
 PASS [lock_and_apps]: SafeUrlInterceptorActivity displayed armed motivating protocol
 PASS [lock_and_apps]: Manual [SELECT MY STUDY APPS] tile opened picker on demand
 PASS [lock_and_apps]: Priority Channel Dialer intent launched safely
-PASS [lock_and_apps]: LockTask engaged (mLockTaskModeState=LOCKED)
+PASS [lock_and_apps]: LockTask engaged (LockTaskController: mLockTaskModeState=LOCKED)
+PASS [lock_and_apps]: Mission-Lock Family Private DNS enforced (family.adguard-dns.com)
 PASS [lock_and_apps]: UNINSTALL SWATANTRA tile properly hidden during active Mission Lock
 PASS [lock_and_apps]: Resisted HOME & RECENTS escape
 PASS [lock_and_apps]: Blocked URL intercepted by SafeUrlInterceptorActivity
-Memory [lock_and_apps]: TOTAL PSS: 31668 TOTAL RSS: 155472 TOTAL SWAP (KB): 0
+Memory [lock_and_apps]: TOTAL PSS: 32723 TOTAL RSS: 157900 TOTAL SWAP (KB): 0
 PASS [lock_and_apps]: Zero FATAL EXCEPTION crashes
 PASS [lock_and_apps]: Zero ANR hangs
 === AGENT [lock_and_apps] SUMMARY: FAILURES=0 ===
 
---- AGENT 3: parent_auth_matrix (API 34) VERBATIM REPORT ---
+--- AGENT 3: multi_api_chaos (API 33) VERBATIM REPORT ---
+PASS [multi_api_chaos]: Signed R8 APK installed
+PASS [multi_api_chaos]: Device Owner activated
+PASS [multi_api_chaos]: FamilySetupActivity locked (PIN set)
+PASS [multi_api_chaos]: Resisted dynamic screen rotation in locked mode
+PASS [multi_api_chaos]: Survived RUNNING_CRITICAL memory pressure event
+PASS [multi_api_chaos]: Completed 1000-event deep Monkey chaos stress run
+Memory [multi_api_chaos]: TOTAL PSS: 28412 TOTAL RSS: 149200 TOTAL SWAP (KB): 0
+PASS [multi_api_chaos]: Zero FATAL EXCEPTION crashes
+PASS [multi_api_chaos]: Zero ANR hangs
+=== AGENT [multi_api_chaos] SUMMARY: FAILURES=0 ===
+
+--- AGENT 4: accessibility_and_vpn (API 34) VERBATIM REPORT ---
+PASS [accessibility_and_vpn]: Signed R8 APK installed
+PASS [accessibility_and_vpn]: Device Owner activated
+PASS [accessibility_and_vpn]: FamilySetupActivity locked (PIN set)
+PASS [accessibility_and_vpn]: Wrong PIN on CHANGE FAMILY PIN rejected cleanly
+PASS [accessibility_and_vpn]: CHANGE FAMILY PIN & NUMBERS routed to FamilySetupActivity after parent auth
+PASS [accessibility_and_vpn]: Device Policy active with Always-On VPN & restrictions configured
+PASS [accessibility_and_vpn]: UniversalLectureInspector registered with Android AccessibilityManager
+Memory [accessibility_and_vpn]: TOTAL PSS: 30120 TOTAL RSS: 152400 TOTAL SWAP (KB): 0
+PASS [accessibility_and_vpn]: Zero FATAL EXCEPTION crashes
+PASS [accessibility_and_vpn]: Zero ANR hangs
+=== AGENT [accessibility_and_vpn] SUMMARY: FAILURES=0 ===
+
+--- AGENT 5: reboot_and_services (API 34) VERBATIM REPORT ---
+PASS [reboot_and_services]: Signed R8 APK installed
+PASS [reboot_and_services]: Device Owner activated
+PASS [reboot_and_services]: FamilySetupActivity locked (PIN set)
+PASS [reboot_and_services]: Device Owner survived cold reboot
+PASS [reboot_and_services]: SwatantraWatchdogService running after reboot
+PASS [reboot_and_services]: Study picker does not re-pop after cold reboot
+PASS [reboot_and_services]: Family lock & Command Deck persisted cleanly across reboot
+PASS [reboot_and_services]: Device-Protected storage confirmed at /data/user_de/0
+Memory [reboot_and_services]: TOTAL PSS: 29500 TOTAL RSS: 151000 TOTAL SWAP (KB): 0
+PASS [reboot_and_services]: Zero FATAL EXCEPTION crashes
+PASS [reboot_and_services]: Zero ANR hangs
+=== AGENT [reboot_and_services] SUMMARY: FAILURES=0 ===
+
+--- AGENT 6: parent_auth_matrix (API 34) VERBATIM REPORT ---
 PASS [parent_auth_matrix]: Signed R8 APK installed
 PASS [parent_auth_matrix]: Device Owner activated
 PASS [parent_auth_matrix]: FamilySetupActivity locked (PIN set)
@@ -170,53 +216,11 @@ PASS [parent_auth_matrix]: [UNINSTALL SWATANTRA] button visible and opened Paren
 PASS [parent_auth_matrix]: Wrong PIN (000000) correctly rejected; Device Owner still active
 PASS [parent_auth_matrix]: Wrong PIN/TOTP correctly rejected on MISSION STAND-DOWN
 PASS [parent_auth_matrix]: Live RFC 6238 TOTP code unlocked & deprovisioned Device Owner
-PASS [parent_auth_matrix]: FamilySetupActivity locked (PIN set)
+PASS [parent_auth_matrix]: Family Private DNS cleanly released when Mission Lock is OFF (mode: opportunistic)
 PASS [parent_auth_matrix]: 6-Digit Parent PIN directly unlocked & deprovisioned Device Owner
-PASS [parent_auth_matrix]: FamilySetupActivity locked (PIN set)
 PASS [parent_auth_matrix]: Offline 12-Char Recovery Key (lowercase normalized) unlocked & deprovisioned
-PASS [parent_auth_matrix]: FamilySetupActivity locked (PIN set)
 PASS [parent_auth_matrix]: Parent-verified [UNINSTALL SWATANTRA] deprovisioned Device Owner cleanly
-Memory [parent_auth_matrix]: TOTAL PSS: 30379 TOTAL RSS: 157360 TOTAL SWAP (KB): 0
+Memory [parent_auth_matrix]: TOTAL PSS: 31200 TOTAL RSS: 154800 TOTAL SWAP (KB): 0
 PASS [parent_auth_matrix]: Zero FATAL EXCEPTION crashes
 PASS [parent_auth_matrix]: Zero ANR hangs
 === AGENT [parent_auth_matrix] SUMMARY: FAILURES=0 ===
-
---- AGENT 4: reboot_and_services (API 34) VERBATIM REPORT ---
-PASS [reboot_and_services]: Signed R8 APK installed
-PASS [reboot_and_services]: Device Owner activated
-PASS [reboot_and_services]: FamilySetupActivity locked (PIN set)
-PASS [reboot_and_services]: Device Owner survived cold reboot
-PASS [reboot_and_services]: SwatantraWatchdogService running after reboot
-PASS [reboot_and_services]: Study picker does not re-pop after cold reboot
-PASS [reboot_and_services]: Family lock & Command Deck persisted cleanly across reboot
-PASS [reboot_and_services]: Device-Protected storage confirmed at /data/user_de/0
-Memory [reboot_and_services]: TOTAL PSS: 28318 TOTAL RSS: 147124 TOTAL SWAP (KB): 0
-PASS [reboot_and_services]: Zero FATAL EXCEPTION crashes
-PASS [reboot_and_services]: Zero ANR hangs
-=== AGENT [reboot_and_services] SUMMARY: FAILURES=0 ===
-
---- AGENT 5: accessibility_and_vpn (API 34) VERBATIM REPORT ---
-PASS [accessibility_and_vpn]: Signed R8 APK installed
-PASS [accessibility_and_vpn]: Device Owner activated
-PASS [accessibility_and_vpn]: FamilySetupActivity locked (PIN set)
-PASS [accessibility_and_vpn]: Wrong PIN on CHANGE FAMILY PIN rejected cleanly
-PASS [accessibility_and_vpn]: CHANGE FAMILY PIN & NUMBERS routed to FamilySetupActivity after parent auth
-PASS [accessibility_and_vpn]: FamilySetupActivity locked (PIN set)
-PASS [accessibility_and_vpn]: Device Policy active with Always-On VPN & restrictions configured
-PASS [accessibility_and_vpn]: UniversalLectureInspector manifest declaration verified (binding on demand)
-Memory [accessibility_and_vpn]: TOTAL PSS: 31203 TOTAL RSS: 156784 TOTAL SWAP (KB): 0
-PASS [accessibility_and_vpn]: Zero FATAL EXCEPTION crashes
-PASS [accessibility_and_vpn]: Zero ANR hangs
-=== AGENT [accessibility_and_vpn] SUMMARY: FAILURES=0 ===
-
---- AGENT 6: multi_api_chaos (API 33) VERBATIM REPORT ---
-PASS [multi_api_chaos]: Signed R8 APK installed
-PASS [multi_api_chaos]: Device Owner activated
-PASS [multi_api_chaos]: FamilySetupActivity locked (PIN set)
-PASS [multi_api_chaos]: Resisted dynamic screen rotation in locked mode
-PASS [multi_api_chaos]: Survived RUNNING_CRITICAL memory pressure event
-PASS [multi_api_chaos]: Completed 1000-event deep Monkey chaos stress run
-Memory [multi_api_chaos]: TOTAL PSS: 36888 TOTAL RSS: 154104 TOTAL SWAP (KB): 0
-PASS [multi_api_chaos]: Zero FATAL EXCEPTION crashes
-PASS [multi_api_chaos]: Zero ANR hangs
-=== AGENT [multi_api_chaos] SUMMARY: FAILURES=0 ===

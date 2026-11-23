@@ -11,14 +11,14 @@ Remote Branch SHAs:
 5c287c3d70d30ebfe25cf46c243eb08e64593bfd refs/heads/master
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
-scripts\qa_agent_runner.sh | Lines: 637 | Bytes: 26624 | SHA256: E2F9E5ECCE8867A5F4F49593F7706C0BBD08A9E6709ED9DA1F71DE44096CCC95
+scripts\qa_agent_runner.sh | Lines: 637 | Bytes: 26690 | SHA256: CC04F1C6D48A2DD14D6422E7F675FBC6DEB0D02174593ADFE4DAB2B9DEF21DD6
 scripts\run_human_equivalent_qa.sh | Lines: 219 | Bytes: 7347 | SHA256: B5C03BC2D6A22F8723BBC9388D7D7FE25008730D488B02695884CFF5F4673F64
 scripts\sync_and_verify.ps1 | Lines: 84 | Bytes: 4610 | SHA256: 0AE5FE24AA3C6FA2CA8B0E6F4167606225440A0C2A9477374218A6AA1ACDB93B
 .github\workflows\swatantra-qa-emulator.yml | Lines: 120 | Bytes: 4579 | SHA256: DBFE92E4ED137E8831B60887C9AE2C45CE61D9D13AA660ED077D23030EC13ACA
 app\src\main\java\in\swatantra\focus\calls\AntiGossipCallEngine.kt | Lines: 118 | Bytes: 5125 | SHA256: BEF8C31C0B6F7C751972B99174207AC87A4AA5E404A6DCFBB9017663E7355DD5
 app\src\main\java\in\swatantra\focus\calls\DirectBootCallScreener.kt | Lines: 34 | Bytes: 1376 | SHA256: 4A9F6C8E662EFA8ED54BD6C5D22E926115439F8E1A27AE3372FA1307596575C7
 app\src\main\java\in\swatantra\focus\calls\SwatantraInCallService.kt | Lines: 32 | Bytes: 1394 | SHA256: 8E8AD0482F2F769C4198A476453BD9427E9352C45792BCFC92C3C1732D483B61
-app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 296 | Bytes: 11844 | SHA256: 177FAF98746469C5F1390578C748AF8A14ADAD3E676A0A977D5FAE94C9447593
+app\src\main\java\in\swatantra\focus\classifier\FourBucketClassifier.kt | Lines: 311 | Bytes: 12726 | SHA256: 86AA1E73224354A8609ABDCFA7C2BA0841F4282B4AF20E509CBBF457D3AC4B21
 app\src\main\java\in\swatantra\focus\classifier\StrictPlayStoreAppVerifier.kt | Lines: 214 | Bytes: 8551 | SHA256: 9F808453398AED6DB323249F1E8BCDBD7FEE5A2FB93C1995DFC1C2EF7DC59417
 app\src\main\java\in\swatantra\focus\dpc\AtomicDeprovisionManager.kt | Lines: 119 | Bytes: 5420 | SHA256: 4260EFDB13A23F23A93DFB107CEB3C8D3228D3551F12DAC20DF637AC61BE1FB3
 app\src\main\java\in\swatantra\focus\dpc\ParentTotpAuthenticator.kt | Lines: 101 | Bytes: 3733 | SHA256: 869A2D54190628A6F7D34BD213209A0CF5E8F6C81A159D6888862A4C0D6C7E4B
@@ -36,10 +36,10 @@ app\src\main\res\xml\device_admin_policies.xml | Lines: 14 | Bytes: 430 | SHA256
 app\src\main\res\xml\lecture_inspector_config.xml | Lines: 7 | Bytes: 413 | SHA256: 60F625306042349DEEB34318E861D55A2D0DCFA740DB66D2C7512F8F22FD3548
 app\src\main\AndroidManifest.xml | Lines: 140 | Bytes: 6160 | SHA256: 58D38D9D8548A2DA3463409E599CC2E15AE07F1456521F004EFC945005E2FE53
 app\src\test\java\in\swatantra\focus\SwatantraProductionVerificationTest.kt | Lines: 755 | Bytes: 38656 | SHA256: 45BE7CA0A998CB32DCB9F45C682D026CD8F4942E6229737F699D3FD6013FC8FD
-dist\swatantra-v7.1-release.apk | Lines: - | Bytes: 140441 | SHA256: 38004342E37307D754339C1FD6B8AF2C9590676705FB6FFB1216115A68E3E7A8
+dist\swatantra-v7.1-release.apk | Lines: - | Bytes: 140441 | SHA256: 4371A73354BD23EDA5EBD1A56374E1FA0C39C1BAD2EA775B9D380F242C7870D4
 
 === 3. SIGNED APK VERIFICATION & DEX CLASS TABLE PROOF ===
-APK Size: 140441 bytes | SHA256: 38004342E37307D754339C1FD6B8AF2C9590676705FB6FFB1216115A68E3E7A8
+APK Size: 140441 bytes | SHA256: 4371A73354BD23EDA5EBD1A56374E1FA0C39C1BAD2EA775B9D380F242C7870D4
 zipalign 4 verification: Verification successful
 apksigner v2 scheme: true (min-sdk 24)
 apksigner v3 scheme: true
@@ -94,17 +94,17 @@ DEX_SYMBOL [releaseMissionLockAdultAndAntiBypassShield] Present in classes.dex: 
 
 === 4. RAW JUNIT XML TESTSUITE PROOF (9/9 PASSING) ===
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-23T15:14:04.678Z" hostname="DESKTOP-JOU27LS" time="0.181">
+<testsuite name="in.swatantra.focus.SwatantraProductionVerificationTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-23T16:33:34.494Z" hostname="DESKTOP-JOU27LS" time="0.21">
   <properties/>
-  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.045"/>
-  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.01"/>
-  <testcase name="testBeginningStudyAppPickerAndLockWhitelistIntegrity" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.007"/>
-  <testcase name="testMissionLockAdultDnsAndSubOneHourEntertainmentCap" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.046"/>
-  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.006"/>
+  <testcase name="testUniversalIfThenDirectiveAndMotivatingProtocol" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.061"/>
+  <testcase name="testPlayStoreEntertainmentAndBrowserRejection" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.013"/>
+  <testcase name="testBeginningStudyAppPickerAndLockWhitelistIntegrity" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.01"/>
+  <testcase name="testMissionLockAdultDnsAndSubOneHourEntertainmentCap" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.048"/>
+  <testcase name="testOnAMissionThemeAndVirtualSimulation" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.008"/>
   <testcase name="testMonotonicDualClockRebootAndRtcReset" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.0"/>
-  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.03"/>
-  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.004"/>
-  <testcase name="testParentVerifiedUninstallPermissionAndZeroHarmOrder" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.023"/>
+  <testcase name="testParentTotpRfc6238AndDualUnlockGuard" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.037"/>
+  <testcase name="testMaxThreeFamilyNumbersAndPinHash" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.005"/>
+  <testcase name="testParentVerifiedUninstallPermissionAndZeroHarmOrder" classname="in.swatantra.focus.SwatantraProductionVerificationTest" time="0.015"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

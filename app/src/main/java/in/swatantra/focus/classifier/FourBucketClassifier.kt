@@ -37,8 +37,15 @@ fun isEmulatorEnvironment(): Boolean {
            android.os.Build.HARDWARE.contains("ranchu") ||
            android.os.Build.HARDWARE.contains("goldfish") ||
            android.os.Build.MODEL.contains("sdk_gphone") ||
+           android.os.Build.MODEL.contains("Emulator") ||
+           android.os.Build.MODEL.contains("Android SDK built for") ||
            android.os.Build.PRODUCT.contains("sdk_gphone") ||
-           android.os.Build.PRODUCT.contains("emulator")
+           android.os.Build.PRODUCT.contains("emulator") ||
+           android.os.Build.PRODUCT.contains("sdk") ||
+           android.os.Build.PRODUCT.contains("google_sdk") ||
+           (android.os.Build.MANUFACTURER.contains("Google") && android.os.Build.BRAND.startsWith("generic")) ||
+           android.os.Build.BRAND.startsWith("generic") ||
+           android.os.Build.DEVICE.startsWith("generic")
 }
 
 /**
@@ -70,6 +77,10 @@ fun applyMissionLockAdultAndAntiBypassShield(context: Context) {
                 android.provider.Settings.Global.getString(context.contentResolver, "private_dns_specifier")
             }.getOrNull()
             if (currentSpec.isNullOrEmpty() || currentSpec == "null") {
+                runCatching {
+                    dpm.setGlobalSetting(admin, "private_dns_mode", "hostname")
+                    dpm.setGlobalSetting(admin, "private_dns_specifier", FAMILY_PRIVATE_DNS_HOST)
+                }
                 runCatching {
                     android.provider.Settings.Global.putString(
                         context.contentResolver,
@@ -123,6 +134,10 @@ fun releaseMissionLockAdultAndAntiBypassShield(context: Context) {
     }
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
         runCatching { dpm.setGlobalPrivateDnsModeOpportunistic(admin) }
+        runCatching {
+            dpm.setGlobalSetting(admin, "private_dns_mode", "opportunistic")
+            dpm.setGlobalSetting(admin, "private_dns_specifier", "")
+        }
         runCatching {
             android.provider.Settings.Global.putString(
                 context.contentResolver,

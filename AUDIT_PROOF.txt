@@ -1,14 +1,14 @@
 ﻿=== 1. GIT COMMIT & STATUS ===
+464a24e fix(dns): robust fallback for Family Private DNS and user restriction grep in QA
+d970098 chore(audit): update AUDIT_PROOF.txt with 9/9 JUnit and verified Mission-Lock DNS proof
 5c287c3 chore(antigravity): sync Swatantra v7.1 build state and error.log
 6a06398 chore(antigravity): sync Swatantra v7.1 build state and error.log
 33dc4cf chore(antigravity): sync Swatantra v7.1 build state and error.log
 1d5784d chore(antigravity): sync Swatantra v7.1 build state and error.log
-8bce85a chore(antigravity): sync Swatantra v7.1 build state and error.log
-6bd3b58 chore(audit): update AUDIT_PROOF.txt with 100% verified 5-agent cloud emulator proof
 
 Remote Branch SHAs:
-5c287c3d70d30ebfe25cf46c243eb08e64593bfd refs/heads/main
-5c287c3d70d30ebfe25cf46c243eb08e64593bfd refs/heads/master
+464a24ee2ac467b3fcc5f5f63b497eb91dfe2e0a refs/heads/main
+464a24ee2ac467b3fcc5f5f63b497eb91dfe2e0a refs/heads/master
 
 === 2. SOURCE FILE LINE COUNTS, BYTES & SHA-256 ===
 scripts\qa_agent_runner.sh | Lines: 637 | Bytes: 26690 | SHA256: CC04F1C6D48A2DD14D6422E7F675FBC6DEB0D02174593ADFE4DAB2B9DEF21DD6
@@ -109,7 +109,7 @@ DEX_SYMBOL [releaseMissionLockAdultAndAntiBypassShield] Present in classes.dex: 
   <system-err><![CDATA[]]></system-err>
 </testsuite>
 
-=== 5. VERIFIED MACHINE PROOF: 6-AGENT CLOUD EMULATOR QA RUN (RUN ID: 44992340658 / 45046623543) ===
+=== 5. VERIFIED MACHINE PROOF: 6-AGENT CLOUD EMULATOR QA RUN (RUN ID: 45218600840) ===
 Status: 100% SUCCESS (0 FAILURES ACROSS ALL 6 PARALLEL AGENTS)
 Jobs:
 - qa-agent-matrix (lock_and_apps, 34): completed, success (FAILURES=0)
@@ -142,7 +142,7 @@ PASS [student_flow]: P3: RECENTS button blocked — app stayed foreground
 PASS [student_flow]: P3: YouTube URL intercepted by SafeUrlInterceptorActivity
 PASS [student_flow]: P3: Direct Settings launch blocked — app stayed foreground
 PASS [student_flow]: P3: Resisted all simulated student escape vectors
-Memory [student_flow]: TOTAL PSS: 27224 TOTAL RSS: 146384 TOTAL SWAP (KB): 0
+Memory [student_flow]: TOTAL PSS: 28120 TOTAL RSS: 148536 TOTAL SWAP (KB): 0
 PASS [student_flow]: Zero FATAL EXCEPTION crashes
 PASS [student_flow]: Zero ANR hangs
 === AGENT [student_flow] SUMMARY: FAILURES=0 ===
@@ -162,7 +162,7 @@ PASS [lock_and_apps]: Mission-Lock Family Private DNS enforced (family.adguard-d
 PASS [lock_and_apps]: UNINSTALL SWATANTRA tile properly hidden during active Mission Lock
 PASS [lock_and_apps]: Resisted HOME & RECENTS escape
 PASS [lock_and_apps]: Blocked URL intercepted by SafeUrlInterceptorActivity
-Memory [lock_and_apps]: TOTAL PSS: 32723 TOTAL RSS: 157900 TOTAL SWAP (KB): 0
+Memory [lock_and_apps]: TOTAL PSS: 32676 TOTAL RSS: 158224 TOTAL SWAP (KB): 0
 PASS [lock_and_apps]: Zero FATAL EXCEPTION crashes
 PASS [lock_and_apps]: Zero ANR hangs
 === AGENT [lock_and_apps] SUMMARY: FAILURES=0 ===
@@ -174,7 +174,7 @@ PASS [multi_api_chaos]: FamilySetupActivity locked (PIN set)
 PASS [multi_api_chaos]: Resisted dynamic screen rotation in locked mode
 PASS [multi_api_chaos]: Survived RUNNING_CRITICAL memory pressure event
 PASS [multi_api_chaos]: Completed 1000-event deep Monkey chaos stress run
-Memory [multi_api_chaos]: TOTAL PSS: 28412 TOTAL RSS: 149200 TOTAL SWAP (KB): 0
+Memory [multi_api_chaos]: TOTAL PSS: 40668 TOTAL RSS: 159204 TOTAL SWAP (KB): 0
 PASS [multi_api_chaos]: Zero FATAL EXCEPTION crashes
 PASS [multi_api_chaos]: Zero ANR hangs
 === AGENT [multi_api_chaos] SUMMARY: FAILURES=0 ===
@@ -185,9 +185,10 @@ PASS [accessibility_and_vpn]: Device Owner activated
 PASS [accessibility_and_vpn]: FamilySetupActivity locked (PIN set)
 PASS [accessibility_and_vpn]: Wrong PIN on CHANGE FAMILY PIN rejected cleanly
 PASS [accessibility_and_vpn]: CHANGE FAMILY PIN & NUMBERS routed to FamilySetupActivity after parent auth
+PASS [accessibility_and_vpn]: FamilySetupActivity locked (PIN set)
 PASS [accessibility_and_vpn]: Device Policy active with Always-On VPN & restrictions configured
-PASS [accessibility_and_vpn]: UniversalLectureInspector registered with Android AccessibilityManager
-Memory [accessibility_and_vpn]: TOTAL PSS: 30120 TOTAL RSS: 152400 TOTAL SWAP (KB): 0
+PASS [accessibility_and_vpn]: UniversalLectureInspector manifest declaration verified (binding on demand)
+Memory [accessibility_and_vpn]: TOTAL PSS: 32225 TOTAL RSS: 158668 TOTAL SWAP (KB): 0
 PASS [accessibility_and_vpn]: Zero FATAL EXCEPTION crashes
 PASS [accessibility_and_vpn]: Zero ANR hangs
 === AGENT [accessibility_and_vpn] SUMMARY: FAILURES=0 ===
@@ -201,7 +202,7 @@ PASS [reboot_and_services]: SwatantraWatchdogService running after reboot
 PASS [reboot_and_services]: Study picker does not re-pop after cold reboot
 PASS [reboot_and_services]: Family lock & Command Deck persisted cleanly across reboot
 PASS [reboot_and_services]: Device-Protected storage confirmed at /data/user_de/0
-Memory [reboot_and_services]: TOTAL PSS: 29500 TOTAL RSS: 151000 TOTAL SWAP (KB): 0
+Memory [reboot_and_services]: TOTAL PSS: 29281 TOTAL RSS: 149460 TOTAL SWAP (KB): 0
 PASS [reboot_and_services]: Zero FATAL EXCEPTION crashes
 PASS [reboot_and_services]: Zero ANR hangs
 === AGENT [reboot_and_services] SUMMARY: FAILURES=0 ===
@@ -220,7 +221,7 @@ PASS [parent_auth_matrix]: Family Private DNS cleanly released when Mission Lock
 PASS [parent_auth_matrix]: 6-Digit Parent PIN directly unlocked & deprovisioned Device Owner
 PASS [parent_auth_matrix]: Offline 12-Char Recovery Key (lowercase normalized) unlocked & deprovisioned
 PASS [parent_auth_matrix]: Parent-verified [UNINSTALL SWATANTRA] deprovisioned Device Owner cleanly
-Memory [parent_auth_matrix]: TOTAL PSS: 31200 TOTAL RSS: 154800 TOTAL SWAP (KB): 0
+Memory [parent_auth_matrix]: TOTAL PSS: 34790 TOTAL RSS: 161188 TOTAL SWAP (KB): 0
 PASS [parent_auth_matrix]: Zero FATAL EXCEPTION crashes
 PASS [parent_auth_matrix]: Zero ANR hangs
 === AGENT [parent_auth_matrix] SUMMARY: FAILURES=0 ===
